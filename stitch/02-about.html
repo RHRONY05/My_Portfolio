@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#0a0e14",
+                        "primary-fixed-dim": "#00e383",
+                        "surface-variant": "#31353c",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#00e383",
+                        "secondary-container": "#274b6e",
+                        "on-tertiary-container": "#606700",
+                        "surface-container-high": "#262a31",
+                        "tertiary": "#fdffcb",
+                        "on-primary": "#00391d",
+                        "outline": "#849586",
+                        "on-primary-fixed": "#00210e",
+                        "on-secondary-fixed": "#001d35",
+                        "on-secondary-fixed-variant": "#25496c",
+                        "surface-container-low": "#181c22",
+                        "on-secondary": "#063254",
+                        "outline-variant": "#3b4b3e",
+                        "surface": "#10141a",
+                        "on-surface": "#dfe2eb",
+                        "primary-fixed": "#5bffa1",
+                        "primary-container": "#00ff94",
+                        "primary": "#f2fff1",
+                        "on-surface-variant": "#b9cbbb",
+                        "secondary-fixed-dim": "#a7caf3",
+                        "on-secondary-container": "#99bbe4",
+                        "tertiary-container": "#dbe912",
+                        "inverse-surface": "#dfe2eb",
+                        "secondary-fixed": "#d0e4ff",
+                        "surface-container": "#1c2026",
+                        "surface-dim": "#10141a",
+                        "on-tertiary-fixed": "#1b1d00",
+                        "on-primary-container": "#00713f",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#31353c",
+                        "on-tertiary-fixed-variant": "#454a00",
+                        "on-tertiary": "#2f3300",
+                        "tertiary-fixed": "#dfed1a",
+                        "on-primary-fixed-variant": "#00522c",
+                        "tertiary-fixed-dim": "#c3d000",
+                        "background": "#10141a",
+                        "inverse-primary": "#006d3c",
+                        "secondary": "#a7caf3",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#353940",
+                        "on-background": "#dfe2eb",
+                        "inverse-on-surface": "#2d3137"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "96px",
+                        "stack-sm": "4px",
+                        "margin-page": "48px",
+                        "base": "8px",
+                        "stack-md": "12px",
+                        "stack-lg": "24px",
+                        "gutter": "24px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "hero-display": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "caption": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "hero-display": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "label-mono": ["13px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(49, 53, 60, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(132, 149, 134, 0.2);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 148, 0.1);
+            border-color: #00FF94;
+        }
+        .dot-grid {
+            background-image: radial-gradient(circle, #30363D 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-[#0D1117]/80 backdrop-blur-md border-b border-[#30363D]">
+<div class="flex justify-between items-center w-full px-6 md:px-12 py-4 max-w-[1440px] mx-auto font-sans antialiased text-sm tracking-tight">
+<!-- Brand Logo -->
+<div class="text-xl font-black tracking-tighter text-[#00FF94] font-mono">
+                RONY.DEV
+            </div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-400 font-medium hover:text-[#00FF94] hover:bg-[#30363D]/30 transition-all duration-200 px-3 py-1 rounded" href="#about">About</a>
+<a class="text-slate-400 font-medium hover:text-[#00FF94] hover:bg-[#30363D]/30 transition-all duration-200 px-3 py-1 rounded" href="#skills">Skills</a>
+<a class="text-slate-400 font-medium hover:text-[#00FF94] hover:bg-[#30363D]/30 transition-all duration-200 px-3 py-1 rounded" href="#projects">Projects</a>
+<a class="text-slate-400 font-medium hover:text-[#00FF94] hover:bg-[#30363D]/30 transition-all duration-200 px-3 py-1 rounded" href="#contact">Contact</a>
+</nav>
+<!-- Action -->
+<div>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-lg font-semibold text-sm hover:opacity-90 active:scale-95 transition-all duration-100">
+                    Hire Me
+                </button>
+</div>
+</div>
+</header>
+<main class="pt-24 space-y-[96px] dot-grid">
+<!-- About Me Section -->
+<section class="max-w-[1200px] mx-auto px-6 md:px-12 py-12" id="about">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<!-- Left: Profile Photo -->
+<div class="relative group">
+<div class="absolute -inset-1 bg-[#00FF94] opacity-20 blur group-hover:opacity-40 transition duration-500 rounded-xl"></div>
+<div class="relative aspect-[4/5] w-full max-w-md mx-auto bg-surface-container-low rounded-xl border border-[#30363D] overflow-hidden shadow-2xl">
+<img alt="Professional Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-in-out" data-alt="A professional close-up portrait of a male software engineer with a confident expression, set against a dark, moody studio background. The lighting is dramatic, with subtle neon green rim light catching the edges of his profile, echoing a high-tech developer aesthetic. He is wearing a minimalist dark turtleneck, emphasizing a clean and sophisticated look. The overall visual style is sharp, high-contrast, and clinical, fitting for a premium developer portfolio." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABzQRxmcuSbzzPw3lB7lehY9s-VmhnOjLFFVz_KMblGNdIhOj9NGpjfmUIXT14aVFY50wiH-XU3Jkk2PBbwx5PZVaoyst35b09U9QKgp0wZbjU0DGUuKjROjnQHrrvCm4QCx-C8gTYwXPF1_sz6Sx0L9RwW4oyiKBFgadN6N_ZLdwTdlxBJhJbEUQg5TpP3yjpxSzlO7ZSclWxyg8FhTy6tdI4hccq_zpSHFpIW4fDkLboqYKl9rjW13hPi2VynqU0Be2TBtFWoscC"/>
+</div>
+</div>
+<!-- Right: Content -->
+<div class="space-y-8">
+<div class="space-y-4">
+<span class="font-label-mono text-primary-fixed-dim uppercase tracking-widest text-xs flex items-center gap-2">
+<span class="w-2 h-2 bg-primary-fixed-dim rounded-full"></span>
+                            About Me
+                        </span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface leading-tight">
+                            A Developer Who Solves <span class="text-primary-fixed-dim">Real Problems</span>
+</h2>
+</div>
+<div class="space-y-6 text-on-surface-variant font-body-lg text-body-lg">
+<p>
+                            With over eight years of experience in the digital trenches, I bridge the gap between complex engineering challenges and seamless user experiences. My philosophy is simple: code should be as clean as it is functional.
+                        </p>
+<p>
+                            I specialize in architecting scalable full-stack applications that don't just work—they perform. Whether it's optimizing a React rendering cycle or designing a robust PostgreSQL schema, I focus on building systems that last.
+                        </p>
+<p>
+                            Beyond the syntax, I'm a firm believer in the power of automation and AI. I build tools that eliminate redundancy, allowing teams to focus on creative strategy while the infrastructure manages itself with clinical precision.
+                        </p>
+</div>
+<div class="inline-flex items-center gap-4 px-6 py-4 bg-surface-container-high border border-primary-fixed-dim/30 rounded-lg">
+<span class="material-symbols-outlined text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<span class="font-label-mono text-primary-fixed-dim text-sm uppercase">Currently open to remote freelance projects</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Skills & Technologies Section -->
+<section class="max-w-[1200px] mx-auto px-6 md:px-12 py-12 pb-24" id="skills">
+<div class="text-center mb-16 space-y-4">
+<span class="font-label-mono text-primary-fixed-dim uppercase tracking-widest text-xs">Technical Arsenal</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Skills &amp; Technologies</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Card 1: Frontend -->
+<div class="glass-card glow-hover p-8 rounded-xl transition-all duration-300 group"><div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-surface-container-highest border border-outline-variant rounded-lg text-primary-fixed-dim group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined">layers</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Interface Engineering</h3>
+</div>
+<span class="font-label-mono text-[10px] text-outline uppercase tracking-widest flex-shrink-0">01 / Frontend</span>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">React</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">Next.js</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">TypeScript</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">Tailwind CSS</span>
+</div></div>
+<!-- Card 2: Backend -->
+<div class="glass-card glow-hover p-8 rounded-xl transition-all duration-300 group"><div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-surface-container-highest border border-outline-variant rounded-lg text-primary-fixed-dim group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined">database</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Scalable Architecture</h3>
+</div>
+<span class="font-label-mono text-[10px] text-outline uppercase tracking-widest flex-shrink-0">02 / Backend</span>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">Node.js</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">Express</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">PostgreSQL</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">MongoDB</span>
+</div></div>
+<!-- Card 3: AI & Automation -->
+<div class="glass-card glow-hover p-8 rounded-xl transition-all duration-300 group"><div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-surface-container-highest border border-outline-variant rounded-lg text-primary-fixed-dim group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined">smart_toy</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Intelligent Systems</h3>
+</div>
+<span class="font-label-mono text-[10px] text-outline uppercase tracking-widest flex-shrink-0">03 / AI &amp; Automation</span>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">n8n</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">RAG</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">LLM APIs</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">AI Agents</span>
+</div></div>
+<!-- Card 4: DevOps -->
+<div class="glass-card glow-hover p-8 rounded-xl transition-all duration-300 group"><div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-surface-container-highest border border-outline-variant rounded-lg text-primary-fixed-dim group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined">terminal</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Cloud Infrastructure</h3>
+</div>
+<span class="font-label-mono text-[10px] text-outline uppercase tracking-widest flex-shrink-0">04 / DevOps</span>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">Docker</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">Git</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">Linux</span>
+<span class="px-3 py-1 bg-surface-container-lowest border border-primary-fixed-dim/40 text-primary-fixed-dim font-label-mono text-[11px] rounded uppercase">Shell Scripting</span>
+</div></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#0D1117] w-full py-12 border-t border-[#30363D]">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="text-sm font-bold text-white font-mono">RONY.DEV</div>
+<div class="flex gap-8">
+<a class="text-slate-500 font-mono text-xs uppercase tracking-widest hover:text-white transition-colors" href="#">Github</a>
+<a class="text-slate-500 font-mono text-xs uppercase tracking-widest hover:text-white transition-colors" href="#">LinkedIn</a>
+<a class="text-slate-500 font-mono text-xs uppercase tracking-widest hover:text-white transition-colors" href="#">Twitter</a>
+<a class="text-slate-500 font-mono text-xs uppercase tracking-widest hover:text-white transition-colors" href="#">Email</a>
+</div>
+<p class="text-slate-500 font-mono text-xs uppercase tracking-widest">© 2024 Rony. Built with precision.</p>
+</div>
+</footer>
+</body></html>

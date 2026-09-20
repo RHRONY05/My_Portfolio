@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RONY.DEV | Portfolio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ffb4ab",
+                      "on-error-container": "#ffdad6",
+                      "primary": "#f2fff1",
+                      "tertiary": "#fdffcb",
+                      "primary-container": "#00ff94",
+                      "surface-dim": "#10141a",
+                      "secondary-container": "#274b6e",
+                      "inverse-primary": "#006d3c",
+                      "error-container": "#93000a",
+                      "on-primary-fixed-variant": "#00522c",
+                      "secondary-fixed": "#d0e4ff",
+                      "on-primary-fixed": "#00210e",
+                      "surface-container-low": "#181c22",
+                      "primary-fixed-dim": "#00e383",
+                      "on-error": "#690005",
+                      "on-tertiary-fixed-variant": "#454a00",
+                      "on-tertiary-fixed": "#1b1d00",
+                      "on-surface": "#dfe2eb",
+                      "surface-tint": "#00e383",
+                      "outline": "#849586",
+                      "outline-variant": "#3b4b3e",
+                      "on-tertiary": "#2f3300",
+                      "surface": "#10141a",
+                      "on-secondary": "#063254",
+                      "on-surface-variant": "#b9cbbb",
+                      "surface-container-high": "#262a31",
+                      "inverse-surface": "#dfe2eb",
+                      "on-secondary-container": "#99bbe4",
+                      "tertiary-container": "#dbe912",
+                      "surface-bright": "#353940",
+                      "tertiary-fixed-dim": "#c3d000",
+                      "on-secondary-fixed-variant": "#25496c",
+                      "tertiary-fixed": "#dfed1a",
+                      "on-background": "#dfe2eb",
+                      "secondary": "#a7caf3",
+                      "surface-container": "#1c2026",
+                      "on-tertiary-container": "#606700",
+                      "on-secondary-fixed": "#001d35",
+                      "primary-fixed": "#5bffa1",
+                      "background": "#10141a",
+                      "on-primary": "#00391d",
+                      "surface-container-highest": "#31353c",
+                      "secondary-fixed-dim": "#a7caf3",
+                      "on-primary-container": "#00713f",
+                      "inverse-on-surface": "#2d3137",
+                      "surface-variant": "#31353c",
+                      "surface-container-lowest": "#0a0e14"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "8px",
+                      "gutter": "24px",
+                      "container-max": "1200px",
+                      "stack-md": "12px",
+                      "stack-lg": "24px",
+                      "margin-page": "48px",
+                      "section-gap": "96px",
+                      "stack-sm": "4px"
+              },
+              "fontFamily": {
+                      "label-mono": ["Inter", "monospace"],
+                      "headline-md": ["Inter", "sans-serif"],
+                      "body-lg": ["Inter", "sans-serif"],
+                      "caption": ["Inter", "sans-serif"],
+                      "headline-lg": ["Inter", "sans-serif"],
+                      "hero-display": ["Inter", "sans-serif"],
+                      "body-md": ["Inter", "sans-serif"],
+                      "mono": ["JetBrains Mono", "monospace"]
+              },
+              "fontSize": {
+                      "label-mono": ["13px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "caption": ["12px", {"lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "hero-display": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .dot-grid {
+            background-image: radial-gradient(circle, #00FF94 1px, transparent 1px);
+            background-size: 32px 32px;
+            opacity: 0.05;
+        }
+        .hero-glow {
+            filter: blur(100px);
+            background: radial-gradient(circle, rgba(0, 255, 148, 0.15) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#0D1117]/80 backdrop-blur-md border-b border-[#30363D]">
+<div class="flex justify-between items-center w-full px-6 md:px-12 py-4 max-w-[1440px] mx-auto font-sans antialiased text-sm tracking-tight">
+<!-- Brand Logo -->
+<div class="text-xl font-black tracking-tighter text-[#00FF94] font-mono">
+                RONY.DEV
+            </div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-400 font-medium hover:text-[#00FF94] hover:bg-[#30363D]/30 transition-all duration-200 px-3 py-1 rounded" href="#about">About</a>
+<a class="text-slate-400 font-medium hover:text-[#00FF94] hover:bg-[#30363D]/30 transition-all duration-200 px-3 py-1 rounded" href="#skills">Skills</a>
+<a class="text-slate-400 font-medium hover:text-[#00FF94] hover:bg-[#30363D]/30 transition-all duration-200 px-3 py-1 rounded" href="#projects">Projects</a>
+<a class="text-slate-400 font-medium hover:text-[#00FF94] hover:bg-[#30363D]/30 transition-all duration-200 px-3 py-1 rounded" href="#contact">Contact</a>
+</nav>
+<!-- Action -->
+<div>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-lg font-semibold text-sm hover:opacity-90 active:scale-95 transition-all duration-100">
+                    Hire Me
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="relative min-h-screen flex flex-col items-center justify-center pt-20 px-6 overflow-hidden">
+<!-- Background Decorations -->
+<div class="absolute inset-0 dot-grid -z-10"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] hero-glow -z-10"></div>
+<!-- Hero Section Canvas -->
+<section class="max-w-[1200px] w-full flex flex-col items-center text-center">
+<!-- Availability Badge -->
+<div class="flex items-center gap-2 bg-[#1C2026] border border-[#30363D] px-4 py-1.5 rounded-full mb-8">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00FF94] opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-[#00FF94]"></span>
+</span>
+<span class="font-label-mono text-label-mono uppercase tracking-widest text-[#00FF94]">Available for freelance work</span>
+</div>
+<!-- Headline -->
+<h1 class="font-hero-display text-hero-display text-on-background mb-6 tracking-tight max-w-5xl">
+                I Build Web Apps &amp; <span class="text-primary-container drop-shadow-[0_0_15px_rgba(0,255,148,0.3)]">AI Automations</span>
+</h1>
+<!-- Subheadline -->
+<p class="font-body-lg text-body-lg text-[#8B949E] max-w-2xl mb-12 leading-relaxed">
+                Full Stack Developer specializing in <span class="text-on-surface">Next.js</span>, <span class="text-on-surface">Node.js</span>, and <span class="text-on-surface">n8n</span> workflow automation for high-growth technical teams.
+            </p>
+<!-- CTA Buttons -->
+<div class="flex flex-col sm:flex-row items-center gap-4 mb-16">
+<button class="w-full sm:w-auto bg-primary-container text-on-primary-container px-8 py-4 rounded-lg font-bold text-lg hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2">
+                    View My Work
+                    <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<button class="w-full sm:w-auto bg-transparent text-on-surface border border-[#30363D] px-8 py-4 rounded-lg font-bold text-lg hover:bg-[#30363D]/30 active:scale-95 transition-all">
+                    Contact Me
+                </button>
+</div>
+<!-- Stats Bar -->
+<div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 pt-12 border-t border-[#30363D]/50 w-full max-w-4xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#8B949E] text-[18px]">verified</span>
+<span class="font-label-mono text-label-mono text-slate-500">6+ Projects Delivered</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#8B949E] text-[18px]">stack</span>
+<span class="font-label-mono text-label-mono text-slate-500">MERN Stack</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#8B949E] text-[18px]">psychology</span>
+<span class="font-label-mono text-label-mono text-slate-500">AI Automation</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#8B949E] text-[18px]">account_tree</span>
+<span class="font-label-mono text-label-mono text-slate-500">n8n Expert</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 border-t border-[#30363D] bg-[#0D1117]">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="text-sm font-bold text-white uppercase font-mono">
+                RONY.DEV
+            </div>
+<div class="flex gap-8">
+<a class="font-mono text-xs uppercase tracking-widest text-slate-500 hover:text-white transition-colors" href="#">Github</a>
+<a class="font-mono text-xs uppercase tracking-widest text-slate-500 hover:text-white transition-colors" href="#">LinkedIn</a>
+<a class="font-mono text-xs uppercase tracking-widest text-slate-500 hover:text-white transition-colors" href="#">Twitter</a>
+<a class="font-mono text-xs uppercase tracking-widest text-slate-500 hover:text-white transition-colors" href="#">Email</a>
+</div>
+<div class="font-mono text-xs uppercase tracking-widest text-slate-500">
+                © 2024 Rony. Built with precision.
+            </div>
+</div>
+</footer>
+</body></html>
