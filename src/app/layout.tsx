@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,17 +7,25 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Rony — Full-Stack Developer",
+  title: "Rony — Full-Stack Developer & AI Automation Specialist",
   description:
-    "Portfolio of Rony — full-stack developer building precise, performant web products.",
+    "Portfolio of Rony — Full-Stack Developer specializing in Next.js, Node.js, and autonomous AI automations.",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col bg-canvas text-fg">
         {children}
       </body>

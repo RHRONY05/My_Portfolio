@@ -46,32 +46,33 @@ A high-performance, single-page 3D developer portfolio that replaces traditional
 
 ## 2. Section Architecture & Feature Blueprints
 
-### Section 01: Hero — "The Cockpit // Atmospheric Multi-Layer Parallax" [LOCKED]
-Inspired by atmospheric narrative parallax web designs (e.g., Notosan), establishing mood, human identity, and technical authority without 3D fatigue.
+### Section 01: Hero — "The Open-Air Cinema // Starry Night Multi-Plane Parallax" [LOCKED]
+Inspired by atmospheric narrative parallax web designs (e.g., Notosan VISITE), establishing mood, human identity, and cinematic storytelling through a calm outdoor setting under the stars.
 
-#### Visual Architecture & Composition (Hybrid Split View)
-- **Overall Canvas**: Deep dark terminal void (`#0D1117`), fine hairline registration grid (`#30363D`), and electric phosphor green accents (`#00FF94`).
-- **Left Column (High-Readability Value Proposition)**:
-  - Top Dispatch Badge: `● ACTIVE DISPATCH // AVAILABLE FOR SELECT TEAMS`
-  - Headline: **"I Build Web Apps & AI Automations"** (with glowing emerald phosphor aura on *AI Automations*).
-  - Narrative Sub-headline: *"Full Stack Developer specializing in Next.js, Node.js, and autonomous AI workflow pipelines for high-growth technical teams."*
-  - Action Row:
-    - Primary CTA: `VIEW PROJECTS →` (Solid emerald `#00FF94` with black bold typography)
-    - Ghost CTA: `GET IN TOUCH ↗` (Hairline border with subtle hover wash)
-    - Devlog Anchor: `READ DEVLOG (ISSUE NOTES) ↵`
-  - Telemetry Stats Grid:
-    - `99.9% // PROD UPTIME` • `NEXT.JS 16 // ARCHITECTURE` • `AI AGENTS // RUNTIMES` • `CUET // CSE ALUM`
-  - Scroll Cue at Bottom-Left: `SCROLL TO EXPLORE ORIGIN DOSSIER ↓` with coordinate stamp `LAT: 22.4633° N, 91.9712° E`.
-
-- **Right Column & Ambient Background (The Cockpit Parallax Window)**:
-  - **The Scene**: A young software engineer (boy seen from behind wearing a sleek dark tech hoodie), seated at an ergonomic chair typing at an ultrawide triple curved monitor setup at midnight.
-  - **Monitors & Lighting**: Screens illuminate the desk with emerald code syntax, neural network graphs, and live terminal telemetry (`STREAM: nextjs-agent-runtime.ts // 240 req/s`).
-  - **Background Horizon**: A loft window behind the desk revealing a misty midnight metropolis with subtle blueprint grid lines and starfield.
-  - **Interactive Multi-Plane Parallax**:
-    - Layer 1 (Foreground silhouette): Moves subtly with mouse coordinates (`~5px`).
-    - Layer 2 (Midground workstation & monitors): Moves at medium depth (`~15px`).
-    - Layer 3 (Background window & city grid): Moves at deepest depth (`~25px`).
-  - **Transition**: Smooth scroll transition dollies down into `#about` (Section 02: 3D Comic Book Dossier).
+#### Visual Architecture & Composition (Full-Screen Immersive Canvas)
+- **Overall Canvas**: Full-viewport immersive nature setting at night. No boxed cards. The entire screen is the outdoor world.
+- **Background Plane (Layer 0 - Deepest Depth)**:
+  - Deep dark twilight/midnight sky with glowing moon, gentle starfield, and distant silhouetted hills/trees.
+  - Moves subtly with mouse coordinates (~5px) to give the illusion of infinite distance.
+- **Midground Plane (Layer 1 - The Projection Ground)**:
+  - Outdoor clearing with natural ground and foliage framing.
+  - **The Centerpiece — Outdoor Projector Screen**:
+    - A clean, portable outdoor movie projector screen on tripod stands planted on the ground (based on reference specification).
+    - **Live HTML / React Content on the Screen**:
+      - Top Dispatch Badge: `● ACTIVE DISPATCH // AVAILABLE FOR SELECT TEAMS`
+      - Headline: **"I Build Web Apps & AI Automations"** (with glowing emerald phosphor emphasis).
+      - Narrative Sub-headline: *"Full Stack Developer specializing in Next.js, Node.js, and autonomous AI workflow pipelines for high-growth technical teams."*
+      - Action Row:
+        - Primary CTA: `VIEW PROJECTS →` (Solid emerald `#00FF94` with bold typography)
+        - Ghost CTA: `GET IN TOUCH ↗` (Clean bordered button with subtle hover wash)
+        - Devlog Anchor: `READ DEVLOG (ISSUE NOTES) ↵`
+      - Telemetry Stats Grid:
+        - `99.9% // PROD UPTIME` • `NEXT.JS 16 // ARCHITECTURE` • `AI AGENTS // RUNTIMES` • `CUET // CSE ALUM`
+- **Foreground Plane (Layer 2 - The Human Anchor & Living Campfire)**:
+  - **The Subject (Rony)**: Positioned on the right side in graphic novel / comic illustration style, seen from behind/profile, relaxed and watching the projector screen (matching the visual weight of the wanderer in Notosan).
+  - **The Living Campfire**: Beside Rony, a cozy campfire with an animated flickering flame and tiny glowing embers floating up into the night sky (lightweight particle/CSS loop, giving a cinemagraph "living photo" feel).
+  - Shifts with responsive spring-damped parallax (~25px), creating tangible physical depth between the viewer, the character, and the screen.
+- **Transition**: Smooth momentum scroll transition flowing into `#about` (Section 02: 3D Comic Book Dossier).
 
 ---
 

@@ -22,6 +22,7 @@
 
   /* Typography */
   --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
 
   --text-hero: 72px;
   --text-hero--line-height: 1.1;

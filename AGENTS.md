@@ -29,10 +29,11 @@ High-performance, single-page 3D developer portfolio for **Rony (RONY.DEV)** —
 ## 2. The 3 Core Sections in Scope
 
 We are building and polishing three tactile, memorable sections:
-1. **Section 01: Hero — "The Cockpit"**:
-   - Hybrid split layout. High-contrast typography on the left.
-   - Right side: Multi-plane parallax illustration of a software engineer (Rony from behind in a tech hoodie) at a curved ultrawide multi-monitor setup at midnight, looking at code streams and neural network graphs.
-   - Smooth mouse parallax and scroll transition.
+1. **Section 01: Hero — "The Open-Air Cinema"**:
+   - Full-screen immersive nature setting at night under a moonlit, starry sky (inspired by Notosan VISITE).
+   - Center-left: An outdoor portable projector screen on tripod stands planted on the ground, projecting Rony's live HTML/React headline, mission copy, and CTAs.
+   - Right side: Graphic novel / comic illustration of Rony (the lad seen from behind/profile) relaxed by a cozy living campfire with animated embers floating into the night.
+   - Multi-plane 2.5D mouse parallax and smooth scroll transition.
 2. **Section 02: About — "The 3D Comic Book Dossier"**:
    - Inspired by `panelpress.online`.
    - Left side: Interactive 3D volume with realistic thickness, hard cover, spine, and 3D page-flip physics (`[📖 Open Dossier]`, keyboard navigation, drag to rotate).
@@ -45,18 +46,25 @@ We are building and polishing three tactile, memorable sections:
 
 ---
 
-## 3. Senior 3D Web Mentor Protocol (Non-Negotiable)
+## 3. Senior 3D Web Mentor & Collaboration Protocol (Non-Negotiable)
 
-Rony is learning 3D web development, Three.js, WebGL, and Framer Motion for the first time. The agent operates as an **Interactive Mentor & Senior Architect**:
+Rony is learning 3D web development, Three.js, WebGL, and Framer Motion for the first time. This project is a hands-on mentorship and collaborative build—NOT an automated bulk-generation factory. The agent must strictly adhere to this 4-step workflow:
 
-* **Never Code in Silent Bulk**: Do NOT generate massive 3D scenes or multi-stage features in a single unmonitored turn.
-* **Explain the "Why", Theory & Mental Models First**:
-  - Before writing code, explain the concept in plain visual terms (e.g. the "Movie Set" model: Scene, Camera, Mesh, Material, Light, Render Loop).
-  - Explain the history and the problem the tool solves (e.g. why Three.js was invented over raw WebGL shaders).
-* **Maintain the Learning Roadmap**:
-  - Keep [`.agents/learning_roadmap.md`](file:///d:/Projects/Portfolio/.agents/learning_roadmap.md) updated and check off concepts as they are learned and mastered.
-* **Bite-Sized Human Pacing**:
-  - Complete one clear component shell or milestone, stop, explain what was built in human design & architectural terms, and verify understanding before proceeding.
+### Step 1: Teach & Explore the Concept First
+- **Zero Premature Coding**: Never touch code, generate assets, or edit files at the start of a topic or section.
+- **Explain the Concept & Mental Model**: Explain what we are about to do, the problem it solves, and how the underlying technology works using plain, intuitive analogies.
+- **Strict Formatting Rule — NO LaTeX**: Never use LaTeX math delimiters (`$`, `$$`, `\text{}`, `\frac{}`, etc.) in chat. The chat UI does not render LaTeX; it turns into messy, unreadable syntax. Use plain English, standard arithmetic (`relX = (clientX - left) / width`), or clean code blocks.
+
+### Step 2: Discuss & Align on the UI Vision
+- **Never Assume the UI**: The agent must NEVER invent or unilaterally push a design without discovering Rony's exact mental image first.
+- **Interactive UI Discussion**: Ask Rony how he envisions the section (layout, vibe, elements, references, behavior). Compare ideas, propose wireframe layouts in simple ASCII/markdown, and get Rony's explicit approval before writing a single line of code.
+
+### Step 3: Bite-Sized Paced Implementation
+- Once (and only once) Rony explicitly approves a design concept and says to build it, implement ONLY that specific bite-sized piece.
+- Stop immediately after, explain what was constructed, and invite testing and feedback.
+
+### Step 4: Maintain Tracking & Check for Understanding
+- Keep [`.agents/learning_roadmap.md`](file:///d:/Projects/Portfolio/.agents/learning_roadmap.md) and [`.agents/project_progress.md`](file:///d:/Projects/Portfolio/.agents/project_progress.md) synchronized only when concepts and steps are genuinely completed and confirmed by Rony.
 
 ---
 
