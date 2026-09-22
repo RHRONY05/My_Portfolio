@@ -25,11 +25,13 @@ All assets are verified, high-resolution (1080p), and tested. **DO NOT re-genera
 2. **Campfire "Hybrid Core" Technique**: The base wood logs and warm glowing core live in `layer1-campsite.png`. Live code (`CampfireFX.tsx`) will render active dancing upper flame tips, rising spark particles floating into the starry sky, and pulsating radial amber light.
 3. **Character Seating Distance**: Character sits at **Option B (Relaxed Natural Distance)** with open sandy breathing room between the stool and fire pit (`x: 1410, y: 565` in 1080p frame).
 
-### 3. Immediate Next Steps for Next Session (Start Directly with Code):
-- [ ] **Step 1**: Create `src/components/hero/HeroCinemaCanvas.tsx` with Framer Motion spring physics (`useMotionValue`, `useSpring`, `useTransform`) for 2.5D multi-plane mouse parallax.
-- [ ] **Step 2**: Add CSS keyframe wind-sway animation to `layer1-canopy.png`.
-- [ ] **Step 3**: Build `src/components/hero/CampfireFX.tsx` (HTML5 Canvas particle emitter for rising glowing embers + radial amber light flicker).
-- [ ] **Step 4**: Mount `src/components/hero/ProjectorScreenHUD.tsx` onto the projector screen frame with live React HTML/typography, status badge, and CTA buttons (`VIEW PROJECTS →`, `GET IN TOUCH ↗`).
+### 3. Hero Implementation Milestones:
+- [x] **Living Video Hero**: Activated full-bleed 1080p animated video (`Flames_ignite_and_flicker_1080p_20260921024320.mp4`) with dancing campfire flames, glowing porch lantern, and animated night atmosphere.
+- [x] **Transparent Navbar**: Updated `Navbar.tsx` to be 100% transparent over the hero, automatically transitioning to `bg-canvas/80 backdrop-blur-md border-b border-line` when scrolling down past 40px.
+- [ ] **Projector Screen Live HUD**: Mount `ProjectorScreenHUD.tsx` positioned precisely over the outdoor movie screen (live dispatch badge, "I Build Web Apps & AI Automations" headline, CTA buttons, and telemetry stats).
+- [ ] **Production Polish**: Video pre-load state with smooth loading spinner / reveal transition once video is buffered and ready.
+
+
 
 ---
 
@@ -50,8 +52,27 @@ All assets are verified, high-resolution (1080p), and tested. **DO NOT re-genera
 - [ ] Set up blueprint grid utilities and editorial typography scale (`Inter` + `JetBrains Mono`).
 
 ### Phase 2: 3D Comic Book Dossier (About Section)
-- [ ] Prototype 3D Book rigging and page-flip physics with React Three Fiber / Drei.
-- [ ] Connect synced editorial narrative drawer on right.
+- [x] Front cover (`book_cover.png`) and Back cover (`back_cover.png`) finalized at 1:1 scale (1024x1536) in Obsidian & Champagne Ivory.
+- [x] 3D Book rigging with `@react-three/fiber` and `@react-three/drei`: 20% enlarged scale (`2.35` x `3.53`), anti-clipping open centering (`+0.92`), viewport framing (`z: 5.85`).
+- [x] **Chapter 01 Spread Integrated**:
+  - Left page: Quote & Epigraph (`page_01_left.png`, color-matched `#08090B` solid background, Cormorant Garamond serif).
+  - Right page: Workstation cloud architecting illustration + authentic student story (`page_01_right.png`).
+- [x] **Chapter 02 Spread Integrated**:
+  - Left page: The CUET Paradox quote (`page_02_left.png`, color-matched `#08080A` solid background).
+  - Right page: CUET Main Gate illustration + hall life story (`page_02_right.png`).
+- [x] **Chapter 03 Spread Integrated**:
+  - Left page: SCPSC Days quote (`page_03_left.png`, color-matched `#08090D` solid background).
+  - Right page: Savar Cantonment Public School & College illustration + story (`page_03_right.png`).
+- [x] **Chapter 04 Spread Integrated**:
+  - Left page: The First Spark quote (`page_04_left.png`, color-matched `#08090D` solid background).
+  - Right page: School & Voyager artwork + story (`page_04_right.png`).
+- [x] **Direct-Click 3D Multi-Leaf Page-Turning System**:
+  - Concentric spine hinge system with 3 turning leaves (`leaf1Ref`, `leaf2Ref`, `leaf3Ref`) sharing pivot `[-width/2, 0, pagesBlockThickness/2]`.
+  - Realistic fanned page stacking angles (-142.2°, -136.8°, -131.4°, -126.0°) with zero clipping and zero Z-fighting.
+  - Clicking right page turns forward (Chapter 1 → 2 → 3 → 4); clicking left page turns backward (Chapter 4 → 3 → 2 → 1).
+  - Keyboard ArrowLeft / ArrowRight support and bottom chapter controls fully synchronized across all 4 chapters.
+  - Hover pointer feedback (`cursor: pointer`) on active clickable pages.
+  - Right-hand editorial narrative panel in `About.tsx` dynamically synchronized in real-time with chapter state.
 
 ### Phase 3: Mahoraga Adaptation Wheel & Tech Stack
 - [ ] 3D Mahoraga wheel with ratchet sound effect and rotating AI icons.
