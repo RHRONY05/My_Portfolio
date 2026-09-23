@@ -294,11 +294,123 @@ export function SkillsLoadBalancer() {
           </div>
         </div>
 
-        {/* 6 Compact Cards Reflowed into Clean 2-Column Grid (1-Col on tiny phones) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-xl mx-auto w-full">
-          {SKILL_REALMS.map((realm) => (
-            <SkillRealmCard key={realm.id} realm={realm} />
-          ))}
+        {/* Vertical circuit feeder connecting CTA down into load balancer hub */}
+        <div className="flex flex-col items-center -my-3 z-10 pointer-events-none">
+          <div className="w-[2px] h-6 bg-gradient-to-b from-accent/80 via-accent to-line shadow-[0_0_8px_rgba(229,184,105,0.5)]" />
+        </div>
+
+        {/* MOBILE 1:1 LOAD BALANCER STAGE (Single Horizontal Bus Architecture) */}
+        <div className="relative w-full max-w-[430px] mx-auto flex items-center justify-between h-[235px] sm:h-[250px] px-1 select-none">
+          {/* Left Cluster: 3 Compact Cards */}
+          <div className="w-[135px] sm:w-[155px] h-full flex flex-col justify-between py-1 z-20">
+            {leftRealms.map((realm) => (
+              <SkillRealmCard key={realm.id} realm={realm} variant="compact" />
+            ))}
+          </div>
+
+          {/* Central Circuit: Symmetrical 3-Way Forks + Single Horizontal Bus Line */}
+          <div className="flex-1 h-full relative z-10 mx-1">
+            <svg
+              className="w-full h-full overflow-visible"
+              viewBox="0 0 100 235"
+              preserveAspectRatio="none"
+            >
+              {/* Single Continuous Horizontal Line at 50% (Y = 117.5) */}
+              <line
+                x1="0"
+                y1="117.5"
+                x2="100"
+                y2="117.5"
+                stroke="#30363D"
+                strokeWidth="2"
+              />
+
+              {/* Glowing Amber Pulse along the central horizontal line */}
+              <line
+                x1="0"
+                y1="117.5"
+                x2="100"
+                y2="117.5"
+                stroke="#E5B869"
+                strokeWidth="2"
+                strokeOpacity="0.75"
+                strokeDasharray="6 8"
+                className="animate-pulse"
+              />
+
+              {/* LEFT 3-WAY FORK CONVERGENCE (Meeting at (35, 117.5)) */}
+              {/* Top Branch (Card 1: Frontend) */}
+              <line
+                x1="0"
+                y1="28"
+                x2="35"
+                y2="117.5"
+                stroke="#30363D"
+                strokeWidth="1.5"
+              />
+              {/* Bottom Branch (Card 3: Database) */}
+              <line
+                x1="0"
+                y1="207"
+                x2="35"
+                y2="117.5"
+                stroke="#30363D"
+                strokeWidth="1.5"
+              />
+
+              {/* RIGHT 3-WAY FORK DIVERGENCE (Starting from (65, 117.5)) */}
+              {/* Top Branch (Card 4: AI Agents) */}
+              <line
+                x1="65"
+                y1="117.5"
+                x2="100"
+                y2="28"
+                stroke="#30363D"
+                strokeWidth="1.5"
+              />
+              {/* Bottom Branch (Card 6: Tooling) */}
+              <line
+                x1="65"
+                y1="117.5"
+                x2="100"
+                y2="207"
+                stroke="#30363D"
+                strokeWidth="1.5"
+              />
+
+              {/* Left & Right Convergence Nodes */}
+              <circle
+                cx="35"
+                cy="117.5"
+                r="3.5"
+                fill="#E5B869"
+                className="drop-shadow-[0_0_6px_rgba(229,184,105,0.8)]"
+              />
+              <circle
+                cx="65"
+                cy="117.5"
+                r="3.5"
+                fill="#E5B869"
+                className="drop-shadow-[0_0_6px_rgba(229,184,105,0.8)]"
+              />
+
+              {/* Center Main Power Hub Node */}
+              <circle
+                cx="50"
+                cy="117.5"
+                r="4.5"
+                fill="#E5B869"
+                className="drop-shadow-[0_0_8px_rgba(229,184,105,0.9)] animate-pulse"
+              />
+            </svg>
+          </div>
+
+          {/* Right Cluster: 3 Compact Cards */}
+          <div className="w-[135px] sm:w-[155px] h-full flex flex-col justify-between py-1 z-20">
+            {rightRealms.map((realm) => (
+              <SkillRealmCard key={realm.id} realm={realm} variant="compact" />
+            ))}
+          </div>
         </div>
       </div>
     </section>

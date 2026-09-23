@@ -1,3 +1,8 @@
+export interface SkillTool {
+  name: string;
+  icon?: string;
+}
+
 export interface SkillRealm {
   id: string;
   side: "left" | "right";
@@ -7,7 +12,7 @@ export interface SkillRealm {
   previewTech: string;
   tagline: string;
   summary: string;
-  tools: string[];
+  tools: SkillTool[];
   patterns: string[];
 }
 
@@ -18,21 +23,28 @@ export const SKILL_REALMS: SkillRealm[] = [
     number: "01",
     title: "Frontend Architecture",
     shortName: "Frontend",
-    previewTech: "Next.js • React • TS",
+    previewTech: "Next.js • React • Redux",
     tagline: "UI & INTERACTION",
     summary:
-      "High-performance interfaces, 60-FPS animation physics, and tactile 3D experiences with clean component architecture.",
+      "Building clean, responsive websites and web applications with React and Next.js, with smooth animations and interactive 3D elements.",
     tools: [
-      "Next.js 16 (App Router)",
-      "React 19",
-      "TypeScript",
-      "Tailwind CSS v4",
-      "Framer Motion",
-      "Three.js / React Three Fiber",
-      "Drei",
-      "HTML5 / Modern CSS",
+      { name: "Next.js 16 (App Router)", icon: "/images/skills/icons/nextdotjs.svg" },
+      { name: "React 19", icon: "/images/skills/icons/react.svg" },
+      { name: "TypeScript", icon: "/images/skills/icons/typescript.svg" },
+      { name: "Redux Toolkit", icon: "/images/skills/icons/redux.svg" },
+      { name: "Tailwind CSS v4", icon: "/images/skills/icons/tailwindcss.svg" },
+      { name: "Framer Motion", icon: "/images/skills/icons/framer.svg" },
+      { name: "Three.js / React Three Fiber", icon: "/images/skills/icons/threedotjs.svg" },
+      { name: "Stitch (UI Design)", icon: "/images/skills/icons/stitch.svg" },
+      { name: "Canva (Visuals)", icon: "/images/skills/icons/canva.svg" },
+      { name: "Modern CSS / Responsive", icon: "/images/skills/icons/tailwindcss.svg" },
     ],
-    patterns: ["Server Actions", "Turbopack Bundling", "Mobile Safe Viewports", "GPU translate3d"],
+    patterns: [
+      "Component-Based Architecture",
+      "State Management with Redux",
+      "Smooth Animations & Transitions",
+      "Mobile-First Responsive Design",
+    ],
   },
   {
     id: "backend",
@@ -41,20 +53,23 @@ export const SKILL_REALMS: SkillRealm[] = [
     title: "Backend & Systems",
     shortName: "Backend",
     previewTech: "Node.js • Express • APIs",
-    tagline: "APIS & RUNTIMES",
+    tagline: "APIS & SERVERS",
     summary:
-      "Scalable server architectures, resilient API routing, asynchronous event loops, and robust microservices.",
+      "Creating fast and secure backend servers and APIs using Node.js and Express, with real-time communication using WebSockets.",
     tools: [
-      "Node.js",
-      "Express",
-      "Fastify",
-      "Python",
-      "REST APIs",
-      "GraphQL",
-      "WebSockets",
-      "Server-Sent Events",
+      { name: "Node.js", icon: "/images/skills/icons/nodedotjs.svg" },
+      { name: "Express", icon: "/images/skills/icons/express.svg" },
+      { name: "REST APIs", icon: "/images/skills/icons/postman.svg" },
+      { name: "GraphQL", icon: "/images/skills/icons/graphql.svg" },
+      { name: "WebSockets", icon: "/images/skills/icons/nodedotjs.svg" },
+      { name: "Server-Sent Events (SSE)", icon: "/images/skills/icons/express.svg" },
     ],
-    patterns: ["Event-Driven Architecture", "JWT / OAuth Auth", "Rate Limiting", "Structured Logging"],
+    patterns: [
+      "RESTful API Development",
+      "User Authentication & Authorization",
+      "Real-Time Data Streaming",
+      "Clean Error Handling",
+    ],
   },
   {
     id: "database",
@@ -63,19 +78,24 @@ export const SKILL_REALMS: SkillRealm[] = [
     title: "Database & Storage",
     shortName: "Database",
     previewTech: "PostgreSQL • Redis • Supabase",
-    tagline: "PERSISTENCE & CACHE",
+    tagline: "DATABASES & CACHING",
     summary:
-      "Relational data modeling, distributed caching, real-time sync, and optimized query execution.",
+      "Structuring and managing data in relational databases like PostgreSQL and NoSQL like MongoDB, with Redis for fast caching.",
     tools: [
-      "PostgreSQL",
-      "Redis",
-      "Supabase",
-      "Prisma ORM",
-      "MongoDB",
-      "Database Indexing",
-      "Connection Pooling",
+      { name: "PostgreSQL", icon: "/images/skills/icons/postgresql.svg" },
+      { name: "Redis", icon: "/images/skills/icons/redis.svg" },
+      { name: "Supabase", icon: "/images/skills/icons/supabase.svg" },
+      { name: "Prisma ORM", icon: "/images/skills/icons/prisma.svg" },
+      { name: "MongoDB", icon: "/images/skills/icons/mongodb.svg" },
+      { name: "Database Indexing", icon: "/images/skills/icons/postgresql.svg" },
+      { name: "Connection Pooling", icon: "/images/skills/icons/redis.svg" },
     ],
-    patterns: ["ACID Transactions", "Redis Pub/Sub & Caching", "Schema Migrations", "Row-Level Security"],
+    patterns: [
+      "Relational & NoSQL Data Modeling",
+      "Database Caching with Redis",
+      "Database Migrations & Prisma ORM",
+      "Fast Query Optimization",
+    ],
   },
   {
     id: "ai-agents",
@@ -84,19 +104,25 @@ export const SKILL_REALMS: SkillRealm[] = [
     title: "Autonomous AI Agents",
     shortName: "AI Automations",
     previewTech: "n8n • Claude • Workflows",
-    tagline: "AI & ORCHESTRATION",
+    tagline: "AI & AUTOMATION",
     summary:
-      "Self-orchestrating multi-agent systems, deterministic workflow automation, and custom LLM tool-calling pipelines.",
+      "Automating tasks and connecting AI models like Claude and ChatGPT into real-world business workflows using n8n and LangChain.",
     tools: [
-      "n8n Automation",
-      "Zapier",
-      "Claude API (Anthropic)",
-      "OpenAI API",
-      "LangChain",
-      "Agent Tool Calling",
-      "Webhook Triaging",
+      { name: "n8n Automation", icon: "/images/skills/icons/n8n.svg" },
+      { name: "Zapier", icon: "/images/skills/icons/zapier.svg" },
+      { name: "Claude API (Anthropic)", icon: "/images/skills/tools/claude.svg" },
+      { name: "OpenAI API", icon: "/images/skills/tools/chatgpt.svg" },
+      { name: "LangChain", icon: "/images/skills/icons/langchain.svg" },
+      { name: "Agent Tool Calling", icon: "/images/skills/tools/antigravity.svg" },
+      { name: "Webhook Triaging", icon: "/images/skills/icons/n8n.svg" },
+      { name: "Ollama (Local Models)", icon: "/images/skills/tools/ollama.svg" },
     ],
-    patterns: ["Autonomous Error Self-Healing", "Prompt Engineering", "Stateful Multi-Agent Loops", "RAG"],
+    patterns: [
+      "Workflow Automation with n8n",
+      "LLM API Integration",
+      "AI Function & Tool Calling",
+      "Connecting Webhooks & APIs",
+    ],
   },
   {
     id: "devops",
@@ -105,19 +131,24 @@ export const SKILL_REALMS: SkillRealm[] = [
     title: "DevOps & Cloud Ops",
     shortName: "DevOps & Cloud",
     previewTech: "Docker • Linux • CI/CD",
-    tagline: "INFRASTRUCTURE & CI/CD",
+    tagline: "CLOUD & CI/CD",
     summary:
-      "Containerized production runtimes, automated continuous deployment, and resilient zero-downtime shipping.",
+      "Packaging applications into Docker containers, automating deployment with GitHub Actions, and hosting on cloud platforms like Vercel and AWS.",
     tools: [
-      "Docker",
-      "Linux / Bash",
-      "GitHub Actions (CI/CD)",
-      "Vercel",
-      "AWS (EC2 / S3)",
-      "Nginx",
-      "SSL / DNS",
+      { name: "Docker", icon: "/images/skills/icons/docker.svg" },
+      { name: "Linux (WSL) / Bash", icon: "/images/skills/icons/linux.svg" },
+      { name: "GitHub Actions (CI/CD)", icon: "/images/skills/icons/githubactions.svg" },
+      { name: "Vercel", icon: "/images/skills/icons/vercel.svg" },
+      { name: "AWS (EC2 / S3)", icon: "/images/skills/icons/aws.svg" },
+      { name: "Nginx", icon: "/images/skills/icons/nginx.svg" },
+      { name: "Shell Scripting", icon: "/images/skills/icons/gnubash.svg" },
     ],
-    patterns: ["Multi-Stage Docker Builds", "Automated Lint & Test Gates", "Edge Caching", "Zero-Downtime Rollouts"],
+    patterns: [
+      "Docker Containerization",
+      "Automated CI/CD with GitHub Actions",
+      "Cloud Hosting & Deployment",
+      "Linux Server Management",
+    ],
   },
   {
     id: "tooling",
@@ -125,19 +156,27 @@ export const SKILL_REALMS: SkillRealm[] = [
     number: "06",
     title: "Engineering Tooling",
     shortName: "Tooling & DX",
-    previewTech: "Git • Cursor • Turbopack",
-    tagline: "WORKFLOW & RELIABILITY",
+    previewTech: "Antigravity • Cursor • Git",
+    tagline: "DEVELOPER TOOLS & GIT",
     summary:
-      "Modern developer ergonomics, rigorous automated testing, git workflows, and high-velocity coding environments.",
+      "Using modern code editors, Git version control, and AI coding assistants like Cursor and Antigravity to write clean, well-tested code.",
     tools: [
-      "Git & GitHub",
-      "Cursor AI",
-      "Postman",
-      "Vitest / Jest",
-      "Turbopack",
-      "ESLint / Prettier",
-      "npm / pnpm",
+      { name: "Google Antigravity", icon: "/images/skills/tools/antigravity.svg" },
+      { name: "Cursor AI", icon: "/images/skills/tools/cursor.svg" },
+      { name: "VS Code", icon: "/images/skills/icons/vscode.svg" },
+      { name: "Git & GitHub", icon: "/images/skills/icons/git.svg" },
+      { name: "Postman", icon: "/images/skills/icons/postman.svg" },
+      { name: "Vitest / Jest", icon: "/images/skills/icons/vitest.svg" },
+      { name: "Turbopack", icon: "/images/skills/icons/nextdotjs.svg" },
+      { name: "C++ (Algorithms & CP)", icon: "/images/skills/icons/cplusplus.svg" },
+      { name: "ESLint / Prettier", icon: "/images/skills/icons/eslint.svg" },
+      { name: "npm / pnpm", icon: "/images/skills/icons/pnpm.svg" },
     ],
-    patterns: ["Git Feature Branching", "Test-Driven Reliability", "Semantic Versioning", "Static Analysis"],
+    patterns: [
+      "Git Version Control & GitHub",
+      "AI-Assisted Development",
+      "Unit & Integration Testing",
+      "Competitive Programming & Problem Solving",
+    ],
   },
 ];
