@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
+import Image from "next/image";
 
 interface HeroCinemaCanvasProps {
   children?: React.ReactNode;
 }
 
 export function HeroCinemaCanvas({ children }: HeroCinemaCanvasProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   return (
     <section
@@ -15,22 +15,16 @@ export function HeroCinemaCanvas({ children }: HeroCinemaCanvasProps) {
       className="relative w-full h-screen overflow-hidden bg-canvas select-none"
       aria-label="Hero Section: The Open-Air Cinema"
     >
-      {/* Full-Bleed 1080p Living Video Background */}
-      <div className="absolute inset-0 w-full h-full">
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="w-full h-full object-cover object-center"
-        >
-          <source
-            src="/Flames_ignite_and_flicker_1080p_20260921024320.mp4"
-            type="video/mp4"
-          />
-        </video>
+      {/* Hero Image - Fitted to Viewport */}
+      <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+        <Image
+          src="/images/Hero/billboard&me.jpeg"
+          alt="Open-Air Cinema Sky"
+          fill
+          priority
+          sizes="100vw"
+          className="object-contain object-center"
+        />
       </div>
 
       {/* Subtle Atmospheric Vignette */}

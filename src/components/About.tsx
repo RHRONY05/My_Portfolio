@@ -28,16 +28,16 @@ export function About() {
   return (
     <section
       id="about"
-      className="relative mx-auto max-w-[1400px] min-h-screen flex flex-col justify-center px-4 pt-20 pb-10 sm:pt-22 sm:pb-12 lg:pt-20 lg:pb-10 scroll-mt-0"
+      className="relative mx-auto max-w-[1400px] min-h-screen flex flex-col justify-center px-4 sm:px-6 md:px-8 lg:px-8 pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-20 lg:pb-10 scroll-mt-0"
     >
-      <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
+      <div className="grid grid-cols-1 items-center gap-10 sm:gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
         {/* LEFT COLUMN: The Interactive 3D Book Dossier */}
         <div className="flex w-full justify-center">
           <Book3DCanvas chapter={chapter} onChapterChange={setChapter} />
         </div>
 
-        {/* RIGHT COLUMN: Executive Summary & Clean Spec Sheet */}
-        <div className="flex flex-col justify-center space-y-5 lg:space-y-5.5 lg:pr-4">
+        {/* RIGHT COLUMN: Executive Summary & Clean Spec Sheet (Responsive across mobile, tablet & desktop) */}
+        <div className="flex flex-col justify-center space-y-5 lg:space-y-5.5 w-full max-w-2xl mx-auto lg:max-w-none px-2 sm:px-6 lg:px-0 lg:pr-4 mt-2 sm:mt-4 lg:mt-0">
           {/* Eyebrow */}
           <div className="font-mono text-xs font-semibold tracking-widest text-muted uppercase">
             ABOUT ME // QUICK SUMMARY
@@ -60,7 +60,7 @@ export function About() {
           </p>
 
           {/* Clean Telemetry Bullet Points */}
-          <div className="border-y border-line/60 py-4 space-y-3">
+          <div className="border-y border-line/60 py-4 sm:py-5 space-y-3 sm:space-y-3.5">
             <div className="flex items-start gap-3">
               <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
               <div className="text-sm leading-relaxed">
@@ -111,13 +111,13 @@ export function About() {
             </div>
           </div>
 
-          {/* Dual Action CTAs */}
-          <div className="flex flex-wrap items-center gap-4 pt-1">
+          {/* Dual Action CTAs (Stacked on small phones, inline on tablets and desktop) */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
             <a
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-mono text-xs font-bold text-on-accent transition-all duration-150 hover:opacity-90 active:scale-95"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 font-mono text-xs font-bold text-on-accent transition-all duration-150 hover:opacity-90 active:scale-95"
             >
               <span>VIEW RESUME / CV</span>
               <ExternalLink className="size-3.5" />
@@ -125,7 +125,7 @@ export function About() {
 
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 rounded-lg border border-line bg-card/60 px-6 py-3 font-mono text-xs font-semibold text-fg transition-all duration-150 hover:border-accent hover:text-accent hover:bg-card active:scale-95"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg border border-line bg-card/60 px-6 py-3 font-mono text-xs font-semibold text-fg transition-all duration-150 hover:border-accent hover:text-accent hover:bg-card active:scale-95"
             >
               <span>LET&apos;S TALK</span>
               <span className="text-accent font-bold">↵</span>

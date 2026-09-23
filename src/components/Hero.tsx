@@ -28,7 +28,7 @@ export function Hero() {
 
         <h1 className="mb-6 max-w-5xl text-hero text-fg">
           I Build Web Apps &{" "}
-          <span className="text-accent drop-shadow-[0_0_15px_rgba(0,255,148,0.3)]">
+          <span className="text-accent drop-shadow-[0_0_15px_rgba(229,184,105,0.35)]">
             AI Automations
           </span>
         </h1>

@@ -114,7 +114,7 @@ export function Projects() {
             aria-current={i === index}
             className={
               i === index
-                ? "size-2 rounded-full bg-accent shadow-[0_0_8px_rgba(0,255,148,0.6)] transition-all"
+                ? "size-2 rounded-full bg-accent shadow-[0_0_8px_rgba(229,184,105,0.6)] transition-all"
                 : "size-2 rounded-full bg-line transition-all hover:bg-muted"
             }
           />
@@ -188,7 +188,7 @@ function BrowserMockup({ project }: { project: Project }) {
 function cssVarFromCategory(category: ProjectCategory) {
   switch (category) {
     case "Full Stack":
-      return "rgba(0, 255, 148, 0.25)";
+      return "rgba(229, 184, 105, 0.25)";
     case "Automation":
       return "rgba(108, 99, 255, 0.25)";
     case "AI/RAG":

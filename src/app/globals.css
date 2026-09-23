@@ -11,12 +11,13 @@
   --color-fg: #ffffff;
   --color-muted: #8b949e;
 
-  /* Brand accent */
-  --color-accent: #00ff94;
-  --color-on-accent: #00391d;
+  /* Brand accent (Theme 03: Obsidian & Royal Sunburst Amber) */
+  --color-accent: #e5b869;
+  --color-on-accent: #241800;
+  --color-secondary: #f3c77c;
 
   /* Project category accents */
-  --color-cat-fullstack: #00ff94;
+  --color-cat-fullstack: #e5b869;
   --color-cat-automation: #6c63ff;
   --color-cat-ai: #00d9ff;
 
@@ -79,7 +80,7 @@ html {
   filter: blur(100px);
   background: radial-gradient(
     circle,
-    rgba(0, 255, 148, 0.15) 0%,
+    rgba(229, 184, 105, 0.15) 0%,
     transparent 70%
   );
 }
@@ -93,7 +94,7 @@ html {
 
 .glass-card:hover {
   border-color: var(--color-accent);
-  box-shadow: 0 0 20px rgba(0, 255, 148, 0.1);
+  box-shadow: 0 0 20px rgba(229, 184, 105, 0.12);
 }
 
 .glow-border {
@@ -104,7 +105,7 @@ html {
 .glow-border:hover {
   box-shadow:
     inset 0 0 0 1px var(--color-accent),
-    0 0 16px rgba(0, 255, 148, 0.1);
+    0 0 16px rgba(229, 184, 105, 0.12);
 }
 
 body {

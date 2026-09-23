@@ -35,9 +35,90 @@ export interface ThemeConfig {
 
 export const themes: ThemeConfig[] = [
   {
+    id: "obsidian-champagne-gold",
+    name: "01. Obsidian & Champagne Gold (Book 1:1 Match)",
+    tagline: "Exact match to the 3D book cover: warm lustrous gold, ivory typography, and rich obsidian contrast",
+    dark: {
+      canvas: "#0D1117",
+      card: "#161B22",
+      line: "#30363D",
+      fg: "#F7F4EB",
+      muted: "#9E988D",
+      accent: "#D4AF37",
+      onAccent: "#1A1400",
+      secondary: "#C5A880",
+      accentGlow: "rgba(212, 175, 55, 0.35)",
+    },
+    light: {
+      canvas: "#FBF9F4",
+      card: "#FFFFFF",
+      line: "#E6E1D8",
+      fg: "#1E1C18",
+      muted: "#7A7366",
+      accent: "#997312",
+      onAccent: "#FFFFFF",
+      secondary: "#8A6D3B",
+      accentGlow: "rgba(153, 115, 18, 0.2)",
+    },
+  },
+  {
+    id: "obsidian-soft-sand",
+    name: "02. Obsidian & Soft Champagne Sand (Minimalist Luxury)",
+    tagline: "Understated cashmere sand and subtle antique ivory for a relaxed, ultra-premium editorial aesthetic",
+    dark: {
+      canvas: "#0D1117",
+      card: "#161B22",
+      line: "#30363D",
+      fg: "#FAF8F5",
+      muted: "#8C867A",
+      accent: "#D8B780",
+      onAccent: "#221808",
+      secondary: "#E6D5B8",
+      accentGlow: "rgba(216, 183, 128, 0.35)",
+    },
+    light: {
+      canvas: "#F8F6F0",
+      card: "#FFFFFF",
+      line: "#E2DDD2",
+      fg: "#1C1B18",
+      muted: "#756F64",
+      accent: "#A67C38",
+      onAccent: "#FFFFFF",
+      secondary: "#8C6A30",
+      accentGlow: "rgba(166, 124, 56, 0.2)",
+    },
+  },
+  {
+    id: "obsidian-amber-gold",
+    name: "03. Obsidian & Royal Sunburst Amber (High-Contrast)",
+    tagline: "Vivid, high-energy warm honey gold with razor-sharp readability on obsidian dark surfaces",
+    dark: {
+      canvas: "#0D1117",
+      card: "#161B22",
+      line: "#30363D",
+      fg: "#FFFFFF",
+      muted: "#8B949E",
+      accent: "#E5B869",
+      onAccent: "#241800",
+      secondary: "#F3C77C",
+      accentGlow: "rgba(229, 184, 105, 0.35)",
+    },
+    light: {
+      canvas: "#F7F5F0",
+      card: "#FFFFFF",
+      line: "#DDD8CD",
+      fg: "#181714",
+      muted: "#6E685B",
+      accent: "#B87A14",
+      onAccent: "#FFFFFF",
+      secondary: "#9E6B17",
+      accentGlow: "rgba(184, 122, 20, 0.2)",
+    },
+  },
+  {
     id: "obsidian-phosphor",
-    name: "01. Obsidian & Phosphor Neon",
-    tagline: "High-tech terminal, cyberpunk authority, and developer console clarity",
+    name: "04. Obsidian & Phosphor Neon (Current Baseline)",
+    tagline: "The original cyberpunk phosphor neon green palette kept for instant before/after comparison",
     dark: {
       canvas: "#0D1117",
       card: "#161B22",
@@ -59,60 +140,6 @@ export const themes: ThemeConfig[] = [
       onAccent: "#FFFFFF",
       secondary: "#0969DA",
       accentGlow: "rgba(9, 146, 78, 0.2)",
-    },
-  },
-  {
-    id: "deep-space",
-    name: "02. Deep Space & Ice Titanium",
-    tagline: "Linear & Vercel inspired: ultra-clean, minimalist, subtle glassmorphism",
-    dark: {
-      canvas: "#08090C",
-      card: "#111318",
-      line: "#222630",
-      fg: "#F1F5F9",
-      muted: "#94A3B8",
-      accent: "#38BDF8",
-      onAccent: "#082F49",
-      secondary: "#818CF8",
-      accentGlow: "rgba(56, 189, 248, 0.35)",
-    },
-    light: {
-      canvas: "#F8FAFC",
-      card: "#FFFFFF",
-      line: "#E2E8F0",
-      fg: "#0F172A",
-      muted: "#64748B",
-      accent: "#0284C7",
-      onAccent: "#FFFFFF",
-      secondary: "#6366F1",
-      accentGlow: "rgba(2, 132, 199, 0.2)",
-    },
-  },
-  {
-    id: "editorial-archive",
-    name: "03. Editorial Archive & Champagne Gold",
-    tagline: "Panel / Press inspired: tactile graphic novel, luxury print paper & ink",
-    dark: {
-      canvas: "#121115",
-      card: "#1A1820",
-      line: "#2E2A38",
-      fg: "#F5F3EF",
-      muted: "#9691A4",
-      accent: "#E5C07B",
-      onAccent: "#241A04",
-      secondary: "#E06C75",
-      accentGlow: "rgba(229, 192, 123, 0.35)",
-    },
-    light: {
-      canvas: "#F4F1EA",
-      card: "#FFFFFF",
-      line: "#DDD7CA",
-      fg: "#1C1917",
-      muted: "#78716C",
-      accent: "#B45309",
-      onAccent: "#FFFFFF",
-      secondary: "#BE123C",
-      accentGlow: "rgba(180, 83, 9, 0.2)",
     },
   },
 ];
@@ -163,7 +190,7 @@ export const fontPairings: FontPairing[] = [
 ];
 
 export default function ThemeShowcasePage() {
-  const [selectedThemeId, setSelectedThemeId] = useState<string>("obsidian-phosphor");
+  const [selectedThemeId, setSelectedThemeId] = useState<string>("obsidian-champagne-gold");
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
   const [selectedFontId, setSelectedFontId] = useState<string>("precision-inter");
   const [copiedHex, setCopiedHex] = useState<string | null>(null);
@@ -607,6 +634,95 @@ export default function ThemeShowcasePage() {
                   Case Study →
                 </span>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SPECIMEN: ABOUT SECTION & BOOK PARITY PREVIEW */}
+        <section
+          className="p-8 rounded-xl border space-y-6 shadow-md transition-colors"
+          style={{ backgroundColor: activeColors.card, borderColor: activeColors.line }}
+        >
+          <div className="border-b pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2" style={{ borderColor: activeColors.line }}>
+            <div>
+              <span className="text-[11px] font-mono uppercase tracking-widest block mb-1 font-semibold" style={{ color: activeColors.accent }}>
+                ABOUT SECTION LIVE PREVIEW
+              </span>
+              <h2 className="text-2xl font-bold tracking-tight" style={{ fontFamily: activeFont.headingFamily }}>
+                Executive Summary &amp; Book Parity Test
+              </h2>
+            </div>
+            <span
+              className="text-xs font-mono px-3 py-1 rounded border self-start sm:self-auto"
+              style={{ borderColor: activeColors.line, backgroundColor: activeColors.canvas, color: activeColors.muted }}
+            >
+              Exact Live Component Replica
+            </span>
+          </div>
+
+          <div
+            className="p-8 rounded-xl border space-y-6"
+            style={{ backgroundColor: activeColors.canvas, borderColor: activeColors.line }}
+          >
+            <div className="font-mono text-xs font-semibold tracking-widest uppercase" style={{ color: activeColors.muted }}>
+              ABOUT ME // QUICK SUMMARY
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight" style={{ color: activeColors.fg }}>
+                Robiul Hasan Rony
+              </h3>
+              <p className="text-base sm:text-lg font-medium" style={{ color: activeColors.accent }}>
+                Aspiring Software Engineer &amp; AI Automation Builder
+              </p>
+            </div>
+
+            <p className="text-base leading-relaxed max-w-2xl" style={{ color: activeColors.muted }}>
+              Full-stack developer with a passion for building clean web applications
+              and orchestrating autonomous AI workflows that eliminate repetitive manual work.
+            </p>
+
+            <div className="border-y py-4 space-y-3" style={{ borderColor: activeColors.line }}>
+              {[
+                { label: "Core Focus", desc: "Full-stack web development with Next.js, Node.js & TypeScript." },
+                { label: "Automations", desc: "Designing autonomous AI agent pipelines using n8n & Zapier." },
+                { label: "Currently Into", desc: "Actively deep-diving into AI engineering, autonomous agents & DevOps." },
+                { label: "Academic Roots", desc: "3rd-year Computer Science & Engineering undergraduate at CUET." },
+              ].map((bullet) => (
+                <div key={bullet.label} className="flex items-start gap-3">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full" style={{ backgroundColor: activeColors.accent }} />
+                  <div className="text-sm leading-relaxed">
+                    <span className="font-mono text-xs font-semibold uppercase tracking-wider mr-2" style={{ color: activeColors.fg }}>
+                      {bullet.label}:
+                    </span>
+                    <span style={{ color: activeColors.muted }}>{bullet.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4 pt-1">
+              <button
+                className="inline-flex items-center gap-2 rounded-lg px-6 py-3 font-mono text-xs font-bold transition-all hover:opacity-90 active:scale-95 shadow-lg"
+                style={{
+                  backgroundColor: activeColors.accent,
+                  color: activeColors.onAccent,
+                  boxShadow: `0 0 20px ${activeColors.accentGlow}`,
+                }}
+              >
+                <span>VIEW RESUME / CV ↗</span>
+              </button>
+              <button
+                className="inline-flex items-center gap-2 rounded-lg border px-6 py-3 font-mono text-xs font-semibold transition-all hover:opacity-80 active:scale-95"
+                style={{
+                  borderColor: activeColors.line,
+                  backgroundColor: activeColors.card,
+                  color: activeColors.fg,
+                }}
+              >
+                <span>LET&apos;S TALK</span>
+                <span style={{ color: activeColors.accent }}>↵</span>
+              </button>
             </div>
           </div>
         </section>

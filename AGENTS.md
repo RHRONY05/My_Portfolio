@@ -15,10 +15,10 @@ This version has breaking changes — APIs, conventions, and file structure may 
 High-performance, single-page 3D developer portfolio for **Rony (RONY.DEV)** — Full-Stack Engineer & Autonomous AI Automation Specialist.
 
 * **Stack**: **Next.js 16 (App Router, Turbopack)**, React 19, TypeScript, Tailwind CSS v4 (CSS-first config), Framer Motion, Three.js / React Three Fiber (`@react-three/fiber` + `@react-three/drei`), Lenis Smooth Scroll.
-* **Approved Theme**: **Obsidian & Phosphor Neon (Dark)**
+* **Approved Theme**: **Obsidian & Royal Sunburst Amber (Dark)**
   - Canvas: `#0D1117` | Card Surfaces: `#161B22` | Hairline Borders: `#30363D`
-  - Primary Accent: `#00FF94` (Electric Phosphor Neon Green) | Text on Accent: `#00391D`
-  - Secondary Accent: `#58A6FF` (Blueprint Cyan)
+  - Primary Accent: `#E5B869` (Royal Sunburst Amber Gold) | Text on Accent: `#241800`
+  - Secondary Accent: `#F3C77C` (Warm Honey Accent)
   - Typography: **Precision Engineering** (`Inter` display/body + `JetBrains Mono` telemetry/code).
 * **Git Branches**:
   - `v1-current-backup` (Safe permanent backup of original site; do NOT modify).

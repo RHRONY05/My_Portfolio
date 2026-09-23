@@ -48,8 +48,9 @@ All assets are verified, high-resolution (1080p), and tested. **DO NOT re-genera
 - [ ] **Complete Plan Approval**: Final sign-off on `.agents/project_plan.md`.
 
 ### Phase 1: Visual Theme & Design System Codification
-- [ ] Establish design tokens (colors, typography, spacing, surface tiers) in `src/app/globals.css`.
-- [ ] Set up blueprint grid utilities and editorial typography scale (`Inter` + `JetBrains Mono`).
+- [x] Establish design tokens in `src/app/globals.css`: **Obsidian & Royal Sunburst Amber (`#0D1117` / `#E5B869`)**.
+- [x] Synchronize 3D book studio lighting with warm sunburst amber rim lights (`#E5B869`).
+- [x] Precision Engineering typography scale locked (`Inter` + `JetBrains Mono`).
 
 ### Phase 2: 3D Comic Book Dossier (About Section)
 - [x] Front cover (`book_cover.png`) and Back cover (`back_cover.png`) finalized at 1:1 scale (1024x1536) in Obsidian & Champagne Ivory.
@@ -79,6 +80,11 @@ All assets are verified, high-resolution (1080p), and tested. **DO NOT re-genera
   - Scannable bulleted spec sheet: Core Focus, Automations, Currently Into (AI engineering & DevOps), Academic Roots (CUET CSE).
   - Dual action CTAs: `[ VIEW RESUME / CV ↗ ]` and `[ LET'S TALK ↵ ]`.
   - Balanced side-by-side with the 3D Comic Book Dossier on the left.
+- [x] **Full-Device Mobile & Tablet Responsiveness**:
+  - Calibrated horizontal margins and padding (`px-4 sm:px-6 md:px-8`).
+  - Mobile/tablet text container capped at `max-w-2xl mx-auto` to prevent over-extended line lengths when stacked.
+  - Adaptive thumb-friendly action buttons (full-width stacked on mobile, inline on desktop).
+  - Clean vertical breathing room (`gap-10 sm:gap-12 lg:gap-14`) between the 3D book stage and the text summary.
 
 ### Phase 3: Mahoraga Adaptation Wheel & Tech Stack
 - [ ] 3D Mahoraga wheel with ratchet sound effect and rotating AI icons.

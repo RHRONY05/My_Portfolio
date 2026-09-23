@@ -135,11 +135,11 @@ export function Book3DCanvas({
             shadow-bias={-0.0001}
           />
 
-          {/* Cyber Neon Phosphor Rim Light */}
+          {/* Warm Sunburst Amber Rim Light */}
           <pointLight
             position={[-4, 2, 3]}
             intensity={1.8}
-            color="#00FF94"
+            color="#E5B869"
             distance={9}
           />
 
