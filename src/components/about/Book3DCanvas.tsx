@@ -22,6 +22,17 @@ export function Book3DCanvas({
   const initialOffsetRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Dedicated handler to cleanly toggle open/close cover and reset to chapter 1
+  const handleToggleCover = useCallback(() => {
+    if (isOpen) {
+      onChapterChange?.(1);
+      setIsOpen(false);
+    } else {
+      onChapterChange?.(1);
+      setIsOpen(true);
+    }
+  }, [isOpen, onChapterChange]);
+
   // Rotate step by ~20 degrees
   const handleRotateLeft = () => setRotationOffset((prev) => prev + 0.35);
   const handleRotateRight = () => setRotationOffset((prev) => prev - 0.35);
@@ -57,7 +68,7 @@ export function Book3DCanvas({
           document.activeElement === containerRef.current
         ) {
           e.preventDefault();
-          setIsOpen((prev) => !prev);
+          handleToggleCover();
         }
       } else if (e.key === "Home") {
         e.preventDefault();
@@ -67,7 +78,7 @@ export function Book3DCanvas({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, chapter, onChapterChange]);
+  }, [isOpen, chapter, onChapterChange, handleToggleCover]);
 
   // Smooth pointer drag rotation
   const onPointerDown = useCallback((e: React.PointerEvent) => {
@@ -101,7 +112,7 @@ export function Book3DCanvas({
     >
       {/* 3D Canvas Stage: Optimized viewport height so book + controls fit within browser view */}
       <div
-        className="relative h-[480px] w-full sm:h-[540px] lg:h-[590px] xl:h-[620px] cursor-grab active:cursor-grabbing touch-none"
+        className="relative h-[440px] w-full sm:h-[490px] lg:h-[530px] xl:h-[560px] cursor-grab active:cursor-grabbing touch-none"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -144,7 +155,7 @@ export function Book3DCanvas({
             {/* The 20% Larger 3D Book Actor */}
             <BookMesh
               isOpen={isOpen}
-              onToggleOpen={() => setIsOpen((prev) => !prev)}
+              onToggleOpen={handleToggleCover}
               chapter={chapter}
               onChapterChange={onChapterChange}
               rotationYOffset={rotationOffset}
@@ -196,7 +207,7 @@ export function Book3DCanvas({
           {/* Open / Close Cover Button */}
           <button
             type="button"
-            onClick={() => setIsOpen((prev) => !prev)}
+            onClick={handleToggleCover}
             className="flex h-9 items-center gap-2 rounded-lg border border-line bg-card/80 px-4 text-xs font-medium text-fg transition-all duration-150 hover:border-accent hover:text-accent active:scale-95"
           >
             <BookOpen className="size-3.5 text-accent" />

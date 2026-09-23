@@ -24,13 +24,7 @@ export function Navbar() {
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "border-b border-line bg-canvas/80 backdrop-blur-md py-4"
-          : "border-b border-transparent bg-transparent py-5"
-      }`}
-    >
+    <header className="fixed top-0 inset-x-0 z-50 bg-transparent py-4 md:py-5 transition-all duration-300">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 md:px-12">
         <Link
           href="#top"

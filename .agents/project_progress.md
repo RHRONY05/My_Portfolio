@@ -73,6 +73,12 @@ All assets are verified, high-resolution (1080p), and tested. **DO NOT re-genera
   - Keyboard ArrowLeft / ArrowRight support and bottom chapter controls fully synchronized across all 4 chapters.
   - Hover pointer feedback (`cursor: pointer`) on active clickable pages.
   - Right-hand editorial narrative panel in `About.tsx` dynamically synchronized in real-time with chapter state.
+- [x] **Clean Executive Summary & Spec Sheet on Right Panel**:
+  - Replaced redundant wall-of-text narrative with a clean, high-signal developer summary.
+  - Headline: **Robiul Hasan Rony** • *Aspiring Software Engineer & AI Automation Builder*.
+  - Scannable bulleted spec sheet: Core Focus, Automations, Currently Into (AI engineering & DevOps), Academic Roots (CUET CSE).
+  - Dual action CTAs: `[ VIEW RESUME / CV ↗ ]` and `[ LET'S TALK ↵ ]`.
+  - Balanced side-by-side with the 3D Comic Book Dossier on the left.
 
 ### Phase 3: Mahoraga Adaptation Wheel & Tech Stack
 - [ ] 3D Mahoraga wheel with ratchet sound effect and rotating AI icons.

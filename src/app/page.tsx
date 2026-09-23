@@ -12,7 +12,7 @@ export default function Home() {
       <Navbar />
       <HeroCinemaCanvas />
 
-      <div className="dot-grid">
+      <div className="bg-canvas">
         <About />
         <Skills />
         <Projects />
