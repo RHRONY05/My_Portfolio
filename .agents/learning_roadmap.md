@@ -88,10 +88,10 @@
 
 - [x] **4.1 Raycasting: How Clicks Hit a 3D Object**
   - *Theory*: Shooting rays from 2D mouse cursor coordinates to register direct clicks (`onClick`, `onPointerOver`) on 3D pages in real time.
-- [ ] **4.2 Rotational Inertia & Damping (The Mahoraga Wheel)**
+- [x] **4.2 Rotational Inertia & Damping (The Mahoraga Wheel)**
   - *Theory*: When you spin a wheel, it shouldn't stop dead when you release the mouse. Friction and velocity damping allow it to spin down smoothly.
-- [ ] **4.3 Audio-Visual Synchronization (Web Audio API)**
-  - *Theory*: Triggering mechanical ratchet clicks whenever the rotation angle crosses an 8-spoke threshold (`angle % (Math.PI / 4)`).
+- [x] **4.3 Audio-Visual Synchronization (Web Audio API)**
+  - *Theory*: Triggering mechanical ratchet clicks whenever the rotation angle crosses an angle threshold (`angle % (Math.PI / 3)`).
 - [ ] **4.4 The 60-FPS Performance Bible (DPR & Intersection Observers)**
   - *Theory*: Why retina mobile screens lag if you don't cap `dpr={[1, 1.5]}` and how to freeze the GPU loop when scrolled offscreen.
 
@@ -105,3 +105,6 @@
 | *2026-09-21* | 2.5D Parallax, Mouse Coordinates & Spring Physics | Section 01: Hero | Mastered |
 | *2026-09-22* | 3D Book Rigging, Concentric Spine Hinge, UV Textures | Section 02: About | Mastered |
 | *2026-09-23* | Multi-Leaf Kinematics, Raycasting & Synced Editorial | Section 02: About | Mastered |
+| *2026-09-23* | Rotational Inertia & Damping, 2.5D Load Balancer Layout | Section 03: Skills | Mastered |
+| *2026-09-23* | Web Audio Synthesizer, 3D Vector Badges & Ratchet FX | Section 03: Skills | Mastered |
+| *2026-09-23* | Direct Turntable 1:1 Physics, Bidirectional Spin & 3D Pitch Tilt | Section 03: Skills | Mastered |

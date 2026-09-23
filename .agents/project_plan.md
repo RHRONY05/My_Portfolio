@@ -120,44 +120,38 @@ Inspired by the tactile 3D book interaction on `panelpress.online`.
 
 ---
 
-### Section 03: Tech Stack & Skill Matrix — "The Mahoraga Adaptation Wheel & Yggdrasil Realm Orbs" [LOCKED]
-Inspired by the synergy between the *Jujutsu Kaisen* Mahoraga Dharmachakra Adaptation Wheel and the *Norse Mythology* Yggdrasil World Tree of Realms.
+### Section 03: Tech Stack & Skill Matrix — "The Mahoraga Adaptation Circuit & Load-Balancer" [LOCKED]
+Inspired by the load-balancer network topology, the *Jujutsu Kaisen* Mahoraga Dharmachakra Adaptation Wheel, and Rony's personal developer journey.
 
 #### Core Metaphor & Theme
 - **The Modern Reality**: Modern full-stack engineering is powered by autonomous AI agent orchestration (Claude, Gemini, ChatGPT, Cursor, DeepSeek). Rather than writing every boilerplate line by hand, Rony summons AI to adapt instantly to any tech stack or codebase challenge.
-- **Tagline / Lore**: *"With this sacred treasure, I summon... Full-Stack AI Adaptation."* (Wheel spins with metallic ratchet sound: *"Adapted to Legacy Codebase / Complex Cloud Migration / Autonomous Agent Workflows"*).
+- **Tagline / Lore**: *"With this sacred treasure, I summon... Full-Stack AI Adaptation."* (Clicking `[ ☸ SPIN / SUMMON ]` spins the wheel with metallic ratchet sound effects and sends amber energy pulses into the circuit bus).
+- **Approved Theme**: **Obsidian & Royal Sunburst Amber** (`#0D1117` ground, `#E5B869` gold accent, `#F3C77C` honey secondary).
 
-#### 3D Visual Hierarchy & Structure
-1. **The Apex — The 3D Mahoraga Adaptation Wheel (AI Layer)**:
-   - High-fidelity 8-spoked Dharmachakra wheel floating above as a luminous halo.
-   - Emblems at each spoke: **Claude 3.7**, **Gemini 2.5/Flash**, **ChatGPT / OpenAI**, **Cursor**, **DeepSeek**, **Antigravity / Coding Agents**.
-   - Emits an electric neon green phosphor glow (`#00FF94`) and ambient particle arcs.
-   - **Interactive Mechanic**: Hover/click or drag to spin the wheel with a mechanical ratchet click sound effect. Clicking a primary `[ ☸️ TRIGGER ADAPTATION ]` button spins the wheel and sends energy pulses cascading down into the trunk and branches.
-2. **The Central Pillar — Cyber-Yggdrasil (Mahoraga Core)**:
-   - A stylized biomechanical trunk / silhouette with muscular contours and glowing data circuit veins running down like cyber-bark.
-   - Routes neural energy pathways from the top Adaptation Wheel outward to the branch nodes.
-3. **The Branches — 4 Floating Planetary Realm Orbs (Yggdrasil Engineering Realms)**:
-   Transparent 3D glass biospheres / crystal planetary orbs tethered to the branches:
-   - **Realm 01: Midgard of Frontend**:
-     - *Holographic visual interior*: Floating UI cards, React & Next.js geometric glyphs.
-     - *Stack*: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Framer Motion, Three.js / R3F.
-   - **Realm 02: Asgard of Backend & Architecture**:
-     - *Holographic visual interior*: Golden microservices mesh, server racks, API pathways.
-     - *Stack*: Node.js, Express, Python, REST & GraphQL APIs, WebSockets, Fastify.
-   - **Realm 03: Nidavellir of Database & Persistence**:
-     - *Holographic visual interior*: Subterranean obsidian & cyan data cylinder prisms.
-     - *Stack*: PostgreSQL, Redis, Supabase, MongoDB, Prisma ORM.
-   - **Realm 04: Bifrost of DevOps & Cloud Infrastructure**:
-     - *Holographic visual interior*: Shimmering energy aura containing floating Docker containers and CI/CD pipelines.
-     - *Stack*: Docker, GitHub Actions CI/CD, Linux, AWS, Vercel.
-
-#### Interactivity & Telemetry Detail
-- **Orb Hover / Selection**: Hovering an orb causes it to glow, gently expand, and tilt towards the camera.
-- **Deep-Dive Telemetry Drawer**: Clicking any Realm Orb opens an adjacent HUD card detailing:
-  - Proficiency metrics & years of production usage.
-  - Key architectural patterns (e.g., Server Actions, Docker multi-stage builds, Redis caching).
-  - Quick clickable links to projects built with that specific realm.
-- **Mobile Responsive Layout**: On mobile viewports, the Adaptation Wheel remains pinned at the top, while the Realm Orbs reflow into an interactive 3D horizontal swipe carousel.
+#### 2.5D Visual Hierarchy & Structure
+1. **The Centerpiece — Meditating Rony & 3D Mahoraga Halo Wheel**:
+   - **Meditating Character**: High-resolution cutout illustration of Rony seated in meditation with golden sunlight highlights (`/images/skills/meditating_rony.png`). Animates with gentle floating breathing sway.
+   - **3D Mahoraga Halo Wheel**: True 3D React Three Fiber canvas floating directly above Rony's head like a divine celestial crown.
+     - 8-spoked golden Dharmachakra wheel with rotating AI tool nodes (Claude 3.7, Gemini 2.5, ChatGPT, Cursor, DeepSeek, Antigravity, etc.).
+     - Interactive drag-to-spin physics with angular velocity damping and mechanical ratchet audio feedback.
+   - **Summon Banner**: Monospace text ribbons flanking the character: *"With this sacred treasure, I summon... Full-Stack AI Adaptation."*
+2. **The Data Bus — Responsive SVG Circuit Lines**:
+   - Central horizontal bus splitting into 3 branches to the left and 3 branches to the right (inspired by network load balancers).
+   - Animated SVG stroke-dasharray traveling amber energy pulses cascading from the central character outward to the nodes.
+3. **The 6 Load-Balanced Realm Boxes (Glassmorphic Cyber-Cards)**:
+   - **Left Cluster (Core Engineering)**:
+     - **01. Frontend Architecture**: Next.js 16, React 19, TypeScript, Tailwind CSS v4, Framer Motion, Three.js / R3F.
+     - **02. Backend & Distributed Systems**: Node.js, Express, Fastify, Python, REST & GraphQL APIs, WebSockets.
+     - **03. Database & Persistence**: PostgreSQL, Redis, Supabase, MongoDB, Prisma ORM.
+   - **Right Cluster (Automations & Cloud Ops)**:
+     - **04. Autonomous AI Agents**: n8n, Zapier, LangChain / LlamaIndex, Claude & OpenAI API Workflows.
+     - **05. DevOps & Cloud Infrastructure**: Docker, Linux / Bash, GitHub Actions CI/CD, Vercel, AWS.
+     - **06. Developer Tooling & Testing**: Git, Turbopack, Postman, Cursor AI, Vitest / Jest.
+4. **Interactive HUD Tool Popovers / Modals**:
+   - Hovering or clicking any of the 6 boxes opens a floating glassmorphic telemetry modal showing the tool logos, proficiency level, and production architectural patterns.
+5. **Mobile & Tablet Responsive Flow**:
+   - Desktop: Wide 3-Center-3 load-balancer spread.
+   - Mobile/Tablet: Pinned Meditating Rony + 3D Halo Wheel at the top, reflowing the 6 realm boxes into an adaptive 2-column or 1-column grid below.
 
 ---
 
