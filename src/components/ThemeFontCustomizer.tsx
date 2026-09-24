@@ -9,7 +9,7 @@ import {
   applyThemeToDocument,
   applyFontToDocument,
 } from "@/data/themeConfig";
-import { Palette, Type, Check, ChevronDown, Sparkles, Sliders } from "lucide-react";
+import { Palette, Type, Check, ChevronDown, Sparkles, Sliders, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function ThemeFontCustomizer() {
@@ -37,7 +37,7 @@ export function ThemeFontCustomizer() {
 
   // Close dropdown on outside click or ESC key
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)
@@ -54,10 +54,12 @@ export function ThemeFontCustomizer() {
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
       document.addEventListener("keydown", handleKeyDown);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen]);
@@ -119,7 +121,7 @@ export function ThemeFontCustomizer() {
 
         {/* Icon & Label */}
         <Sliders className="size-3.5 text-accent transition-transform group-hover:rotate-45 duration-300" />
-        <span className="hidden sm:inline font-mono text-[11px] font-bold uppercase tracking-wider text-fg/90 group-hover:text-accent">
+        <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg/90 group-hover:text-accent">
           Theme
         </span>
 
@@ -130,6 +132,17 @@ export function ThemeFontCustomizer() {
         />
       </button>
 
+      {/* Mobile Scrim / Backdrop */}
+      <AnimatePresence>
+        {isOpen && (
+          <div
+            className="sm:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-40 transition-opacity"
+            onClick={() => setIsOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Dropdown Popover */}
       <AnimatePresence>
         {isOpen && (
@@ -138,7 +151,7 @@ export function ThemeFontCustomizer() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.96 }}
             transition={{ duration: 0.16, ease: "easeOut" }}
-            className="absolute right-0 mt-2 w-[310px] sm:w-[340px] origin-top-right rounded-xl border border-line/80 bg-card/95 p-3 shadow-2xl backdrop-blur-2xl ring-1 ring-black/40 z-50 overflow-hidden"
+            className="fixed inset-x-3 top-[62px] mx-auto w-[calc(100vw-24px)] max-w-[340px] sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-[340px] sm:max-w-none origin-top rounded-xl border border-line/80 bg-card/95 p-3 shadow-2xl backdrop-blur-2xl ring-1 ring-black/40 z-50 overflow-hidden"
             style={{
               boxShadow:
                 "0 20px 35px -5px rgba(0, 0, 0, 0.7), 0 0 20px -3px rgba(var(--color-accent-rgb, 229, 229, 229), 0.15)",
@@ -174,9 +187,19 @@ export function ThemeFontCustomizer() {
                 </button>
               </div>
 
-              <span className="text-[10px] font-mono text-muted/70 tracking-tight">
-                Live Switch
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="hidden sm:inline text-[10px] font-mono text-muted/70 tracking-tight">
+                  Live Switch
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="sm:hidden flex size-6 items-center justify-center rounded-md border border-line/60 bg-canvas/80 text-muted hover:text-accent cursor-pointer"
+                  aria-label="Close theme customizer"
+                >
+                  <X className="size-3.5" />
+                </button>
+              </div>
             </div>
 
             {/* TAB 1: 4 Approved Themes */}

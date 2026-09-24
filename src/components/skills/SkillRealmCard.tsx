@@ -45,6 +45,11 @@ export function SkillRealmCard({
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
+    // Notify other components (like 3D Mahoraga wheel) that a modal is open
+    window.dispatchEvent(
+      new CustomEvent("rony_modal_state", { detail: { open: true } })
+    );
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsOpen(false);
     };
@@ -52,6 +57,9 @@ export function SkillRealmCard({
 
     return () => {
       document.body.style.overflow = originalOverflow;
+      window.dispatchEvent(
+        new CustomEvent("rony_modal_state", { detail: { open: false } })
+      );
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen]);
@@ -123,20 +131,22 @@ export function SkillRealmCard({
           <div
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
+            style={{ zIndex: 2147483647 }}
+            className="fixed inset-0 flex items-center justify-center p-3 sm:p-4 bg-black/95 backdrop-blur-2xl animate-in fade-in duration-200"
             onClick={() => setIsOpen(false)}
           >
             <div
-              className="relative w-full max-w-lg rounded-2xl border border-accent/60 bg-card p-6 sm:p-7 shadow-[0_0_50px_rgba(var(--color-accent-rgb,229,184,105),0.35)] space-y-5 max-h-[90vh] overflow-y-auto"
+              style={{ zIndex: 2147483647 }}
+              className="relative w-full max-w-[480px] max-h-[85dvh] sm:max-h-[85vh] flex flex-col rounded-2xl border border-accent/60 bg-card shadow-[0_0_60px_rgba(0,0,0,0.95),0_0_30px_rgba(var(--color-accent-rgb,229,184,105),0.25)] overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Modal Header */}
-              <div className="flex items-start justify-between gap-4 border-b border-line/60 pb-4">
+              {/* Sticky Header: Always pinned & visible on mobile */}
+              <div className="shrink-0 flex items-start justify-between gap-3 p-4 sm:p-6 pb-3 border-b border-line/60 bg-card">
                 <div>
-                  <div className="font-mono text-xs text-accent font-semibold tracking-wider uppercase mb-1">
+                  <div className="font-mono text-[10px] sm:text-xs text-accent font-semibold tracking-wider uppercase mb-0.5 sm:mb-1">
                     REALM {realm.number} • {realm.tagline}
                   </div>
-                  <h3 className="text-2xl font-black text-fg tracking-tight">
+                  <h3 className="text-lg sm:text-2xl font-black text-fg tracking-tight">
                     {realm.title}
                   </h3>
                 </div>
@@ -145,65 +155,68 @@ export function SkillRealmCard({
                   type="button"
                   onClick={() => setIsOpen(false)}
                   aria-label="Close modal"
-                  className="flex size-8 items-center justify-center rounded-lg border border-line bg-canvas text-muted hover:border-accent hover:text-accent transition-all cursor-pointer"
+                  className="flex size-9 sm:size-8 shrink-0 items-center justify-center rounded-lg border border-line bg-canvas text-muted hover:border-accent hover:text-accent active:scale-95 transition-all cursor-pointer"
                 >
                   <X className="size-4" />
                 </button>
               </div>
 
-              {/* Summary Prose */}
-              <p className="text-sm leading-relaxed text-muted">
-                {realm.summary}
-              </p>
+              {/* Scrollable Modal Body */}
+              <div className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-4 custom-scrollbar">
+                {/* Summary Prose */}
+                <p className="text-xs sm:text-sm leading-relaxed text-muted">
+                  {realm.summary}
+                </p>
 
-              {/* Complete Tools Matrix with Tech Icons */}
-              <div className="space-y-2">
-                <span className="font-mono text-xs font-semibold text-fg tracking-wider uppercase block">
-                  Production Stack &amp; Frameworks
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {realm.tools.map((tool) => (
-                    <span
-                      key={tool.name}
-                      className="inline-flex items-center gap-2 font-mono text-xs font-semibold px-3 py-1.5 rounded-lg border border-accent/30 bg-accent/10 text-accent hover:border-accent hover:bg-accent/15 transition-all"
-                    >
-                      {tool.icon && (
-                        <img
-                          src={tool.icon}
-                          alt=""
-                          className="size-3.5 object-contain"
-                        />
-                      )}
-                      <span>{tool.name}</span>
-                    </span>
-                  ))}
+                {/* Complete Tools Matrix with Tech Icons */}
+                <div className="space-y-2">
+                  <span className="font-mono text-[11px] sm:text-xs font-semibold text-fg tracking-wider uppercase block">
+                    Production Stack &amp; Frameworks
+                  </span>
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    {realm.tools.map((tool) => (
+                      <span
+                        key={tool.name}
+                        className="inline-flex items-center gap-1.5 sm:gap-2 font-mono text-[11px] sm:text-xs font-semibold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-accent/30 bg-accent/10 text-accent hover:border-accent hover:bg-accent/15 transition-all"
+                      >
+                        {tool.icon && (
+                          <img
+                            src={tool.icon}
+                            alt=""
+                            className="size-3.5 object-contain"
+                          />
+                        )}
+                        <span>{tool.name}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Architectural Patterns */}
+                <div className="space-y-2 pt-2 border-t border-line/40">
+                  <span className="font-mono text-[10px] sm:text-[11px] font-semibold text-muted tracking-wider uppercase block">
+                    Key Architectural Patterns
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
+                    {realm.patterns.map((pattern) => (
+                      <div
+                        key={pattern}
+                        className="flex items-center gap-2 text-[11px] sm:text-xs font-mono text-fg/90 bg-canvas/60 px-2.5 py-1.5 rounded border border-line/60"
+                      >
+                        <span className="size-1.5 rounded-full bg-accent shrink-0" />
+                        <span className="leading-snug">{pattern}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Architectural Patterns */}
-              <div className="space-y-2 pt-2 border-t border-line/40">
-                <span className="font-mono text-[11px] font-semibold text-muted tracking-wider uppercase block">
-                  Key Architectural Patterns
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {realm.patterns.map((pattern) => (
-                    <div
-                      key={pattern}
-                      className="flex items-center gap-2 text-xs font-mono text-fg/90 bg-canvas/60 px-2.5 py-1.5 rounded border border-line/60"
-                    >
-                      <span className="size-1.5 rounded-full bg-accent" />
-                      <span>{pattern}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Modal Dismiss Action */}
-              <div className="pt-2 flex justify-end">
+              {/* Sticky Footer Dismiss Action */}
+              <div className="shrink-0 p-3 sm:p-4 pt-2 border-t border-line/40 bg-card flex justify-end">
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="rounded-lg bg-accent px-5 py-2 font-mono text-xs font-bold text-on-accent hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                  className="w-full sm:w-auto rounded-lg bg-accent py-2.5 sm:py-2 px-5 font-mono text-xs font-bold text-on-accent hover:opacity-90 active:scale-95 transition-all cursor-pointer text-center"
                 >
                   CLOSE TELEMETRY [✕]
                 </button>

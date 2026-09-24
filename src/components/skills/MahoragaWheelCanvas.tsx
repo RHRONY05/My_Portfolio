@@ -119,6 +119,7 @@ interface HorizontalHaloRingProps {
   dragPhysicsRef: React.RefObject<DragPhysicsState>;
   accentColor?: string;
   cardBg?: string;
+  isModalOpen?: boolean;
 }
 
 function HorizontalHaloRing({
@@ -126,6 +127,7 @@ function HorizontalHaloRing({
   dragPhysicsRef,
   accentColor = "#E5E5E5",
   cardBg = "#111111",
+  isModalOpen = false,
 }: HorizontalHaloRingProps) {
   const ringGroupRef = useRef<THREE.Group>(null);
   const rotationYRef = useRef(0);
@@ -258,27 +260,30 @@ function HorizontalHaloRing({
             </mesh>
 
             {/* Crisp Compact Vector AI Tool Emblem with Hover Tooltip */}
-            <Html
-              center
-              position={[0, 0.035, 0]}
-              distanceFactor={4.6}
-              className="pointer-events-auto select-none"
-            >
-              <div
-                title={tool.fullName}
-                className="group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card/95 border border-line hover:border-accent hover:scale-115 hover:shadow-[0_0_14px_rgba(var(--color-accent-rgb,229,184,105),0.45)] transition-all cursor-pointer p-1 backdrop-blur-sm"
+            {!isModalOpen && (
+              <Html
+                center
+                position={[0, 0.035, 0]}
+                distanceFactor={4.6}
+                zIndexRange={[5, 0]}
+                className="pointer-events-auto select-none"
               >
-                <img
-                  src={tool.iconUrl}
-                  alt={tool.name}
-                  className="size-4 object-contain filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
-                />
-                {/* Sleek Tooltip on hover */}
-                <div className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-card px-2 py-0.5 rounded border border-line text-[10px] font-mono font-bold text-accent whitespace-nowrap pointer-events-none shadow-lg z-50">
-                  {tool.fullName}
+                <div
+                  title={tool.fullName}
+                  className="group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card/95 border border-line hover:border-accent hover:scale-115 hover:shadow-[0_0_14px_rgba(var(--color-accent-rgb,229,184,105),0.45)] transition-all cursor-pointer p-1 backdrop-blur-sm"
+                >
+                  <img
+                    src={tool.iconUrl}
+                    alt={tool.name}
+                    className="size-4 object-contain filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
+                  />
+                  {/* Sleek Tooltip on hover */}
+                  <div className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-card px-2 py-0.5 rounded border border-line text-[10px] font-mono font-bold text-accent whitespace-nowrap pointer-events-none shadow-lg z-50">
+                    {tool.fullName}
+                  </div>
                 </div>
-              </div>
-            </Html>
+              </Html>
+            )}
           </group>
         );
       })}
@@ -298,6 +303,16 @@ export function MahoragaWheelCanvas({
     secondary: "#A3A3A3",
     card: "#111111",
   });
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  useEffect(() => {
+    const handleModalState = (e: Event) => {
+      const customEvent = e as CustomEvent<{ open: boolean }>;
+      setIsModalOpen(!!customEvent.detail?.open);
+    };
+    window.addEventListener("rony_modal_state", handleModalState);
+    return () => window.removeEventListener("rony_modal_state", handleModalState);
+  }, []);
 
   useEffect(() => {
     const updateColors = () => {
@@ -390,6 +405,7 @@ export function MahoragaWheelCanvas({
           dragPhysicsRef={dragPhysicsRef}
           accentColor={themeColors.accent}
           cardBg={themeColors.card}
+          isModalOpen={isModalOpen}
         />
       </Canvas>
 

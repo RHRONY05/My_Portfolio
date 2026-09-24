@@ -12,7 +12,7 @@ export default function Home() {
       <Navbar />
       <HeroCinemaCanvas />
 
-      <div className="bg-canvas">
+      <div className="bg-canvas overflow-x-clip">
         <About />
         <Skills />
         <Projects />

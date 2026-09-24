@@ -1,6 +1,6 @@
 # Project Progress: Rony's 3D Portfolio Rebuild
 
-> **Current Project Status**: 🟢 **Section 01: Hero COMPLETE & LOCKED (Zero Hardcoded Colors, Full Viewport Responsiveness) -> Ready for Section 04: Featured Projects**  
+> **Current Project Status**: 🟢 **Section 01 (Hero), Section 02 (About - 5-Chapter 3D Comic Book Dossier), and Section 03 (Tech Stack - Mahoraga Load Balancer) COMPLETE & LOCKED -> Ready for Section 04: Featured Projects**  
 > Active Tracking Branch: `v2-3d-rebuild`  
 > Master Plan: [`.agents/project_plan.md`](file:///d:/Projects/Portfolio/.agents/project_plan.md)  
 > Learning Roadmap: [`.agents/learning_roadmap.md`](file:///d:/Projects/Portfolio/.agents/learning_roadmap.md)
@@ -90,11 +90,14 @@
 - [x] **Chapter 04 Spread Integrated**:
   - Left page: The First Spark quote (`page_04_left.png`, color-matched `#08090D` solid background).
   - Right page: School & Voyager artwork + story (`page_04_right.png`).
-- [x] **Direct-Click 3D Multi-Leaf Page-Turning System**:
-  - Concentric spine hinge system with 3 turning leaves (`leaf1Ref`, `leaf2Ref`, `leaf3Ref`) sharing pivot `[-width/2, 0, pagesBlockThickness/2]`.
-  - Realistic fanned page stacking angles (-142.2°, -136.8°, -131.4°, -126.0°) with zero clipping and zero Z-fighting.
-  - Clicking right page turns forward (Chapter 1 → 2 → 3 → 4); clicking left page turns backward (Chapter 4 → 3 → 2 → 1).
-  - Keyboard ArrowLeft / ArrowRight support and bottom chapter controls fully synchronized across all 4 chapters.
+- [x] **Chapter 05 Spread Integrated (The AI Horizon & Shawshank Epigraph)**:
+  - Left page: The Shawshank Redemption quote by Andy Dufresne (`page_05_left.png`, color-matched `#08090D` solid background, Georgia serif, Champagne Ivory).
+  - Right page: Contemplative sunset window artwork + natural reflections on AI, craft, and hope (`page_05_right.png`).
+- [x] **Direct-Click 3D Multi-Leaf Page-Turning System (All 5 Chapters)**:
+  - Concentric spine hinge system with 4 turning leaves (`leaf1Ref`, `leaf2Ref`, `leaf3Ref`, `leaf4Ref`) sharing pivot `[-width/2, 0, pagesBlockThickness/2]`.
+  - Realistic fanned page stacking angles (-142.2°, -136.8°, -131.4°, -126.0°, -120.6°) with zero clipping and zero Z-fighting.
+  - Clicking right page turns forward (Chapter 1 → 2 → 3 → 4 → 5); clicking left page turns backward (Chapter 5 → 4 → 3 → 2 → 1).
+  - Keyboard ArrowLeft / ArrowRight support and bottom chapter controls fully synchronized across all 5 chapters.
   - Hover pointer feedback (`cursor: pointer`) on active clickable pages.
   - Right-hand editorial narrative panel in `About.tsx` dynamically synchronized in real-time with chapter state.
 - [x] **Clean Executive Summary & Spec Sheet on Right Panel**:
@@ -118,6 +121,9 @@
   - Mobile/tablet text container capped at `max-w-2xl mx-auto` to prevent over-extended line lengths when stacked.
   - Adaptive thumb-friendly action buttons (full-width stacked on mobile, inline on desktop).
   - Clean vertical breathing room (`gap-10 sm:gap-12 lg:gap-14`) between the 3D book stage and the text summary.
+  - **Zero Horizontal Scrolling**: Enforced `overflow-x: clip` and `max-width: 100vw` globally and contained fluid backdrop blur within the 3D stage (`overflow-hidden`).
+  - **3D Camera Zoom Controller (`CameraRig`)**: Dynamic `+` and `-` zoom controls (0.65x to 1.40x) with keyboard shortcuts and responsive default auto-zoom (0.80x) on mobile when the book opens.
+  - **Mobile Navbar Optimization**: Hidden redundant "Hire Me" button from mobile top bar (`hidden md:inline-flex`), made Theme Customizer dropdown viewport-anchored (`fixed inset-x-3`) with backdrop scrim and touch dismissal.
 
 ### Phase 3: Mahoraga Adaptation Circuit & Load Balancer (Section 03: Tech Stack) - [COMPLETE]
 - [x] **2.5D Architecture & Layout Blueprint**: Symmetrical 1:1 load-balancer layout with pinned central character, continuous 50% horizontal bus line, and left/right 3-way fork connectors.
@@ -129,7 +135,8 @@
   - Direct 1:1 turntable physics: click-and-hold to pause, bidirectional spin (left = reverse, right = forward), 3D pitch tilt (drag up/down), and smooth inertial coasting with spring-back restitution.
 - [x] **Web Audio Ratchet Synthesizer**: Procedural audio feedback clicking on every 60-degree sector crossed in both directions.
 - [x] **Teleported Modal Architecture (`SkillRealmCard.tsx`)**:
-  - Mounted via `createPortal` to `document.body` at `z-[9999]` with backdrop blur, scroll locking, and `Escape` key listeners (100% immune to canvas or text ribbon clipping).
+  - Mounted via `createPortal` to `document.body` at `zIndex: 999999` so it is unconditionally on top of all fixed bars, canvases, and layers.
+  - Mobile-First Flex-Column Architecture: Sticky header with persistent `[ ✕ ]` close button, smooth touch-scroll body (`max-h-[88dvh]`), and sticky thumb-friendly footer dismiss button.
   - 36+ authentic brand SVG vectors rendered beside tool names.
 - [x] **Mobile Single-Bus Load Balancer (`SkillsLoadBalancer.tsx`)**:
   - Preserves the authentic load balancer architecture on mobile with a single continuous horizontal line and symmetrical 3-way forks.

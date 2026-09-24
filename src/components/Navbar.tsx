@@ -75,7 +75,7 @@ export function Navbar() {
 
           <a
             href="#contact"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 sm:px-5 sm:py-2 text-xs font-mono font-bold text-on-accent transition-all duration-150 hover:bg-secondary hover:shadow-[0_0_15px_rgba(var(--color-accent-rgb,229,229,229),0.45)] active:scale-95 cursor-pointer shadow-md"
+            className="hidden md:inline-flex items-center gap-1.5 rounded-lg bg-accent px-5 py-2 text-xs font-mono font-bold text-on-accent transition-all duration-150 hover:bg-secondary hover:shadow-[0_0_15px_rgba(var(--color-accent-rgb,229,229,229),0.45)] active:scale-95 cursor-pointer shadow-md"
           >
             <span>Hire Me</span>
             <ArrowUpRight className="size-3.5" />

@@ -1,10 +1,32 @@
 "use client";
 
 import React, { Suspense, useState, useRef, useEffect, useCallback } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 import { ContactShadows } from "@react-three/drei";
 import { BookMesh } from "./BookMesh";
-import { ChevronLeft, ChevronRight, BookOpen, MoveHorizontal } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  BookOpen,
+  MoveHorizontal,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
+
+// Smooth camera distance controller for zoom in / zoom out
+function CameraRig({ zoom }: { zoom: number }) {
+  useFrame((state, delta) => {
+    const targetZ = 5.85 / zoom;
+    state.camera.position.z = THREE.MathUtils.damp(
+      state.camera.position.z,
+      targetZ,
+      6,
+      delta
+    );
+  });
+  return null;
+}
 
 interface Book3DCanvasProps {
   chapter?: number;
@@ -17,6 +39,7 @@ export function Book3DCanvas({
 }: Book3DCanvasProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [rotationOffset, setRotationOffset] = useState(0);
+  const [zoom, setZoom] = useState(1);
   const isDraggingRef = useRef(false);
   const startXRef = useRef(0);
   const initialOffsetRef = useRef(0);
@@ -38,6 +61,17 @@ export function Book3DCanvas({
     };
   }, []);
 
+  // Responsive default zoom on mobile: zoom out slightly when opened so entire spread fits
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 640) {
+      if (isOpen) {
+        setZoom(0.8);
+      } else {
+        setZoom(1.0);
+      }
+    }
+  }, [isOpen]);
+
   // Dedicated handler to cleanly toggle open/close cover and reset to chapter 1
   const handleToggleCover = useCallback(() => {
     if (isOpen) {
@@ -52,7 +86,19 @@ export function Book3DCanvas({
   // Rotate step by ~20 degrees
   const handleRotateLeft = () => setRotationOffset((prev) => prev + 0.35);
   const handleRotateRight = () => setRotationOffset((prev) => prev - 0.35);
-  const handleReset = () => setRotationOffset(0);
+
+  const handleZoomIn = useCallback(() => {
+    setZoom((z) => Math.min(1.4, Number((z + 0.15).toFixed(2))));
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    setZoom((z) => Math.max(0.65, Number((z - 0.15).toFixed(2))));
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setRotationOffset(0);
+    setZoom(1);
+  }, []);
 
   // Keyboard navigation matching PanelPress
   useEffect(() => {
@@ -86,6 +132,12 @@ export function Book3DCanvas({
           e.preventDefault();
           handleToggleCover();
         }
+      } else if (e.key === "+" || e.key === "=") {
+        e.preventDefault();
+        handleZoomIn();
+      } else if (e.key === "-" || e.key === "_") {
+        e.preventDefault();
+        handleZoomOut();
       } else if (e.key === "Home") {
         e.preventDefault();
         handleReset();
@@ -94,7 +146,7 @@ export function Book3DCanvas({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, chapter, onChapterChange, handleToggleCover]);
+  }, [isOpen, chapter, onChapterChange, handleToggleCover, handleZoomIn, handleZoomOut, handleReset]);
 
   // Smooth pointer drag rotation
   const onPointerDown = useCallback((e: React.PointerEvent) => {
@@ -128,7 +180,7 @@ export function Book3DCanvas({
     >
       {/* 3D Canvas Stage: Optimized viewport height so book + controls fit within browser view */}
       <div
-        className="relative h-[440px] w-full sm:h-[490px] lg:h-[530px] xl:h-[560px] cursor-grab active:cursor-grabbing touch-none"
+        className="relative h-[440px] w-full sm:h-[490px] lg:h-[530px] xl:h-[560px] cursor-grab active:cursor-grabbing touch-none overflow-hidden"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -170,6 +222,9 @@ export function Book3DCanvas({
           camera={{ position: [0, 0, 5.85], fov: 42 }}
           className="h-full w-full pointer-events-none"
         >
+          {/* Smooth Camera Distance Rig for Zoom In/Out */}
+          <CameraRig zoom={zoom} />
+
           {/* Studio Lights */}
           <ambientLight intensity={1.25} />
 
@@ -222,14 +277,29 @@ export function Book3DCanvas({
       </div>
 
       {/* Control Buttons (Snapped snugly beneath the canvas so they fit on screen) */}
-      <div className="mt-1 flex flex-col items-center gap-2">
-        <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className="mt-1 flex flex-col items-center gap-2 max-w-full px-2">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+          {/* Zoom Out Button */}
+          <button
+            type="button"
+            onClick={handleZoomOut}
+            disabled={zoom <= 0.65}
+            aria-label="Zoom out"
+            title="Zoom out (-)"
+            className={`flex size-9 items-center justify-center rounded-lg border border-line bg-card/80 text-muted transition-all duration-150 hover:border-accent hover:text-accent active:scale-95 cursor-pointer ${
+              zoom <= 0.65 ? "opacity-35 cursor-not-allowed text-muted pointer-events-none" : ""
+            }`}
+          >
+            <ZoomOut className="size-4" />
+          </button>
+
           {/* Rotate Left Button */}
           <button
             type="button"
             onClick={handleRotateLeft}
             aria-label="Rotate book left"
-            className="flex size-9 items-center justify-center rounded-lg border border-line bg-card/80 text-muted transition-all duration-150 hover:border-accent hover:text-accent active:scale-95"
+            title="Rotate left"
+            className="flex size-9 items-center justify-center rounded-lg border border-line bg-card/80 text-muted transition-all duration-150 hover:border-accent hover:text-accent active:scale-95 cursor-pointer"
           >
             <ChevronLeft className="size-4" />
           </button>
@@ -241,9 +311,9 @@ export function Book3DCanvas({
               onClick={() => onChapterChange?.(Math.max(1, chapter - 1))}
               disabled={chapter <= 1}
               aria-label="Previous Chapter"
-              className={`flex h-9 items-center gap-1.5 rounded-lg border border-line bg-card/80 px-3 text-xs font-medium transition-all duration-150 ${
+              className={`flex h-9 items-center gap-1.5 rounded-lg border border-line bg-card/80 px-2.5 sm:px-3 text-xs font-medium transition-all duration-150 cursor-pointer ${
                 chapter <= 1
-                  ? "opacity-35 cursor-not-allowed text-muted"
+                  ? "opacity-35 cursor-not-allowed text-muted pointer-events-none"
                   : "text-fg hover:border-accent hover:text-accent active:scale-95"
               }`}
             >
@@ -255,7 +325,7 @@ export function Book3DCanvas({
           <button
             type="button"
             onClick={handleToggleCover}
-            className="flex h-9 items-center gap-2 rounded-lg border border-line bg-card/80 px-4 text-xs font-medium text-fg transition-all duration-150 hover:border-accent hover:text-accent active:scale-95"
+            className="flex h-9 items-center gap-2 rounded-lg border border-line bg-card/80 px-3.5 sm:px-4 text-xs font-medium text-fg transition-all duration-150 hover:border-accent hover:text-accent active:scale-95 cursor-pointer shadow-sm"
           >
             <BookOpen className="size-3.5 text-accent" />
             <span>{isOpen ? "Close cover" : "Open cover"}</span>
@@ -265,16 +335,16 @@ export function Book3DCanvas({
           {isOpen && (
             <button
               type="button"
-              onClick={() => onChapterChange?.(Math.min(4, chapter + 1))}
-              disabled={chapter >= 4}
+              onClick={() => onChapterChange?.(Math.min(5, chapter + 1))}
+              disabled={chapter >= 5}
               aria-label="Next Chapter"
-              className={`flex h-9 items-center gap-1.5 rounded-lg border border-line bg-card/80 px-3 text-xs font-medium transition-all duration-150 ${
-                chapter >= 4
-                  ? "opacity-35 cursor-not-allowed text-muted"
+              className={`flex h-9 items-center gap-1.5 rounded-lg border border-line bg-card/80 px-2.5 sm:px-3 text-xs font-medium transition-all duration-150 cursor-pointer ${
+                chapter >= 5
+                  ? "opacity-35 cursor-not-allowed text-muted pointer-events-none"
                   : "text-fg hover:border-accent hover:text-accent active:scale-95"
               }`}
             >
-              <span>Chapter {Math.min(4, chapter + 1)} →</span>
+              <span>Chapter {Math.min(5, chapter + 1)} →</span>
             </button>
           )}
 
@@ -283,19 +353,34 @@ export function Book3DCanvas({
             type="button"
             onClick={handleRotateRight}
             aria-label="Rotate book right"
-            className="flex size-9 items-center justify-center rounded-lg border border-line bg-card/80 text-muted transition-all duration-150 hover:border-accent hover:text-accent active:scale-95"
+            title="Rotate right"
+            className="flex size-9 items-center justify-center rounded-lg border border-line bg-card/80 text-muted transition-all duration-150 hover:border-accent hover:text-accent active:scale-95 cursor-pointer"
           >
             <ChevronRight className="size-4" />
+          </button>
+
+          {/* Zoom In Button */}
+          <button
+            type="button"
+            onClick={handleZoomIn}
+            disabled={zoom >= 1.4}
+            aria-label="Zoom in"
+            title="Zoom in (+)"
+            className={`flex size-9 items-center justify-center rounded-lg border border-line bg-card/80 text-muted transition-all duration-150 hover:border-accent hover:text-accent active:scale-95 cursor-pointer ${
+              zoom >= 1.4 ? "opacity-35 cursor-not-allowed text-muted pointer-events-none" : ""
+            }`}
+          >
+            <ZoomIn className="size-4" />
           </button>
         </div>
 
         {/* Instruction Caption */}
-        <div className="flex items-center gap-1.5 font-mono text-[11px] text-muted/70 tracking-wider uppercase">
-          <MoveHorizontal className="size-3 text-accent/80" />
-          <span>
+        <div className="flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] text-muted/70 tracking-wider uppercase text-center px-2">
+          <MoveHorizontal className="size-3 text-accent/80 shrink-0" />
+          <span className="truncate sm:whitespace-normal">
             {isOpen
-              ? "CLICK PAGES DIRECTLY TO FLIP • DRAG TO ROTATE"
-              : "CLICK COVER TO OPEN • DRAG TO ROTATE"}
+              ? "CLICK PAGES DIRECTLY • DRAG TO ROTATE • + / - TO ZOOM"
+              : "CLICK COVER TO OPEN • DRAG TO ROTATE • + / - TO ZOOM"}
           </span>
         </div>
       </div>
