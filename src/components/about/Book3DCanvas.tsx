@@ -73,7 +73,7 @@ export function Book3DCanvas({
         }
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
-        if (isOpen && chapter < 4) {
+        if (isOpen && chapter < 5) {
           onChapterChange?.(chapter + 1);
         } else {
           handleRotateRight();
