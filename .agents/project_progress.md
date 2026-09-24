@@ -7,29 +7,28 @@
 
 ---
 
-## 🎬 Section 01: Hero — "The Open-Air Cinema" (Current Focus)
+## 🎬 Section 01: Hero — "Urban Graffiti Mural & Developer Stage" (Current Focus)
 
-### 1. Finalized 4-Layer Asset Stack (100% Locked in `public/images/`):
-All assets are verified, high-resolution (1080p), and tested. **DO NOT re-generate or re-cut these images:**
+### 1. Visual & Layout Architecture:
+- **Navbar**: Fully responsive, frosted 45% glass (`bg-canvas/45 backdrop-blur-md`), unboxed links (15-16px font), "Hire Me" button with arrow & amber glow, brand **`RH.ROny.`**.
+- **Background**: Full-screen street graffiti mural ([`public/images/Hero/My_graphetti.png`](file:///d:/Projects/Portfolio/public/images/Hero/My_graphetti.png)) with uniform 70% Obsidian canvas wash (`#0D1117`).
+- **Responsive Focal Framing**:
+  - Desktop: `md:object-[right_top]` (no top clipping on ultrawide/big screens, face visible on right).
+  - Tablet: `sm:object-[65%_top] md:object-[65%_top]` with text container `md:max-w-lg` (face on right, text on left, zero overlap).
+  - Mobile: `object-[74%_top]` (portrait framed on right, open dark wall on left for text).
+- **Typography Stage**: Approved Option A headline ("Software Engineer in the Making — Full-Stack & AI") and polished mission copy highlighting CUET CSE, full-stack architecture, agentic workflows, and expanding AI/ML engineering focus.
+- **Layout Decision**: Clean and distraction-free.
 
-| Layer | File Path | Resolution | Visual Content & Animation Role |
-| :--- | :--- | :--- | :--- |
-| **Layer 0** | [`public/images/layer0-sky.jpg`](file:///d:/Projects/Portfolio/public/images/layer0-sky.jpg) | 1920 × 1080 | Deep starry night sky, crescent moon, milky way, and rolling mountain silhouettes. Slowest parallax speed (0.02). |
-| **Layer 1-Canopy** | [`public/images/layer1-canopy.png`](file:///d:/Projects/Portfolio/public/images/layer1-canopy.png) | 1920 × 1080 | Transparent PNG. Isolated hanging palm fronds at the top. Animated with subtle CSS keyframe wind-sway (`transform-origin: top center`). |
-| **Layer 1-Campsite** | [`public/images/layer1-campsite.png`](file:///d:/Projects/Portfolio/public/images/layer1-campsite.png) | 1920 × 1080 | Transparent PNG. Sandy ground, outdoor cinema projector screen on black tripods, beach bungalow with glowing amber lanterns, and campfire pit with warm wood logs. |
-| **Layer 2-Character** | [`public/images/layer2-character.png`](file:///d:/Projects/Portfolio/public/images/layer2-character.png) | 447 × 447 | Transparent PNG. Rony seated on sturdy 4-legged folding black metal camping stool in **RH.RONY #5** dark teal & crimson jersey. Rear three-quarter view, light neat stubble, both feet firmly planted on sand. Fastest parallax speed (0.14). |
-| **Master Reference** | [`public/images/final-scene-composite.jpg`](file:///d:/Projects/Portfolio/public/images/final-scene-composite.jpg) | 1920 × 1080 | Reference composite showing all 4 layers perfectly aligned with character at approved Option B distance. |
-
-### 2. Key Architecture Decisions Confirmed:
-1. **Multi-Screen Strategy**: Tablet (iPad) through 4K Desktop share the **same unified 16:9 Aspect-Ratio Safe Stage** (`object-fit: cover`, `object-position: center bottom`, `scale: 1.06` overscan buffer to prevent edge-clipping during mouse tilt, GPU hardware acceleration with `translate3d`). Mobile UI design is deferred until Tablet/Desktop is live.
-2. **Campfire "Hybrid Core" Technique**: The base wood logs and warm glowing core live in `layer1-campsite.png`. Live code (`CampfireFX.tsx`) will render active dancing upper flame tips, rising spark particles floating into the starry sky, and pulsating radial amber light.
-3. **Character Seating Distance**: Character sits at **Option B (Relaxed Natural Distance)** with open sandy breathing room between the stool and fire pit (`x: 1410, y: 565` in 1080p frame).
-
-### 3. Hero Implementation Milestones:
-- [x] **Living Video Hero**: Activated full-bleed 1080p animated video (`Flames_ignite_and_flicker_1080p_20260921024320.mp4`) with dancing campfire flames, glowing porch lantern, and animated night atmosphere.
-- [x] **Transparent Navbar**: Updated `Navbar.tsx` to be 100% transparent over the hero, automatically transitioning to `bg-canvas/80 backdrop-blur-md border-b border-line` when scrolling down past 40px.
-- [ ] **Projector Screen Live HUD**: Mount `ProjectorScreenHUD.tsx` positioned precisely over the outdoor movie screen (live dispatch badge, "I Build Web Apps & AI Automations" headline, CTA buttons, and telemetry stats).
-- [ ] **Production Polish**: Video pre-load state with smooth loading spinner / reveal transition once video is buffered and ready.
+### 2. Next Session Scope (Interactive Easter Egg / Gamification):
+- [ ] **Idea 1: Street Curb Runner / Skater**:
+  - Lightweight 2D canvas runner along the street curb.
+  - Skater/runner silhouette jumping over `404` errors / bugs.
+  - Non-hijacking controls (click/tap, optional key toggle), 60 FPS, <10KB footprint.
+- [ ] **Idea 2: Interactive Graffiti Spray Can Tagging**:
+  - Particle spray canvas reacting to mouse drag / touch.
+  - Golden amber embers/sparks lighting up the concrete texture with soft decay.
+  - Performance-optimized (requestAnimationFrame, offscreen canvas, auto-sleep when idle).
+- [ ] Compare both in browser and choose the best fit or keep clean.
 
 
 
@@ -86,14 +85,21 @@ All assets are verified, high-resolution (1080p), and tested. **DO NOT re-genera
   - Adaptive thumb-friendly action buttons (full-width stacked on mobile, inline on desktop).
   - Clean vertical breathing room (`gap-10 sm:gap-12 lg:gap-14`) between the 3D book stage and the text summary.
 
-### Phase 3: Mahoraga Adaptation Circuit & Load Balancer (Section 03: Tech Stack)
-- [x] **2.5D Architecture & Layout Blueprint**: 3-Center-3 load-balancer layout with pinned central character and responsive grid reflow.
-- [x] **Tech Stack Data Schema**: Defined 6 realms (Frontend, Backend, Database, AI Agents, DevOps, Tooling) with tools, summaries, and key architectural patterns in `skillsData.ts`.
-- [x] **3D Mahoraga Halo Wheel (`MahoragaWheelCanvas.tsx`)**: 8-spoked golden Dharmachakra wheel with rotating tool spokes, drag-to-spin physics, and rotational damping.
-- [x] **Interactive Realm Cards & Modals (`SkillRealmCard.tsx`)**: Glassmorphic node cards with interactive telemetry modals detailing tools matrix and patterns.
-- [x] **Section Assembly & Mount (`SkillsLoadBalancer.tsx` + `Skills.tsx`)**: Mounted into page layout with zero TypeScript compilation errors.
-- [x] **Circuit Data Bus**: SVG animated circuit lines with flowing amber pulses connecting central character to the 6 nodes.
-- [x] **Audio & Assets Polish**: Web Audio API ratchet sound effects and authentic 6 AI tool logos (Claude, Gemini, ChatGPT, Antigravity, Cursor, Ollama) embedded in rotating 3D halo discs with interactive tooltips.
+### Phase 3: Mahoraga Adaptation Circuit & Load Balancer (Section 03: Tech Stack) - [COMPLETE]
+- [x] **2.5D Architecture & Layout Blueprint**: Symmetrical 1:1 load-balancer layout with pinned central character, continuous 50% horizontal bus line, and left/right 3-way fork connectors.
+- [x] **Tech Stack Data Schema (`skillsData.ts`)**: 6 core engineering realms (Frontend, Backend, Database, Autonomous AI, DevOps, Tooling) with authentic, human copy, standard engineering patterns, and dedicated brand vector icons.
+- [x] **3D Mahoraga Halo Wheel (`MahoragaWheelCanvas.tsx`)**:
+  - Golden Dharmachakra halo with 6 orbiting AI tool discs (Claude, Gemini, ChatGPT, Antigravity, Cursor, Ollama).
+  - Pure white vector emblem for Ollama (`fill="#FFFFFF"`).
+  - Calibrated vertical elevation (`mb-2 sm:mb-3`) floating cleanly above Rony's hair.
+  - Direct 1:1 turntable physics: click-and-hold to pause, bidirectional spin (left = reverse, right = forward), 3D pitch tilt (drag up/down), and smooth inertial coasting with spring-back restitution.
+- [x] **Web Audio Ratchet Synthesizer**: Procedural audio feedback clicking on every 60-degree sector crossed in both directions.
+- [x] **Teleported Modal Architecture (`SkillRealmCard.tsx`)**:
+  - Mounted via `createPortal` to `document.body` at `z-[9999]` with backdrop blur, scroll locking, and `Escape` key listeners (100% immune to canvas or text ribbon clipping).
+  - 36+ authentic brand SVG vectors rendered beside tool names.
+- [x] **Mobile Single-Bus Load Balancer (`SkillsLoadBalancer.tsx`)**:
+  - Preserves the authentic load balancer architecture on mobile with a single continuous horizontal line and symmetrical 3-way forks.
+  - Sized at `h-[235px]` with full cards displaying number prefix, category title, domain icon, and 1-line tech preview.
 
 ### Phase 4: Quality Gate & Multi-Viewport Verification
 - [ ] Tablet and desktop verified at 60 FPS.

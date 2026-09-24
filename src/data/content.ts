@@ -1,15 +1,15 @@
 export const heroContent = {
-  availabilityBadge: "Available for freelance work",
-  headline: "I Build Web Apps & AI Automations",
+  availabilityBadge: "Open to High-Impact Opportunities",
+  headline: "Software Engineer in the Making — Full-Stack & AI",
   subheadline:
-    "Full Stack Developer specializing in Next.js, Node.js, and n8n workflow automation",
-  primaryCta: { label: "View My Work", href: "#projects" },
-  secondaryCta: { label: "Contact Me", href: "#contact" },
+    "CSE undergraduate focused on building production-ready web applications and autonomous systems. Experienced in full-stack architecture, agentic workflows, and LLM integrations, with an expanding focus on AI/ML engineering.",
+  primaryCta: { label: "Explore Work", href: "#projects" },
+  secondaryCta: { label: "Let's Connect", href: "#contact" },
   stats: [
-    "6+ Projects Delivered",
-    "MERN Stack",
-    "AI Automation",
-    "n8n Expert",
+    "Full-Stack Web Systems",
+    "Next.js & TypeScript",
+    "Autonomous Agents (n8n)",
+    "CUET CSE",
   ],
 } as const;
 
@@ -49,7 +49,7 @@ export const contactContent = {
 } as const;
 
 export const footerContent = {
-  brand: "RONY.DEV",
+  brand: "RH.ROny.",
   tagline: "Building the web, one workflow at a time.",
   navLinks: [
     { label: "About", href: "#about" },

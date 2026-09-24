@@ -46,33 +46,31 @@ A high-performance, single-page 3D developer portfolio that replaces traditional
 
 ## 2. Section Architecture & Feature Blueprints
 
-### Section 01: Hero — "The Open-Air Cinema // Starry Night Multi-Plane Parallax" [LOCKED]
-Inspired by atmospheric narrative parallax web designs (e.g., Notosan VISITE), establishing mood, human identity, and cinematic storytelling through a calm outdoor setting under the stars.
+### Section 01: Hero — "The Midnight Metropolis & Digital Billboard // Looped Cinemagraph & 3D-Tilted HUD" [LOCKED]
+A cinematic, rock-solid opening that pairs a full-viewport nighttime metropolis cinemagraph with an industrial digital billboard hosting Rony's portrait and live 3D-tilted interactive DOM elements.
 
-#### Visual Architecture & Composition (Full-Screen Immersive Canvas)
-- **Overall Canvas**: Full-viewport immersive nature setting at night. No boxed cards. The entire screen is the outdoor world.
-- **Background Plane (Layer 0 - Deepest Depth)**:
-  - Deep dark twilight/midnight sky with glowing moon, gentle starfield, and distant silhouetted hills/trees.
-  - Moves subtly with mouse coordinates (~5px) to give the illusion of infinite distance.
-- **Midground Plane (Layer 1 - The Projection Ground)**:
-  - Outdoor clearing with natural ground and foliage framing.
-  - **The Centerpiece — Outdoor Projector Screen**:
-    - A clean, portable outdoor movie projector screen on tripod stands planted on the ground (based on reference specification).
-    - **Live HTML / React Content on the Screen**:
-      - Top Dispatch Badge: `● ACTIVE DISPATCH // AVAILABLE FOR SELECT TEAMS`
-      - Headline: **"I Build Web Apps & AI Automations"** (with glowing emerald phosphor emphasis).
-      - Narrative Sub-headline: *"Full Stack Developer specializing in Next.js, Node.js, and autonomous AI workflow pipelines for high-growth technical teams."*
-      - Action Row:
-        - Primary CTA: `VIEW PROJECTS →` (Solid emerald `#00FF94` with bold typography)
-        - Ghost CTA: `GET IN TOUCH ↗` (Clean bordered button with subtle hover wash)
-        - Devlog Anchor: `READ DEVLOG (ISSUE NOTES) ↵`
-      - Telemetry Stats Grid:
-        - `99.9% // PROD UPTIME` • `NEXT.JS 16 // ARCHITECTURE` • `AI AGENTS // RUNTIMES` • `CUET // CSE ALUM`
-- **Foreground Plane (Layer 2 - The Human Anchor & Living Campfire)**:
-  - **The Subject (Rony)**: Positioned on the right side in graphic novel / comic illustration style, seen from behind/profile, relaxed and watching the projector screen (matching the visual weight of the wanderer in Notosan).
-  - **The Living Campfire**: Beside Rony, a cozy campfire with an animated flickering flame and tiny glowing embers floating up into the night sky (lightweight particle/CSS loop, giving a cinemagraph "living photo" feel).
-  - Shifts with responsive spring-damped parallax (~25px), creating tangible physical depth between the viewer, the character, and the screen.
-- **Transition**: Smooth momentum scroll transition flowing into `#about` (Section 02: 3D Comic Book Dossier).
+#### Modular 3-Layer Visual Architecture
+- **Layer 0: Looped Background Cinemagraph (Full-Viewport Canvas)**:
+  - Deep midnight starry sky with soft glowing clouds and luminous full moon.
+  - Distant nighttime city skyline with illuminated skyscrapers.
+  - **The Perched Sentinel**: A noble owl perched on a prominent skyscraper ledge / rooftop antenna overlooking the city, blinking and subtly turning its head in a seamless loop.
+  - Distant highway along the horizon with subtle streaks of light from moving night traffic.
+  - Rendered as a lightweight, hardware-accelerated 2–3s looped video (or cinemagraph) covering the viewport (`object-fit: cover`).
+- **Layer 1: The Digital Billboard & Character (High-Resolution Isolated Layer)**:
+  - Industrial highway billboard structure with heavy steel trusses, support columns, and overhead warm amber spotlights (`#E5B869`).
+  - **Left Side**: Rony's portrait in a crisp black collared shirt with crossed arms, confident expression, and warm amber rim lighting matching the floodlights.
+  - **Right Side**: Clean, dark obsidian screen (`#0D1117`) with subtle circuit traces, engineered with open breathing space to host live code.
+- **Layer 2: Live 3D-Tilted HTML/React HUD (Interactive DOM)**:
+  - Positioned over the right half of the billboard with CSS 3D perspective (`perspective: 1200px; transform: rotateY(-8deg)`) or R3F `<Html transform>`, perfectly matching the billboard's plane.
+  - **Live Dispatch Badge**: `● ACTIVE DISPATCH // AVAILABLE FOR SELECT CONTRACTS`
+  - **Headline**: **"I Build Scalable Web Apps & AI Automations"** (with warm amber gold `#E5B869` highlight).
+  - **Narrative Sub-headline**: *"Full Stack Developer specializing in Next.js, Node.js, and autonomous AI workflow pipelines for high-growth technical teams."*
+  - **Action Row**:
+    - Primary CTA: `VIEW PROJECTS →` (Solid amber `#E5B869` with bold dark text `#241800`)
+    - Ghost CTA: `GET IN TOUCH ↗` (Bordered button with hover wash)
+  - **Telemetry Grid**:
+    - `NEXT.JS 16` • `NODE.JS` • `n8n AI AGENTS` • `CUET CSE`
+- **Transition**: Smooth momentum scroll flowing into `#about` (Section 02: 3D Comic Book Dossier).
 
 ---
 

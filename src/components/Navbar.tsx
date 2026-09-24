@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { Menu, X, ArrowUpRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { profile } from "@/data/profile";
 
 const navLinks = [
@@ -12,56 +14,108 @@ const navLinks = [
 ] as const;
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
     };
-    handleScroll(); // Initial check
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [mobileMenuOpen]);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-transparent py-4 md:py-5 transition-all duration-300">
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 md:px-12">
+    <header className="fixed top-0 inset-x-0 z-50 bg-canvas/45 backdrop-blur-md border-b border-line/30 py-3 md:py-3.5 transition-all duration-300 shadow-sm shadow-black/20">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12">
+        {/* Brand Logo */}
         <Link
           href="#top"
-          className="font-mono text-xl font-black tracking-tighter text-accent drop-shadow-sm"
+          className="font-mono text-xl font-black tracking-tight text-accent transition-transform active:scale-95 drop-shadow-sm"
           aria-label={`${profile.brand} home`}
+          onClick={() => setMobileMenuOpen(false)}
         >
           {profile.brand}
         </Link>
 
+        {/* Desktop Navigation Links - Clean, unboxed text links */}
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="rounded-md px-3 py-1 text-sm font-medium text-fg/80 transition-colors hover:bg-white/10 hover:text-accent drop-shadow-sm"
+              className="text-[15px] lg:text-base font-semibold text-fg/90 transition-colors hover:text-accent drop-shadow-sm"
             >
               {link.label}
             </a>
           ))}
         </nav>
 
+        {/* Right Section: Desktop & Mobile "Hire Me" Button + Mobile Toggle */}
         <div className="flex items-center gap-3">
-          <Link
-            href="/theme-showcase"
-            className="rounded-lg border border-white/15 bg-black/20 backdrop-blur-sm px-4 py-2 text-xs font-mono font-semibold text-fg transition-all hover:border-accent hover:text-accent"
-          >
-            🎨 Theme & Fonts
-          </Link>
           <a
             href="#contact"
-            className="rounded-lg bg-accent px-6 py-2 text-sm font-semibold text-on-accent transition-all hover:opacity-90 active:scale-95 shadow-lg shadow-accent/20"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 sm:px-5 sm:py-2 text-xs font-mono font-bold text-on-accent transition-all duration-150 hover:bg-secondary hover:shadow-[0_0_15px_rgba(229,184,105,0.4)] active:scale-95 cursor-pointer shadow-md"
           >
-            Hire Me
+            <span>Hire Me</span>
+            <ArrowUpRight className="size-3.5" />
           </a>
+
+          {/* Mobile Hamburger Button */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-fg hover:text-accent transition-colors focus:outline-none"
+            aria-expanded={mobileMenuOpen}
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="size-6" />
+            ) : (
+              <Menu className="size-6" />
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Drawer Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden border-b border-line/60 bg-canvas/95 backdrop-blur-xl px-6 py-6 shadow-2xl mt-3"
+          >
+            <nav className="flex flex-col space-y-4">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="font-mono text-base font-medium text-fg/80 transition-colors hover:text-accent py-1"
+                >
+                  {link.label}
+                </a>
+              ))}
+              <div className="pt-2">
+                <a
+                  href="#contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-3.5 text-center font-mono text-xs font-bold text-on-accent transition-all hover:bg-secondary active:scale-95 shadow-md"
+                >
+                  <span>Hire Me</span>
+                  <ArrowUpRight className="size-4" />
+                </a>
+              </div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
-

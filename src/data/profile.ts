@@ -1,6 +1,6 @@
 export const profile = {
   name: "Rony",
-  brand: "RONY.DEV",
+  brand: "RH.ROny.",
   role: "Full Stack Developer & AI Automation Freelancer",
   university: "Chittagong University of Engineering and Technology (CUET), Bangladesh",
   degree: "BSc in Computer Science & Engineering (3rd year, ongoing)",
