@@ -107,7 +107,7 @@ export default function LogoPreviewPage() {
           <div className="bg-card/90 border border-line/60 rounded-lg p-4 flex items-center justify-between backdrop-blur-md shadow-inner">
             {/* The Brand Mark in Navbar */}
             <div className="flex items-center gap-3 cursor-pointer group">
-              <div className="w-8 h-8 relative transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_8px_rgba(229,184,105,0.35)]">
+              <div className="w-8 h-8 relative transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_8px_rgba(var(--color-accent-rgb,229,184,105),0.35)]">
                 <Image
                   src={activeLogo.file}
                   alt={activeLogo.title}
@@ -142,7 +142,7 @@ export default function LogoPreviewPage() {
                 onClick={() => setSelectedLogo(logo.id)}
                 className={`cursor-pointer rounded-2xl p-6 border transition-all duration-300 flex flex-col justify-between relative group ${
                   isSelected
-                    ? "bg-card border-accent shadow-[0_0_24px_rgba(229,184,105,0.18)]"
+                    ? "bg-card border-accent shadow-[0_0_24px_rgba(var(--color-accent-rgb,229,184,105),0.18)]"
                     : "bg-card/40 border-line/60 hover:border-line hover:bg-card/70"
                 }`}
               >
@@ -168,7 +168,7 @@ export default function LogoPreviewPage() {
                   {/* Large Logo Render Canvas (160x160) */}
                   <div className="h-44 w-full bg-canvas rounded-xl border border-line/40 flex items-center justify-center relative overflow-hidden group-hover:border-accent/40 transition-colors">
                     <div className="absolute inset-0 bg-[radial-gradient(var(--color-line)_1px,transparent_1px)] [background-size:12px_12px] opacity-40" />
-                    <div className="w-28 h-28 relative transition-transform duration-500 group-hover:scale-105 drop-shadow-[0_0_16px_rgba(229,184,105,0.25)]">
+                    <div className="w-28 h-28 relative transition-transform duration-500 group-hover:scale-105 drop-shadow-[0_0_16px_rgba(var(--color-accent-rgb,229,184,105),0.25)]">
                       <Image
                         src={logo.file}
                         alt={logo.title}

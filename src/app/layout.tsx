@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeManager } from "@/components/ThemeManager";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -34,7 +35,20 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lusitana:wght@400;700&family=Original+Surfer&family=Ruwudu:wght@400;500;600;700&display=swap"
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-canvas text-fg">
+        <ThemeManager />
         {children}
       </body>
     </html>

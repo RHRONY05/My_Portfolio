@@ -56,10 +56,24 @@
 - [ ] **Contact Section & Terminal**: Finalize booking & inquiry flow.
 - [ ] **Complete Plan Approval**: Final sign-off on `.agents/project_plan.md`.
 
-### Phase 1: Visual Theme & Design System Codification
-- [x] Establish design tokens in `src/app/globals.css`: **Obsidian & Royal Sunburst Amber (`#0D1117` / `#E5B869`)**.
-- [x] Synchronize 3D book studio lighting with warm sunburst amber rim lights (`#E5B869`).
-- [x] Precision Engineering typography scale locked (`Inter` + `JetBrains Mono`).
+### Phase 1: Visual Theme & Design System Codification [COMPLETE & LOCKED]
+- [x] **Strictly 4 Curated Themes & 4 Curated Fonts** (`src/data/themeConfig.ts`):
+  - Theme 01 (DEFAULT): **Monolithic Onyx & Graphite Grayscale** (`#000000` canvas, `#111111` card, `#E5E5E5` accent).
+  - Theme 02: **Celadon & Hunter Forest** (`#111D13` canvas, `#192B1C` card, `#A1CCA5` accent).
+  - Theme 03: **Midnight Amethyst & Deep Violet** (`#11001C` canvas, `#1E0030` card, `#C084FC` accent).
+  - Theme 04: **Prussian Blue & Space Indigo** (`#0B132B` canvas, `#131C38` card, `#5BC0BE` accent).
+- [x] **Strictly 4 Curated Fonts** (Option 1 Global Inheritance):
+  - Font 01 (DEFAULT): **Original Surfer** (`'Original Surfer', cursive, sans-serif` - Retro Rebel).
+  - Font 02: **Lusitana** (`'Lusitana', serif` - Noble Heritage).
+  - Font 03: **Ruwudu** (`'Ruwudu', serif` - Calligraphic Drama).
+  - Font 04: **Inter** (`'Inter', sans-serif` - Precision Standard).
+- [x] **Navbar Theme & Font Customizer Dropdown** (`src/components/ThemeFontCustomizer.tsx`):
+  - Sleek tactical trigger button on Navbar displaying real-time active color indicator dot and sliders icon.
+  - Interactive popover with dual tabs (Colors vs Fonts) showing live 3-color swatches, active checkmarks, and fonts rendered in their authentic font-family.
+  - Real-time reactive updates via custom DOM events and persistent `localStorage`.
+- [x] **Zero Hardcoded Colors & Glows**:
+  - Replaced all legacy gold glows and hardcoded fallbacks across `Hero.tsx`, `HeroCinemaCanvas.tsx`, `HeroArtifactsRack.tsx`, `StreetCurbRunner.tsx`, `BrandLogo.tsx`, and `ProjectDeck.tsx` with dynamic CSS variables.
+  - Purged all discarded colors and fonts from `/theme-showcase` and the stylesheet.
 
 ### Phase 2: 3D Comic Book Dossier (About Section)
 - [x] Front cover (`book_cover.png`) and Back cover (`back_cover.png`) finalized at 1:1 scale (1024x1536) in Obsidian & Champagne Ivory.
@@ -89,6 +103,16 @@
   - Scannable bulleted spec sheet: Core Focus, Automations, Currently Into (AI engineering & DevOps), Academic Roots (CUET CSE).
   - Dual action CTAs: `[ VIEW RESUME / CV ↗ ]` and `[ LET'S TALK ↵ ]`.
   - Balanced side-by-side with the 3D Comic Book Dossier on the left.
+- [x] **Organic Liquid Amoeba Backlight & Theme-Reactive Aura (`Book3DCanvas.tsx`)**:
+  - 3-lobe asymmetrical undulating amoeba matching reference (`fluid-blob-1` & `fluid-blob-2` keyframes).
+  - Tuned to user-approved 60% opacity (`0.60`) using `var(--color-accent-rgb)` for instant reactivity across all 4 themes.
+  - Soft 22px Gaussian feathering with 38px ambient outer falloff.
+  - Connected to live `rony_theme_change` custom window events.
+- [x] **Option 2B Luxury Metallic Hairline Frame & Default 3/4 Showcase Pose (`BookMesh.tsx`)**:
+  - High-precision 3D perimeter bevels (top, bottom, left, right) on both front and back cover slabs shaded in Champagne Ivory (`#F1DCC2`) matching the book's typography.
+  - Flush spine realignment eliminating any black border gap on the left edge.
+  - Set default closed resting angle to the iconic 3/4 showcase pose (`rotY: -0.68`, `rotX: -0.02`), prominently revealing the realistic page block thickness and paper edge ridges to instantly communicate that it is an interactive 3D book volume.
+  - Complete click-through propagation (`onToggleOpen`) across the entire frame.
 - [x] **Full-Device Mobile & Tablet Responsiveness**:
   - Calibrated horizontal margins and padding (`px-4 sm:px-6 md:px-8`).
   - Mobile/tablet text container capped at `max-w-2xl mx-auto` to prevent over-extended line lengths when stacked.

@@ -1,28 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  /* Surfaces */
-  --color-canvas: #0d1117;
-  --color-card: #161b22;
-  --color-footer: #090d12;
-  --color-line: #30363d;
+  /* Surfaces (Theme: Monolithic Onyx & Graphite Grayscale) */
+  --color-canvas: #000000;
+  --color-card: #111111;
+  --color-footer: #000000;
+  --color-line: #343434;
 
   /* Foreground */
-  --color-fg: #ffffff;
-  --color-muted: #8b949e;
+  --color-fg: #f5f5f5;
+  --color-muted: #7a7a7a;
 
-  /* Brand accent (Theme 03: Obsidian & Royal Sunburst Amber) */
-  --color-accent: #e5b869;
-  --color-on-accent: #241800;
-  --color-secondary: #f3c77c;
+  /* Brand accent */
+  --color-accent: #e5e5e5;
+  --color-on-accent: #000000;
+  --color-secondary: #a3a3a3;
 
   /* Project category accents */
-  --color-cat-fullstack: #e5b869;
-  --color-cat-automation: #6c63ff;
-  --color-cat-ai: #00d9ff;
+  --color-cat-fullstack: #e5e5e5;
+  --color-cat-automation: #8b949e;
+  --color-cat-ai: #d4d4d4;
 
   /* Typography */
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-primary, var(--font-inter));
   --font-mono: var(--font-jetbrains-mono);
 
   --text-hero: 72px;
@@ -60,11 +60,21 @@
   --text-caption--line-height: 1.4;
 }
 
+:root {
+  --color-canvas-rgb: 0, 0, 0;
+  --color-card-rgb: 17, 17, 17;
+  --color-accent-rgb: 229, 229, 229;
+  --color-secondary-rgb: 163, 163, 163;
+  --font-primary: 'Original Surfer', cursive, sans-serif;
+  --font-heading: var(--font-primary);
+}
+
 html {
   background: var(--color-canvas);
   color: var(--color-fg);
   color-scheme: dark;
   scroll-behavior: smooth;
+  transition: background-color 0.5s ease, color 0.3s ease;
 }
 
 .dot-grid {
@@ -80,21 +90,21 @@ html {
   filter: blur(100px);
   background: radial-gradient(
     circle,
-    rgba(229, 184, 105, 0.15) 0%,
+    rgba(var(--color-accent-rgb, 229, 229, 229), 0.15) 0%,
     transparent 70%
   );
 }
 
 .glass-card {
-  background: rgba(22, 27, 34, 0.4);
+  background: rgba(var(--color-card-rgb, 17, 17, 17), 0.5);
   backdrop-filter: blur(12px);
   border: 1px solid var(--color-line);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease;
 }
 
 .glass-card:hover {
   border-color: var(--color-accent);
-  box-shadow: 0 0 20px rgba(229, 184, 105, 0.12);
+  box-shadow: 0 0 20px rgba(var(--color-accent-rgb, 229, 229, 229), 0.15);
 }
 
 .glow-border {
@@ -105,12 +115,16 @@ html {
 .glow-border:hover {
   box-shadow:
     inset 0 0 0 1px var(--color-accent),
-    0 0 16px rgba(229, 184, 105, 0.12);
+    0 0 16px rgba(var(--color-accent-rgb, 229, 229, 229), 0.2);
 }
 
-body {
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+html, body, button, input, select, textarea {
+  font-family: var(--font-primary, var(--font-sans)), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading, var(--font-primary, var(--font-sans)));
 }
 
 ::selection {
@@ -130,5 +144,49 @@ body {
 .animate-canopy-sway {
   transform-origin: 50% 0%;
   animation: canopy-sway 8s ease-in-out infinite;
+}
+
+/* ========================================================
+   Liquid Fluid Blob Keyframes (Exact 3-Lobe Amoeba Morph)
+   Asymmetrical bulging lobes & breathing waist undulation
+   ======================================================== */
+@keyframes fluid-blob-1 {
+  0%, 100% {
+    border-radius: 73% 27% 59% 41% / 57% 59% 41% 43%;
+    transform: translate(-50%, -50%) rotate(-8deg) scale(1);
+  }
+  25% {
+    border-radius: 48% 52% 38% 62% / 65% 36% 64% 35%;
+    transform: translate(-50%, -50%) rotate(12deg) scale(1.06);
+  }
+  50% {
+    border-radius: 62% 38% 68% 32% / 38% 68% 32% 62%;
+    transform: translate(-50%, -50%) rotate(24deg) scale(0.97);
+  }
+  75% {
+    border-radius: 35% 65% 42% 58% / 58% 42% 58% 42%;
+    transform: translate(-50%, -50%) rotate(5deg) scale(1.04);
+  }
+}
+
+@keyframes fluid-blob-2 {
+  0%, 100% {
+    border-radius: 58% 42% 66% 34% / 46% 62% 38% 54%;
+    transform: translate(-50%, -50%) rotate(15deg) scale(0.96);
+  }
+  50% {
+    border-radius: 39% 61% 32% 68% / 68% 34% 66% 32%;
+    transform: translate(-50%, -50%) rotate(-20deg) scale(1.09);
+  }
+}
+
+.animate-fluid-blob-1 {
+  animation: fluid-blob-1 12s ease-in-out infinite;
+  will-change: border-radius, transform;
+}
+
+.animate-fluid-blob-2 {
+  animation: fluid-blob-2 16s ease-in-out infinite;
+  will-change: border-radius, transform;
 }
 

@@ -117,11 +117,15 @@ const RESTING_PITCH = -0.10; // Default natural tilt angle above head
 interface HorizontalHaloRingProps {
   isSpinningFast?: boolean;
   dragPhysicsRef: React.RefObject<DragPhysicsState>;
+  accentColor?: string;
+  cardBg?: string;
 }
 
 function HorizontalHaloRing({
   isSpinningFast = false,
   dragPhysicsRef,
+  accentColor = "#E5E5E5",
+  cardBg = "#111111",
 }: HorizontalHaloRingProps) {
   const ringGroupRef = useRef<THREE.Group>(null);
   const rotationYRef = useRef(0);
@@ -231,23 +235,23 @@ function HorizontalHaloRing({
 
         return (
           <group key={tool.name} position={[x, 0, z]}>
-            {/* Outer Golden Beveled Rim (Refined Sleek Ring) */}
+            {/* Outer Beveled Rim (Refined Sleek Ring) */}
             <mesh rotation={[Math.PI / 2, 0, 0]}>
               <torusGeometry args={[0.20, 0.016, 16, 32]} />
               <meshStandardMaterial
-                color={GOLD_COLOR}
+                color={accentColor}
                 metalness={0.9}
                 roughness={0.2}
-                emissive={GOLD_COLOR}
+                emissive={accentColor}
                 emissiveIntensity={0.3}
               />
             </mesh>
 
-            {/* Inner Dark Circular Token Face */}
+            {/* Inner Circular Token Face */}
             <mesh rotation={[Math.PI / 2, 0, 0]}>
               <cylinderGeometry args={[0.18, 0.18, 0.015, 32]} />
               <meshStandardMaterial
-                color={CARD_BG}
+                color={cardBg}
                 metalness={0.4}
                 roughness={0.5}
               />
@@ -262,7 +266,7 @@ function HorizontalHaloRing({
             >
               <div
                 title={tool.fullName}
-                className="group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card/95 border border-line hover:border-accent hover:scale-115 hover:shadow-[0_0_14px_rgba(229,184,105,0.45)] transition-all cursor-pointer p-1 backdrop-blur-sm"
+                className="group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card/95 border border-line hover:border-accent hover:scale-115 hover:shadow-[0_0_14px_rgba(var(--color-accent-rgb,229,184,105),0.45)] transition-all cursor-pointer p-1 backdrop-blur-sm"
               >
                 <img
                   src={tool.iconUrl}
@@ -289,6 +293,31 @@ interface MahoragaWheelCanvasProps {
 export function MahoragaWheelCanvas({
   isSpinningFast = false,
 }: MahoragaWheelCanvasProps) {
+  const [themeColors, setThemeColors] = React.useState({
+    accent: "#E5E5E5",
+    secondary: "#A3A3A3",
+    card: "#111111",
+  });
+
+  useEffect(() => {
+    const updateColors = () => {
+      const comp = getComputedStyle(document.documentElement);
+      const acc = comp.getPropertyValue("--color-accent").trim();
+      const sec = comp.getPropertyValue("--color-secondary").trim();
+      const crd = comp.getPropertyValue("--color-card").trim();
+      if (acc) {
+        setThemeColors({
+          accent: acc,
+          secondary: sec || "#A3A3A3",
+          card: crd || "#111111",
+        });
+      }
+    };
+    updateColors();
+    window.addEventListener("storage", updateColors);
+    return () => window.removeEventListener("storage", updateColors);
+  }, []);
+
   const dragPhysicsRef = useRef<DragPhysicsState>({
     isDragging: false,
     lastX: 0,
@@ -350,22 +379,24 @@ export function MahoragaWheelCanvas({
         dpr={[1, 1.5]}
         className="size-full pointer-events-auto"
       >
-        {/* Studio Lighting for Gilded Brass / Amber Gold */}
+        {/* Dynamic Studio Lighting matching active theme */}
         <ambientLight intensity={1.3} />
-        <directionalLight position={[3, 6, 4]} intensity={2.2} color="#FFF8E7" />
-        <pointLight position={[-3, 3, 2]} intensity={1.6} color="#E5B869" distance={8} />
-        <pointLight position={[0, -1, 2]} intensity={0.9} color="#F3C77C" distance={5} />
+        <directionalLight position={[3, 6, 4]} intensity={2.2} color="#FFFFFF" />
+        <pointLight position={[-3, 3, 2]} intensity={1.6} color={themeColors.accent} distance={8} />
+        <pointLight position={[0, -1, 2]} intensity={0.9} color={themeColors.secondary} distance={5} />
 
         <HorizontalHaloRing
           isSpinningFast={isSpinningFast}
           dragPhysicsRef={dragPhysicsRef}
+          accentColor={themeColors.accent}
+          cardBg={themeColors.card}
         />
       </Canvas>
 
       {/* Subtle Ambient Radial Glow Backing */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(229,184,105,0.2)_0%,transparent_70%)] blur-md"
+        className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(var(--color-accent-rgb,229,184,105),0.2)_0%,transparent_70%)] blur-md"
       />
     </div>
   );

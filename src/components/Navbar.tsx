@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { profile } from "@/data/profile";
+import { BrandLogo } from "@/components/BrandLogo";
+import { ThemeFontCustomizer } from "@/components/ThemeFontCustomizer";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -30,12 +32,17 @@ export function Navbar() {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-canvas/45 backdrop-blur-md border-b border-line/30 py-3 md:py-3.5 transition-all duration-300 shadow-sm shadow-black/20">
+    <header
+      className="fixed top-0 inset-x-0 z-50 backdrop-blur-md border-b border-line/30 py-3 md:py-3.5 transition-all duration-300 shadow-sm shadow-black/20"
+      style={{
+        backgroundColor: "rgba(var(--color-canvas-rgb, 13, 17, 23), 0.55)",
+      }}
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12">
         {/* Brand Logo */}
         <a
           href="#hero"
-          className="flex items-center gap-2.5 font-mono text-xl font-black tracking-tight text-accent transition-transform active:scale-95 drop-shadow-sm cursor-pointer group"
+          className="flex items-center gap-2.5 text-xl font-black tracking-tight text-accent transition-transform active:scale-95 drop-shadow-sm cursor-pointer group"
           aria-label={`${profile.brand} home`}
           onClick={(e) => {
             e.preventDefault();
@@ -43,15 +50,8 @@ export function Navbar() {
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
-          <div className="relative w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_8px_rgba(229,184,105,0.4)]">
-            <Image
-              src="/images/logo/logo.svg"
-              alt={`${profile.brand} Logo`}
-              width={32}
-              height={32}
-              priority
-              className="object-contain"
-            />
+          <div className="relative w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_10px_rgba(var(--color-accent-rgb,229,229,229),0.45)]">
+            <BrandLogo className="w-full h-full" />
           </div>
           <span className="transition-colors group-hover:text-secondary">{profile.brand}</span>
         </a>
@@ -69,11 +69,13 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Right Section: Desktop & Mobile "Hire Me" Button + Mobile Toggle */}
-        <div className="flex items-center gap-3">
+        {/* Right Section: Theme/Font Customizer + Hire Me Button + Mobile Toggle */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeFontCustomizer />
+
           <a
             href="#contact"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 sm:px-5 sm:py-2 text-xs font-mono font-bold text-on-accent transition-all duration-150 hover:bg-secondary hover:shadow-[0_0_15px_rgba(229,184,105,0.4)] active:scale-95 cursor-pointer shadow-md"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 sm:px-5 sm:py-2 text-xs font-mono font-bold text-on-accent transition-all duration-150 hover:bg-secondary hover:shadow-[0_0_15px_rgba(var(--color-accent-rgb,229,229,229),0.45)] active:scale-95 cursor-pointer shadow-md"
           >
             <span>Hire Me</span>
             <ArrowUpRight className="size-3.5" />

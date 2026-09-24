@@ -128,7 +128,7 @@ export function HeroArtifactsRack() {
                   sizes="(max-width: 768px) 140px, 320px"
                   className={`object-contain object-bottom transition-all duration-300 drop-shadow-[0_10px_20px_rgba(0,0,0,0.85)] ${
                     isHovered
-                      ? "drop-shadow-[0_16px_30px_rgba(229,184,105,0.4)] brightness-110"
+                      ? "drop-shadow-[0_16px_30px_rgba(var(--color-accent-rgb,229,229,229),0.45)] brightness-110"
                       : "brightness-95 hover:brightness-105"
                   }`}
                   priority

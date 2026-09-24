@@ -68,8 +68,8 @@ export function SkillRealmCard({
             : "px-3.5 py-2.5 sm:px-4 sm:py-3"
         } ${
           isOpen
-            ? "border-accent bg-card shadow-[0_0_20px_rgba(229,184,105,0.25)] scale-[1.02]"
-            : "border-line bg-card/75 backdrop-blur-md hover:border-accent hover:bg-card hover:shadow-[0_0_12px_rgba(229,184,105,0.16)]"
+            ? "border-accent bg-card shadow-[0_0_20px_rgba(var(--color-accent-rgb,229,184,105),0.25)] scale-[1.02]"
+            : "border-line bg-card/75 backdrop-blur-md hover:border-accent hover:bg-card hover:shadow-[0_0_12px_rgba(var(--color-accent-rgb,229,184,105),0.18)]"
         }`}
       >
         {variant === "compact" ? (
@@ -127,7 +127,7 @@ export function SkillRealmCard({
             onClick={() => setIsOpen(false)}
           >
             <div
-              className="relative w-full max-w-lg rounded-2xl border border-accent/60 bg-card p-6 sm:p-7 shadow-[0_0_50px_rgba(229,184,105,0.35)] space-y-5 max-h-[90vh] overflow-y-auto"
+              className="relative w-full max-w-lg rounded-2xl border border-accent/60 bg-card p-6 sm:p-7 shadow-[0_0_50px_rgba(var(--color-accent-rgb,229,184,105),0.35)] space-y-5 max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}

@@ -21,6 +21,22 @@ export function Book3DCanvas({
   const startXRef = useRef(0);
   const initialOffsetRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [accentColor, setAccentColor] = useState("#E5E5E5");
+
+  useEffect(() => {
+    const updateColors = () => {
+      const comp = getComputedStyle(document.documentElement);
+      const acc = comp.getPropertyValue("--color-accent").trim();
+      if (acc) setAccentColor(acc);
+    };
+    updateColors();
+    window.addEventListener("storage", updateColors);
+    window.addEventListener("rony_theme_change", updateColors);
+    return () => {
+      window.removeEventListener("storage", updateColors);
+      window.removeEventListener("rony_theme_change", updateColors);
+    };
+  }, []);
 
   // Dedicated handler to cleanly toggle open/close cover and reset to chapter 1
   const handleToggleCover = useCallback(() => {
@@ -118,6 +134,36 @@ export function Book3DCanvas({
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
+        {/* ========================================================
+            Exact 3-Lobe Liquid Morphing Amoeba (Reference Image Match)
+            Features defined asymmetrical lobes, pinched waist, and crisp
+            feathered glowing contours extending generously past the book.
+           ======================================================== */}
+        {/* Layer 1: Ambient outer soft glow aura (Theme-reactive) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 left-1/2 w-[370px] sm:w-[440px] lg:w-[500px] h-[420px] sm:h-[490px] lg:h-[540px] animate-fluid-blob-2 opacity-50 transition-colors duration-700"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(var(--color-accent-rgb, 229, 229, 229), 0.25) 0%, rgba(var(--color-accent-rgb, 229, 229, 229), 0.12) 50%, rgba(var(--color-accent-rgb, 229, 229, 229), 0.20) 100%)",
+            filter: "blur(38px)",
+          }}
+        />
+
+        {/* Layer 2: Primary defined organic blob — Dynamic Theme Reactive (60% Opacity) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 left-1/2 w-[310px] sm:w-[380px] lg:w-[430px] h-[370px] sm:h-[440px] lg:h-[490px] animate-fluid-blob-1 transition-all duration-700"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(var(--color-accent-rgb, 229, 229, 229), 0.60) 0%, rgba(var(--color-accent-rgb, 229, 229, 229), 0.52) 50%, rgba(var(--color-accent-rgb, 229, 229, 229), 0.58) 100%)",
+            border: "1px solid rgba(var(--color-accent-rgb, 229, 229, 229), 0.35)",
+            boxShadow:
+              "0 0 30px rgba(var(--color-accent-rgb, 229, 229, 229), 0.28), 0 0 60px rgba(var(--color-accent-rgb, 229, 229, 229), 0.15), inset 0 0 20px rgba(var(--color-accent-rgb, 229, 229, 229), 0.20)",
+            filter: "blur(22px)",
+          }}
+        />
+
         <Canvas
           shadows
           dpr={[1, 1.5]}
@@ -125,46 +171,47 @@ export function Book3DCanvas({
           className="h-full w-full pointer-events-none"
         >
           {/* Studio Lights */}
-          <ambientLight intensity={1.15} />
+          <ambientLight intensity={1.25} />
 
           <directionalLight
             position={[4, 7, 5]}
-            intensity={1.7}
+            intensity={1.8}
             castShadow
             shadow-mapSize={[1024, 1024]}
             shadow-bias={-0.0001}
           />
 
-          {/* Warm Sunburst Amber Rim Light */}
+          {/* Left Dynamic Theme Rim Light (Spine & Left Edge) */}
           <pointLight
-            position={[-4, 2, 3]}
-            intensity={1.8}
-            color="#E5B869"
+            position={[-3.5, 2.5, 3]}
+            intensity={2.6}
+            color={accentColor}
+            distance={10}
+          />
+
+          {/* Right Dynamic Theme Edge Kicker (Front Cover & Right Trim) */}
+          <pointLight
+            position={[3.5, 1.5, 2.5]}
+            intensity={2.0}
+            color={accentColor}
             distance={9}
           />
 
-          {/* Blueprint Cyan Ambient Fill */}
-          <pointLight
-            position={[4, -2, 2]}
-            intensity={1.0}
-            color="#58A6FF"
-            distance={8}
-          />
-
           <Suspense fallback={null}>
-            {/* The 20% Larger 3D Book Actor */}
+            {/* The 20% Larger 3D Book Actor with Glowing Bevels */}
             <BookMesh
               isOpen={isOpen}
               onToggleOpen={handleToggleCover}
               chapter={chapter}
               onChapterChange={onChapterChange}
               rotationYOffset={rotationOffset}
+              accentColor={accentColor}
             />
 
             {/* Soft contact shadow underneath */}
             <ContactShadows
               position={[isOpen ? 0.92 : 0, -2.0, 0]}
-              opacity={0.55}
+              opacity={0.65}
               scale={8.5}
               blur={2.4}
               far={4.0}

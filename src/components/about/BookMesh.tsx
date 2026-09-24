@@ -10,6 +10,7 @@ interface BookMeshProps {
   chapter?: number;
   onChapterChange?: (chapter: number) => void;
   rotationYOffset?: number;
+  accentColor?: string;
 }
 
 export function BookMesh({
@@ -18,6 +19,7 @@ export function BookMesh({
   chapter = 1,
   onChapterChange,
   rotationYOffset = 0,
+  accentColor = "#E5E5E5",
 }: BookMeshProps) {
   const rootGroupRef = useRef<THREE.Group>(null);
   const frontCoverRef = useRef<THREE.Group>(null);
@@ -115,6 +117,9 @@ export function BookMesh({
   const pagesWidth = width - 0.045;
   const pagesHeight = height - 0.055;
 
+  // Exact Champagne Ivory font color sampled directly from book_cover.png typography
+  const BOOK_FONT_GOLD = "#F1DCC2";
+
   // Realistic Concentric Spine Hinge Math:
   // Cover opens to ~ -142.2 deg (-2.48 rad)
   const targetCoverAngle = isOpen ? -Math.PI * 0.79 : 0;
@@ -126,11 +131,11 @@ export function BookMesh({
   const targetLeaf3Angle = isOpen && chapter >= 4 ? -Math.PI * 0.70 : 0;
 
   // Dynamic centering math:
-  // Closed: centered at 0
+  // Closed: centered at 0 with iconic 3/4 showcase pose showing tactile page block thickness
   // Open: spine shifts so that left open cover and right page are symmetrically balanced
   const targetPositionX = isOpen ? 0.92 : 0;
-  const baseRotationX = isOpen ? -0.08 : -0.14;
-  const baseRotationY = isOpen ? -0.16 : -0.42;
+  const baseRotationX = isOpen ? -0.08 : -0.02;
+  const baseRotationY = isOpen ? -0.16 : -0.68;
 
   useFrame((_, delta) => {
     if (rootGroupRef.current) {
@@ -224,6 +229,54 @@ export function BookMesh({
         </mesh>
       )}
 
+      {/* Back Cover Hairline Perimeter Frame (Option 2B - Matching Book Fonts) */}
+      <group position={[0, 0, -pagesBlockThickness / 2 - coverThickness - 0.002]}>
+        {/* Top Bevel */}
+        <mesh position={[0, height / 2 - 0.006, 0]}>
+          <boxGeometry args={[width, 0.012, 0.003]} />
+          <meshStandardMaterial
+            color={BOOK_FONT_GOLD}
+            emissive={BOOK_FONT_GOLD}
+            emissiveIntensity={0.45}
+            roughness={0.30}
+            metalness={0.75}
+          />
+        </mesh>
+        {/* Bottom Bevel */}
+        <mesh position={[0, -height / 2 + 0.006, 0]}>
+          <boxGeometry args={[width, 0.012, 0.003]} />
+          <meshStandardMaterial
+            color={BOOK_FONT_GOLD}
+            emissive={BOOK_FONT_GOLD}
+            emissiveIntensity={0.45}
+            roughness={0.30}
+            metalness={0.75}
+          />
+        </mesh>
+        {/* Left Bevel */}
+        <mesh position={[-width / 2 + 0.006, 0, 0]}>
+          <boxGeometry args={[0.012, height, 0.003]} />
+          <meshStandardMaterial
+            color={BOOK_FONT_GOLD}
+            emissive={BOOK_FONT_GOLD}
+            emissiveIntensity={0.45}
+            roughness={0.30}
+            metalness={0.75}
+          />
+        </mesh>
+        {/* Right Bevel */}
+        <mesh position={[width / 2 - 0.006, 0, 0]}>
+          <boxGeometry args={[0.012, height, 0.003]} />
+          <meshStandardMaterial
+            color={BOOK_FONT_GOLD}
+            emissive={BOOK_FONT_GOLD}
+            emissiveIntensity={0.45}
+            roughness={0.30}
+            metalness={0.75}
+          />
+        </mesh>
+      </group>
+
       {/* 2. PAGES BLOCK (Stacked paper sheets inside) */}
       <mesh position={[0.018, 0, 0]} castShadow receiveShadow>
         <boxGeometry args={[pagesWidth, pagesHeight, pagesBlockThickness]} />
@@ -243,7 +296,7 @@ export function BookMesh({
       </mesh>
 
       {/* 3. SPINE (The left binding connecting the covers) */}
-      <mesh position={[-width / 2 - coverThickness / 2, 0, 0]} castShadow>
+      <mesh position={[-width / 2 + (coverThickness * 1.3) / 2, 0, 0]} castShadow>
         <boxGeometry
           args={[coverThickness * 1.3, height, pagesBlockThickness + coverThickness * 2]}
         />
@@ -254,13 +307,13 @@ export function BookMesh({
         />
       </mesh>
 
-      {/* Spine Phosphor Neon Stitching */}
-      <mesh position={[-width / 2 - coverThickness - 0.003, 0, 0]}>
-        <boxGeometry args={[0.007, height * 0.88, 0.014]} />
+      {/* Spine Emissive Accent Seam (Matching Book Typography) */}
+      <mesh position={[-width / 2 - 0.002, 0, 0]}>
+        <boxGeometry args={[0.004, height * 0.94, 0.016]} />
         <meshStandardMaterial
-          color="#00FF94"
-          emissive="#00FF94"
-          emissiveIntensity={0.6}
+          color={BOOK_FONT_GOLD}
+          emissive={BOOK_FONT_GOLD}
+          emissiveIntensity={0.55}
         />
       </mesh>
 
@@ -551,6 +604,69 @@ export function BookMesh({
             />
           </mesh>
         )}
+
+        {/* FRONT COVER HAIRLINE PERIMETER FRAME (Option 2B - Dynamic Theme Bevel) */}
+        <group
+          position={[width / 2, 0, coverThickness + 0.002]}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleOpen?.();
+          }}
+          onPointerOver={(e) => {
+            if (!isOpen) {
+              e.stopPropagation();
+              document.body.style.cursor = "pointer";
+            }
+          }}
+          onPointerOut={() => {
+            document.body.style.cursor = "default";
+          }}
+        >
+          {/* Top Bevel */}
+          <mesh position={[0, height / 2 - 0.006, 0]}>
+            <boxGeometry args={[width, 0.012, 0.003]} />
+            <meshStandardMaterial
+              color={BOOK_FONT_GOLD}
+              emissive={BOOK_FONT_GOLD}
+              emissiveIntensity={0.45}
+              roughness={0.30}
+              metalness={0.75}
+            />
+          </mesh>
+          {/* Bottom Bevel */}
+          <mesh position={[0, -height / 2 + 0.006, 0]}>
+            <boxGeometry args={[width, 0.012, 0.003]} />
+            <meshStandardMaterial
+              color={BOOK_FONT_GOLD}
+              emissive={BOOK_FONT_GOLD}
+              emissiveIntensity={0.45}
+              roughness={0.30}
+              metalness={0.75}
+            />
+          </mesh>
+          {/* Left Bevel (Spine Hinge Edge) */}
+          <mesh position={[-width / 2 + 0.006, 0, 0]}>
+            <boxGeometry args={[0.012, height, 0.003]} />
+            <meshStandardMaterial
+              color={BOOK_FONT_GOLD}
+              emissive={BOOK_FONT_GOLD}
+              emissiveIntensity={0.45}
+              roughness={0.30}
+              metalness={0.75}
+            />
+          </mesh>
+          {/* Right Bevel (Opening Edge) */}
+          <mesh position={[width / 2 - 0.006, 0, 0]}>
+            <boxGeometry args={[0.012, height, 0.003]} />
+            <meshStandardMaterial
+              color={BOOK_FONT_GOLD}
+              emissive={BOOK_FONT_GOLD}
+              emissiveIntensity={0.45}
+              roughness={0.30}
+              metalness={0.75}
+            />
+          </mesh>
+        </group>
 
         {/* INSIDE COVER FACE: CHAPTER 01 LEFT PAGE */}
         <group

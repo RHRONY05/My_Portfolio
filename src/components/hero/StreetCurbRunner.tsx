@@ -30,19 +30,54 @@ interface Particle {
 
 // Design system theme tokens mapped for high-performance 2D Canvas rendering
 const RUNNER_THEME = {
-  accent: "#E5B869",
-  accentRgb: "229, 184, 105",
-  secondary: "#F3C77C",
-  card: "#161B22",
-  chassis: "#12171F",
-  line: "#30363D",
-  fg: "#F0F6FC",
-  muted: "#8B949E",
+  accent: "#E5E5E5",
+  accentRgb: "229, 229, 229",
+  secondary: "#A3A3A3",
+  card: "#111111",
+  chassis: "#000000",
+  line: "#343434",
+  fg: "#F5F5F5",
+  muted: "#7A7A7A",
   obsBug: "#FF4444",
   obsBugGlow: "#FF2222",
   obsBugLight: "#FF7777",
   obsNull: "#58A6FF",
-} as const;
+};
+
+// Dynamically queries CSS variables from root document so any live theme changes immediately reflect on canvas
+function getDynamicTheme() {
+  if (typeof window === "undefined") return RUNNER_THEME;
+  const cs = getComputedStyle(document.documentElement);
+  const accent = cs.getPropertyValue("--color-accent").trim() || RUNNER_THEME.accent;
+  const secondary = cs.getPropertyValue("--color-secondary").trim() || RUNNER_THEME.secondary;
+  const card = cs.getPropertyValue("--color-card").trim() || RUNNER_THEME.card;
+  const line = cs.getPropertyValue("--color-line").trim() || RUNNER_THEME.line;
+  const fg = cs.getPropertyValue("--color-fg").trim() || RUNNER_THEME.fg;
+  const muted = cs.getPropertyValue("--color-muted").trim() || RUNNER_THEME.muted;
+
+  let accentRgb = RUNNER_THEME.accentRgb;
+  if (accent.startsWith("#") && accent.length === 7) {
+    const r = parseInt(accent.slice(1, 3), 16);
+    const g = parseInt(accent.slice(3, 5), 16);
+    const b = parseInt(accent.slice(5, 7), 16);
+    if (!isNaN(r) && !isNaN(g) && !isNaN(b)) {
+      accentRgb = `${r}, ${g}, ${b}`;
+    }
+  }
+
+  return {
+    ...RUNNER_THEME,
+    accent,
+    accentRgb,
+    secondary,
+    card,
+    line,
+    fg,
+    muted,
+  };
+}
+
+type DynamicTheme = ReturnType<typeof getDynamicTheme>;
 
 export function StreetCurbRunner() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -131,6 +166,7 @@ export function StreetCurbRunner() {
       s.boardAngle = -0.34;
 
       // Ollie launch sparks behind rear wheel
+      const dynTheme = getDynamicTheme();
       for (let i = 0; i < 7; i++) {
         stateRef.current.particles.push({
           x: s.x + 2,
@@ -139,7 +175,7 @@ export function StreetCurbRunner() {
           vy: Math.random() * -2.2,
           size: Math.random() * 2.5 + 1.2,
           alpha: 1,
-          color: RUNNER_THEME.accent,
+          color: dynTheme.accent,
         });
       }
     }
@@ -266,6 +302,7 @@ export function StreetCurbRunner() {
         return;
       }
 
+      const theme = getDynamicTheme();
       const st = stateRef.current;
       const s = st.skater;
       const groundY = height - groundMargin;
@@ -275,9 +312,9 @@ export function StreetCurbRunner() {
 
       // If PAUSED, just draw static scene
       if (st.mode === "PAUSED") {
-        drawTrack(ctx, width, groundY, st.roadOffset);
-        drawObstacles(ctx, st.obstacles, groundY);
-        drawSkater(ctx, s, groundY, st.distanceAccumulator);
+        drawTrack(ctx, width, groundY, st.roadOffset, theme);
+        drawObstacles(ctx, st.obstacles, groundY, theme);
+        drawSkater(ctx, s, groundY, st.distanceAccumulator, theme);
         animationFrameId = requestAnimationFrame(renderLoop);
         return;
       }
@@ -323,7 +360,7 @@ export function StreetCurbRunner() {
                 vy: Math.random() * -1.5,
                 size: Math.random() * 2.2 + 1,
                 alpha: 0.9,
-                color: RUNNER_THEME.accent,
+                color: theme.accent,
               });
             }
           }
@@ -343,7 +380,7 @@ export function StreetCurbRunner() {
               vy: (Math.random() - 0.7) * 1.2,
               size: Math.random() * 2 + 1,
               alpha: 0.8,
-              color: Math.random() > 0.3 ? RUNNER_THEME.accent : RUNNER_THEME.secondary,
+              color: Math.random() > 0.3 ? theme.accent : theme.secondary,
             });
           }
         }
@@ -425,7 +462,7 @@ export function StreetCurbRunner() {
                   vy: (Math.random() - 0.7) * 5,
                   size: Math.random() * 3 + 1.5,
                   alpha: 1,
-                  color: obs.type === "BUG" ? RUNNER_THEME.obsBug : obs.type === "NULL" ? RUNNER_THEME.obsNull : RUNNER_THEME.accent,
+                  color: obs.type === "BUG" ? theme.obsBug : obs.type === "NULL" ? theme.obsNull : theme.accent,
                 });
               }
 
@@ -489,7 +526,7 @@ export function StreetCurbRunner() {
               vy: -Math.random() * 2,
               size: Math.random() * 2.5 + 1,
               alpha: 0.9,
-              color: RUNNER_THEME.accent,
+              color: theme.accent,
             });
           }
         }
@@ -507,7 +544,7 @@ export function StreetCurbRunner() {
       }
 
       // 3. DRAW ENVIRONMENT (Road line & dashes)
-      drawTrack(ctx, width, groundY, st.roadOffset);
+      drawTrack(ctx, width, groundY, st.roadOffset, theme);
 
       // 4. DRAW PARTICLES
       for (const p of st.particles) {
@@ -521,13 +558,13 @@ export function StreetCurbRunner() {
       }
 
       // 5. DRAW OBSTACLES (Heavy Sprites)
-      drawObstacles(ctx, st.obstacles, groundY);
+      drawObstacles(ctx, st.obstacles, groundY, theme);
 
       // 6. DRAW SKATER OR WIPEOUT
       if (st.mode === "GAME_OVER") {
-        drawWipeout(ctx, s, groundY);
+        drawWipeout(ctx, s, groundY, theme);
       } else {
-        drawSkater(ctx, s, groundY, st.distanceAccumulator);
+        drawSkater(ctx, s, groundY, st.distanceAccumulator, theme);
       }
 
       animationFrameId = requestAnimationFrame(renderLoop);
@@ -657,7 +694,7 @@ export function StreetCurbRunner() {
                     className={`h-2 sm:h-2.5 w-2 sm:w-3 rounded-[1px] transition-all duration-300 ${
                       active
                         ? health > 40
-                          ? "bg-accent shadow-[0_0_6px_rgba(229,184,105,0.6)]"
+                          ? "bg-accent shadow-[0_0_6px_rgba(var(--color-accent-rgb,229,229,229),0.6)]"
                           : "bg-red-400 shadow-[0_0_6px_rgba(255,85,85,0.7)]"
                         : "bg-line/40"
                     }`}
@@ -709,14 +746,15 @@ function drawTrack(
   ctx: CanvasRenderingContext2D,
   width: number,
   groundY: number,
-  roadOffset: number
+  roadOffset: number,
+  theme: DynamicTheme
 ) {
   // 1. The Road Line: Bold, crisp, and clearly visible with subtle edge fade
   const trackGradient = ctx.createLinearGradient(0, 0, width, 0);
-  trackGradient.addColorStop(0, `rgba(${RUNNER_THEME.accentRgb}, 0)`);
-  trackGradient.addColorStop(0.04, `rgba(${RUNNER_THEME.accentRgb}, 0.7)`); // Sunburst Amber Road Line
-  trackGradient.addColorStop(0.96, `rgba(${RUNNER_THEME.accentRgb}, 0.7)`);
-  trackGradient.addColorStop(1, `rgba(${RUNNER_THEME.accentRgb}, 0)`);
+  trackGradient.addColorStop(0, `rgba(${theme.accentRgb}, 0)`);
+  trackGradient.addColorStop(0.04, `rgba(${theme.accentRgb}, 0.7)`); // Dynamic Accent Road Line
+  trackGradient.addColorStop(0.96, `rgba(${theme.accentRgb}, 0.7)`);
+  trackGradient.addColorStop(1, `rgba(${theme.accentRgb}, 0)`);
 
   ctx.strokeStyle = trackGradient;
   ctx.lineWidth = 2; // Crisp and clearly visible
@@ -731,7 +769,7 @@ function drawTrack(
   ctx.rect(width * 0.03, groundY + 1, width * 0.94, 9);
   ctx.clip();
 
-  ctx.strokeStyle = `rgba(${RUNNER_THEME.accentRgb}, 0.4)`;
+  ctx.strokeStyle = `rgba(${theme.accentRgb}, 0.4)`;
   ctx.lineWidth = 2;
   const dashLength = 16;
   const dashGap = 24;
@@ -750,7 +788,8 @@ function drawTrack(
 function drawObstacles(
   ctx: CanvasRenderingContext2D,
   obstacles: Obstacle[],
-  groundY: number
+  groundY: number,
+  theme: DynamicTheme
 ) {
   for (const obs of obstacles) {
     ctx.save();
@@ -762,23 +801,23 @@ function drawObstacles(
     ctx.fill();
 
     // 2. Base Solid Heavy Chassis (Identical size 44x26 for all)
-    ctx.fillStyle = RUNNER_THEME.chassis; // Deep solid dark slate
+    ctx.fillStyle = theme.chassis; // Deep solid dark slate
     ctx.beginPath();
     ctx.roundRect(obs.x, obs.y, obs.width, obs.height, 3.5);
     ctx.fill();
 
     if (obs.type === "404") {
       // --- SOLID HEAVY ROADBLOCK (404) ---
-      ctx.strokeStyle = RUNNER_THEME.accent;
+      ctx.strokeStyle = theme.accent;
       ctx.lineWidth = 1.6;
       ctx.stroke();
 
-      // Solid diagonal hazard chevrons (Amber & Dark)
+      // Solid diagonal hazard chevrons (Accent & Dark)
       ctx.save();
       ctx.beginPath();
       ctx.roundRect(obs.x + 1, obs.y + 1, obs.width - 2, 7, [2.5, 2.5, 0, 0]);
       ctx.clip();
-      ctx.fillStyle = RUNNER_THEME.accent;
+      ctx.fillStyle = theme.accent;
       for (let sx = obs.x - 12; sx < obs.x + obs.width + 12; sx += 8) {
         ctx.beginPath();
         ctx.moveTo(sx, obs.y + 8);
@@ -789,25 +828,25 @@ function drawObstacles(
       }
       ctx.restore();
 
-      // Solid gold corner bolts
-      ctx.fillStyle = RUNNER_THEME.secondary;
+      // Solid gold/secondary corner bolts
+      ctx.fillStyle = theme.secondary;
       ctx.fillRect(obs.x + 3, obs.y + obs.height - 5, 2, 2);
       ctx.fillRect(obs.x + obs.width - 5, obs.y + obs.height - 5, 2, 2);
 
       // Stencil 404
-      ctx.fillStyle = RUNNER_THEME.accent;
+      ctx.fillStyle = theme.accent;
       ctx.font = "900 11px monospace";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("404", obs.x + obs.width / 2, obs.y + obs.height / 2 + 3);
     } else if (obs.type === "BUG") {
       // --- SOLID MECHANICAL CYBER-BEETLE (!BUG) ---
-      ctx.strokeStyle = RUNNER_THEME.obsBug;
+      ctx.strokeStyle = theme.obsBug;
       ctx.lineWidth = 1.6;
       ctx.stroke();
 
       // 4 heavy mechanical walking legs on the asphalt
-      ctx.strokeStyle = RUNNER_THEME.muted;
+      ctx.strokeStyle = theme.muted;
       ctx.lineWidth = 1.8;
       ctx.lineCap = "round";
       const legCycle = Math.sin(obs.x * 0.45) * 3;
@@ -823,38 +862,38 @@ function drawObstacles(
       ctx.stroke();
 
       // Solid crimson top visor band
-      ctx.fillStyle = RUNNER_THEME.obsBug;
+      ctx.fillStyle = theme.obsBug;
       ctx.fillRect(obs.x + 2, obs.y + 2, obs.width - 4, 4);
 
       // Glowing crimson optic eye lens
-      ctx.fillStyle = RUNNER_THEME.obsBugGlow;
+      ctx.fillStyle = theme.obsBugGlow;
       ctx.beginPath();
       ctx.arc(obs.x + obs.width - 8, obs.y + 9, 2.5, 0, Math.PI * 2);
       ctx.fill();
 
       // Solid bold !BUG text
-      ctx.fillStyle = RUNNER_THEME.obsBugLight;
+      ctx.fillStyle = theme.obsBugLight;
       ctx.font = "900 10px monospace";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("!BUG", obs.x + obs.width / 2 - 2, obs.y + obs.height / 2 + 3);
     } else {
       // --- SOLID HEAVY DATA CANISTER (NULL) ---
-      ctx.strokeStyle = RUNNER_THEME.obsNull;
+      ctx.strokeStyle = theme.obsNull;
       ctx.lineWidth = 1.6;
       ctx.stroke();
 
       // Solid cyan top valve bracket
-      ctx.fillStyle = RUNNER_THEME.obsNull;
+      ctx.fillStyle = theme.obsNull;
       ctx.fillRect(obs.x + obs.width / 2 - 5, obs.y - 3, 10, 3);
 
       // Solid cyan top and bottom reinforce rims
-      ctx.fillStyle = RUNNER_THEME.obsNull;
+      ctx.fillStyle = theme.obsNull;
       ctx.fillRect(obs.x + 2, obs.y + 2, obs.width - 4, 3);
       ctx.fillRect(obs.x + 2, obs.y + obs.height - 5, obs.width - 4, 3);
 
       // Solid cyan core text
-      ctx.fillStyle = RUNNER_THEME.obsNull;
+      ctx.fillStyle = theme.obsNull;
       ctx.font = "900 10px monospace";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
@@ -876,7 +915,8 @@ function drawSkater(
     crashTimer: number;
   },
   groundY: number,
-  distAccum: number
+  distAccum: number,
+  theme: DynamicTheme
 ) {
   ctx.save();
 
@@ -903,7 +943,7 @@ function drawSkater(
   const deckX = s.x - 3;
 
   // Board Deck
-  ctx.fillStyle = RUNNER_THEME.accent;
+  ctx.fillStyle = theme.accent;
   ctx.beginPath();
   ctx.roundRect(deckX, deckY, deckW, 3.2, [2, 2, 2, 2]);
   ctx.fill();
@@ -916,14 +956,14 @@ function drawSkater(
     ctx.save();
     ctx.translate(wx, wy);
     ctx.rotate(wheelAngle);
-    ctx.fillStyle = RUNNER_THEME.card;
-    ctx.strokeStyle = RUNNER_THEME.secondary;
+    ctx.fillStyle = theme.card;
+    ctx.strokeStyle = theme.secondary;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.arc(0, 0, wheelRadius, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
-    ctx.fillStyle = RUNNER_THEME.accent;
+    ctx.fillStyle = theme.accent;
     ctx.beginPath();
     ctx.arc(0, 0, 1, 0, Math.PI * 2);
     ctx.fill();
@@ -934,7 +974,7 @@ function drawSkater(
   drawWheel(deckX + deckW - 6, deckY + 4);
 
   // Skater Silhouette
-  ctx.fillStyle = RUNNER_THEME.fg;
+  ctx.fillStyle = theme.fg;
 
   // Head
   ctx.beginPath();
@@ -952,7 +992,7 @@ function drawSkater(
 
   // Arms
   ctx.lineWidth = 2.2;
-  ctx.strokeStyle = RUNNER_THEME.fg;
+  ctx.strokeStyle = theme.fg;
   ctx.lineCap = "round";
 
   ctx.beginPath();
@@ -991,18 +1031,19 @@ function drawWipeout(
     wipeoutBoardY: number;
     wipeoutBoardRot: number;
   },
-  groundY: number
+  groundY: number,
+  theme: DynamicTheme
 ) {
   // 1. Skidding Skateboard
   ctx.save();
   ctx.translate(s.wipeoutBoardX, s.wipeoutBoardY);
   ctx.rotate(s.wipeoutBoardRot);
-  ctx.fillStyle = RUNNER_THEME.accent;
+  ctx.fillStyle = theme.accent;
   ctx.beginPath();
   ctx.roundRect(-18, -2, 36, 3.2, 2);
   ctx.fill();
-  ctx.fillStyle = RUNNER_THEME.card;
-  ctx.strokeStyle = RUNNER_THEME.secondary;
+  ctx.fillStyle = theme.card;
+  ctx.strokeStyle = theme.secondary;
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.arc(-10, 3, 3, 0, Math.PI * 2);
@@ -1015,13 +1056,13 @@ function drawWipeout(
   ctx.save();
   ctx.translate(s.wipeoutSkaterX, s.wipeoutSkaterY);
   ctx.rotate(s.wipeoutSkaterRot);
-  ctx.fillStyle = RUNNER_THEME.fg;
+  ctx.fillStyle = theme.fg;
   ctx.beginPath();
   ctx.arc(0, 0, 5, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.lineWidth = 2.2;
-  ctx.strokeStyle = RUNNER_THEME.fg;
+  ctx.strokeStyle = theme.fg;
   ctx.lineCap = "round";
   ctx.beginPath();
   ctx.moveTo(-10, 10);

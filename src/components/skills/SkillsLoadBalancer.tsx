@@ -84,13 +84,13 @@ export function SkillsLoadBalancer() {
               strokeWidth="2"
             />
 
-            {/* Glowing Amber Pulse on Branches */}
+            {/* Glowing Accent Pulse on Branches */}
             <line
               x1="0"
               y1="190"
               x2="100"
               y2="190"
-              stroke="#E5B869"
+              stroke="var(--color-accent, #E5B869)"
               strokeWidth="2"
               strokeOpacity="0.7"
               strokeDasharray="8 12"
@@ -102,8 +102,8 @@ export function SkillsLoadBalancer() {
               cx="100"
               cy="190"
               r="4"
-              fill="#E5B869"
-              className="drop-shadow-[0_0_8px_rgba(229,184,105,0.8)]"
+              fill="var(--color-accent, #E5B869)"
+              className="drop-shadow-[0_0_8px_rgba(var(--color-accent-rgb,229,184,105),0.8)]"
             />
           </svg>
         </div>
@@ -113,7 +113,7 @@ export function SkillsLoadBalancer() {
           {/* Continuous Straight Horizontal Line running across the center at 50% */}
           <div
             aria-hidden="true"
-            className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-r from-line via-accent to-line shadow-[0_0_12px_rgba(229,184,105,0.35)] z-0"
+            className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-r from-line via-accent to-line shadow-[0_0_12px_rgba(var(--color-accent-rgb,229,184,105),0.35)] z-0"
           />
 
           {/* 
@@ -148,7 +148,7 @@ export function SkillsLoadBalancer() {
                   width={500}
                   height={400}
                   priority
-                  className="w-full h-auto object-contain drop-shadow-[0_12px_24px_rgba(229,184,105,0.25)]"
+                  className="w-full h-auto object-contain drop-shadow-[0_12px_24px_rgba(var(--color-accent-rgb,229,184,105),0.25)]"
                 />
               </div>
 
@@ -169,8 +169,8 @@ export function SkillsLoadBalancer() {
               disabled={isSpinningFast}
               className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-bold transition-all duration-200 active:scale-95 shadow-md ${
                 isSpinningFast
-                  ? "bg-accent text-on-accent shadow-[0_0_20px_rgba(229,184,105,0.6)] animate-pulse"
-                  : "bg-accent text-on-accent hover:opacity-90 hover:shadow-[0_0_16px_rgba(229,184,105,0.35)]"
+                  ? "bg-accent text-on-accent shadow-[0_0_20px_rgba(var(--color-accent-rgb,229,184,105),0.6)] animate-pulse"
+                  : "bg-accent text-on-accent hover:opacity-90 hover:shadow-[0_0_16px_rgba(var(--color-accent-rgb,229,184,105),0.35)]"
               }`}
             >
               <RotateCw
@@ -196,8 +196,8 @@ export function SkillsLoadBalancer() {
               cx="0"
               cy="190"
               r="4"
-              fill="#E5B869"
-              className="drop-shadow-[0_0_8px_rgba(229,184,105,0.8)]"
+              fill="var(--color-accent, #E5B869)"
+              className="drop-shadow-[0_0_8px_rgba(var(--color-accent-rgb,229,184,105),0.8)]"
             />
 
             {/* Top Branch to Card 4 */}
@@ -228,13 +228,13 @@ export function SkillsLoadBalancer() {
               strokeWidth="2"
             />
 
-            {/* Glowing Amber Pulse on Branches */}
+            {/* Glowing Accent Pulse on Branches */}
             <line
               x1="0"
               y1="190"
               x2="100"
               y2="190"
-              stroke="#E5B869"
+              stroke="var(--color-accent, #E5B869)"
               strokeWidth="2"
               strokeOpacity="0.7"
               strokeDasharray="8 12"
@@ -268,7 +268,7 @@ export function SkillsLoadBalancer() {
                 alt="Rony meditating"
                 width={500}
                 height={400}
-                className="w-full h-auto object-contain drop-shadow-[0_10px_20px_rgba(229,184,105,0.2)]"
+                className="w-full h-auto object-contain drop-shadow-[0_10px_20px_rgba(var(--color-accent-rgb,229,184,105),0.2)]"
               />
             </div>
           </div>
@@ -296,7 +296,7 @@ export function SkillsLoadBalancer() {
 
         {/* Vertical circuit feeder connecting CTA down into load balancer hub */}
         <div className="flex flex-col items-center -my-3 z-10 pointer-events-none">
-          <div className="w-[2px] h-6 bg-gradient-to-b from-accent/80 via-accent to-line shadow-[0_0_8px_rgba(229,184,105,0.5)]" />
+          <div className="w-[2px] h-6 bg-gradient-to-b from-accent/80 via-accent to-line shadow-[0_0_8px_rgba(var(--color-accent-rgb,229,184,105),0.5)]" />
         </div>
 
         {/* MOBILE 1:1 LOAD BALANCER STAGE (Single Horizontal Bus Architecture) */}
@@ -325,13 +325,13 @@ export function SkillsLoadBalancer() {
                 strokeWidth="2"
               />
 
-              {/* Glowing Amber Pulse along the central horizontal line */}
+              {/* Glowing Accent Pulse along the central horizontal line */}
               <line
                 x1="0"
                 y1="117.5"
                 x2="100"
                 y2="117.5"
-                stroke="#E5B869"
+                stroke="var(--color-accent, #E5B869)"
                 strokeWidth="2"
                 strokeOpacity="0.75"
                 strokeDasharray="6 8"
@@ -383,15 +383,15 @@ export function SkillsLoadBalancer() {
                 cx="35"
                 cy="117.5"
                 r="3.5"
-                fill="#E5B869"
-                className="drop-shadow-[0_0_6px_rgba(229,184,105,0.8)]"
+                fill="var(--color-accent, #E5B869)"
+                className="drop-shadow-[0_0_6px_rgba(var(--color-accent-rgb,229,184,105),0.8)]"
               />
               <circle
                 cx="65"
                 cy="117.5"
                 r="3.5"
-                fill="#E5B869"
-                className="drop-shadow-[0_0_6px_rgba(229,184,105,0.8)]"
+                fill="var(--color-accent, #E5B869)"
+                className="drop-shadow-[0_0_6px_rgba(var(--color-accent-rgb,229,184,105),0.8)]"
               />
 
               {/* Center Main Power Hub Node */}
@@ -399,8 +399,8 @@ export function SkillsLoadBalancer() {
                 cx="50"
                 cy="117.5"
                 r="4.5"
-                fill="#E5B869"
-                className="drop-shadow-[0_0_8px_rgba(229,184,105,0.9)] animate-pulse"
+                fill="var(--color-accent, #E5B869)"
+                className="drop-shadow-[0_0_8px_rgba(var(--color-accent-rgb,229,184,105),0.9)] animate-pulse"
               />
             </svg>
           </div>

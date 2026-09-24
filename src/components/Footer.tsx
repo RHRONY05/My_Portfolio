@@ -38,7 +38,7 @@ const socialHref = (key: string) => {
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-line bg-footer px-6 py-12">
+    <footer className="w-full border-t border-line bg-canvas px-6 py-12 transition-colors duration-500">
       <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-8 md:grid-cols-3">
         <div className="flex flex-col gap-2 text-center md:items-start md:text-left">
           <span className="text-mono font-black text-fg">
