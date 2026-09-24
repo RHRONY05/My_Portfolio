@@ -3,12 +3,13 @@
 import React from "react";
 import Image from "next/image";
 import { ArrowRight, Terminal } from "lucide-react";
+import { StreetCurbRunner } from "./StreetCurbRunner";
 
 export function HeroCinemaCanvas() {
   return (
     <section
       id="hero"
-      className="relative w-full h-screen overflow-hidden flex flex-col justify-center"
+      className="relative w-full min-h-screen lg:h-screen overflow-hidden flex flex-col justify-center"
       aria-label="Hero Section: Urban Graffiti Mural"
     >
       {/* 1. Full-Screen Graffiti Wall Background (Always Visible, z-0) */}
@@ -48,7 +49,7 @@ export function HeroCinemaCanvas() {
       </div>
 
       {/* 2. Content: Wide Spanning Headline, Subhead & CTAs (z-20) */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 py-12">
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-10 lg:px-12 py-12 pb-44 sm:pb-36 lg:py-12">
         <div className="max-w-md sm:max-w-lg md:max-w-lg lg:max-w-3xl xl:max-w-4xl flex flex-col items-start text-left">
           {/* Main Headline */}
           <h1 className="mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-fg leading-[1.08]">
@@ -83,6 +84,13 @@ export function HeroCinemaCanvas() {
               Let&apos;s Connect
             </a>
           </div>
+        </div>
+      </div>
+
+      {/* 3. Bottom Street Curb Runner (Interactive Mini-Game Easter Egg) */}
+      <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 z-30 px-3 sm:px-8 md:px-10 lg:px-12 pointer-events-none">
+        <div className="w-full max-w-7xl mx-auto pointer-events-auto">
+          <StreetCurbRunner />
         </div>
       </div>
     </section>

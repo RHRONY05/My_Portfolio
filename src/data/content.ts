@@ -49,7 +49,7 @@ export const contactContent = {
 } as const;
 
 export const footerContent = {
-  brand: "RH.ROny.",
+  brand: "RH.RONY",
   tagline: "Building the web, one workflow at a time.",
   navLinks: [
     { label: "About", href: "#about" },

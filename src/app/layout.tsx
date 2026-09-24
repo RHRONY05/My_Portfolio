@@ -13,9 +13,17 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rony — Full-Stack Developer & AI Automation Specialist",
+  title: "RH.RONY — Full-Stack Developer & AI Automation Specialist",
   description:
     "Portfolio of Rony — Full-Stack Developer specializing in Next.js, Node.js, and autonomous AI automations.",
+  icons: {
+    icon: [
+      { url: "/images/logo/logo.svg", type: "image/svg+xml" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/images/logo/logo.svg",
+    apple: "/images/logo/logo.svg",
+  },
 };
 
 export default function RootLayout({

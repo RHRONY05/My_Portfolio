@@ -1,13 +1,13 @@
 # Project Progress: Rony's 3D Portfolio Rebuild
 
-> **Current Project Status**: 🟢 **Hero Section Asset Pipeline COMPLETE -> Ready for Code Implementation**  
+> **Current Project Status**: 🟢 **Section 01: Hero COMPLETE & LOCKED (Zero Hardcoded Colors, Full Viewport Responsiveness) -> Ready for Section 04: Featured Projects**  
 > Active Tracking Branch: `v2-3d-rebuild`  
 > Master Plan: [`.agents/project_plan.md`](file:///d:/Projects/Portfolio/.agents/project_plan.md)  
 > Learning Roadmap: [`.agents/learning_roadmap.md`](file:///d:/Projects/Portfolio/.agents/learning_roadmap.md)
 
 ---
 
-## 🎬 Section 01: Hero — "Urban Graffiti Mural & Developer Stage" (Current Focus)
+## 🎬 Section 01: Hero — "Urban Graffiti Mural & Street Curb Runner" [COMPLETE & LOCKED]
 
 ### 1. Visual & Layout Architecture:
 - **Navbar**: Fully responsive, frosted 45% glass (`bg-canvas/45 backdrop-blur-md`), unboxed links (15-16px font), "Hire Me" button with arrow & amber glow, brand **`RH.ROny.`**.
@@ -19,16 +19,28 @@
 - **Typography Stage**: Approved Option A headline ("Software Engineer in the Making — Full-Stack & AI") and polished mission copy highlighting CUET CSE, full-stack architecture, agentic workflows, and expanding AI/ML engineering focus.
 - **Layout Decision**: Clean and distraction-free.
 
-### 2. Next Session Scope (Interactive Easter Egg / Gamification):
-- [ ] **Idea 1: Street Curb Runner / Skater**:
-  - Lightweight 2D canvas runner along the street curb.
-  - Skater/runner silhouette jumping over `404` errors / bugs.
-  - Non-hijacking controls (click/tap, optional key toggle), 60 FPS, <10KB footprint.
-- [ ] **Idea 2: Interactive Graffiti Spray Can Tagging**:
-  - Particle spray canvas reacting to mouse drag / touch.
-  - Golden amber embers/sparks lighting up the concrete texture with soft decay.
-  - Performance-optimized (requestAnimationFrame, offscreen canvas, auto-sleep when idle).
-- [ ] Compare both in browser and choose the best fit or keep clean.
+### 2. Hero Interactive Easter Egg (Street Curb Runner — POLISHED & FINAL):
+- [x] **Idea 1: Street Curb Runner / Skater (Fully Polished & Integrated)**:
+  - 100% transparent canvas (`bg-transparent`) with elevated headroom to eliminate any clipping.
+  - Positioned to the right of "Let's Connect" button (`37%` screen width) with forward surge momentum on ollie.
+  - Game State Machine with `IDLE` (ambient cruise), `RUNNING`, `PAUSED`, and `GAME_OVER` states.
+  - Clean tactile controls: `[ ▶ PLAY ]` / `[ ⏸ PAUSE ]` and `[ ↺ REBOOT ]` button.
+  - 5-Segment System Integrity Health Bar (100% HP) with exact hit thresholds:
+    - `null` (Heavy canister, slow `0.85x` speed): -20% HP (takes 5 hits to crash).
+    - `!BUG` (Cyber drone, fast `1.45x` speed): -33.4% HP (takes 3 hits to crash).
+    - `404` (Heavy concrete roadblock, `1.15x` speed): -50% HP (takes 2 hits to crash).
+  - **Standardized Solid Heavy Obstacles**: All 3 obstacles standardized to identical `44px x 26px` dimensions with solid opaque `#12171F` background, heavy contact shadows, and bold solid color borders.
+  - **Dynamic 500m Speed Acceleration**: Base velocity scales up by +18% on every 500m milestone covered (`1 + Math.floor(dist / 500) * 0.18`), intensifying the challenge continuously.
+  - Dismissible `SYSTEM CRASHED` notification with top-right `[ X ]` cross button + `localStorage` high score persistence.
+  - Fixed Navbar brand logo (`RH.ROny.`) to reliably scroll straight to top of hero on click.
+  - **Full Mobile & Tablet Responsiveness**:
+    - Adaptive Runway Pocketing: Desktop `width * 0.37` (right of "Let's Connect"), Tablet `width * 0.30`, Mobile `width * 0.22` (min 56px, max 85px) guaranteeing 280px+ forward reaction runway.
+    - Zero-Latency Touch Control: `onTouchStart` on entire roadway + `touch-manipulation` for instantaneous mobile taps.
+    - Anti-Clipping Jump Kinematics: Tuned `jumpForce = -7.2` & `gravity = 0.40` in `h-32 sm:h-36` canvas with ~30px headroom over 26px obstacles.
+    - Responsive Padding & Clearances: `px-3 sm:px-8 md:px-10 lg:px-12` roadway padding + `pb-44 sm:pb-36 lg:py-12` hero content buffer preventing CTA overlap on small phones.
+    - Responsive Telemetry Shelf: Compact status badges, auto-hidden labels on mobile (`hidden md:inline` for INTEGRITY, `hidden sm:inline` for BEST), and conditional borders.
+    - Centered Responsive Crash Modal: Contained within `w-[90%] max-w-xs` with clean touch dismiss.
+- Idea 2 dropped per user decision (Hero Easter Egg finalized with Idea 1).
 
 
 
@@ -37,9 +49,7 @@
 ## 🗺️ Overall Project Milestone Checklist
 
 - [x] **Project Scope & Architecture Alignment**: Clarified track, audience, and overall design direction.
-- [x] **Hero Section Concept Locked**: The Open-Air Cinema with 2.5D multi-plane parallax centerpiece.
-- [x] **Hero 2.5D Layer Asset Stack Finalized**: Layer 0, Layer 1-Canopy, Layer 1-Campsite, Layer 2-Character 100% approved and locked.
-- [ ] **Hero Interactive Component Assembly**: `HeroCinemaCanvas.tsx` + `CampfireFX.tsx` + `ProjectorScreenHUD.tsx`.
+- [x] **Hero Interactive Component Assembly**: `HeroCinemaCanvas.tsx` + `StreetCurbRunner.tsx` 100% complete, fully responsive, zero hardcoded colors, locked.
 - [x] **About Section Concept Locked**: 3D Comic Book Dossier (Panel/Press inspired, 5-spread flow, synced editorial narrative).
 - [x] **Tech Stack Section Concept Locked**: Mahoraga Adaptation Wheel & Yggdrasil Realm Orbs.
 - [ ] **Projects Section Concept**: Define showcase & case study interaction.

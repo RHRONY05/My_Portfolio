@@ -262,7 +262,7 @@ function HorizontalHaloRing({
             >
               <div
                 title={tool.fullName}
-                className="group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-[#161B22]/95 border border-[#30363D] hover:border-accent hover:scale-115 hover:shadow-[0_0_14px_rgba(229,184,105,0.45)] transition-all cursor-pointer p-1 backdrop-blur-sm"
+                className="group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card/95 border border-line hover:border-accent hover:scale-115 hover:shadow-[0_0_14px_rgba(229,184,105,0.45)] transition-all cursor-pointer p-1 backdrop-blur-sm"
               >
                 <img
                   src={tool.iconUrl}

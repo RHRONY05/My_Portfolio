@@ -183,7 +183,7 @@ export function ProjectDeck() {
                   }`}
                 >
                   {/* Comic Issue Header Strip */}
-                  <div className="flex items-center justify-between border-b border-line bg-[#0E1218] px-5 py-3">
+                  <div className="flex items-center justify-between border-b border-line bg-canvas px-5 py-3">
                     <div className="flex items-center gap-2.5">
                       <span className="rounded bg-accent/15 px-2.5 py-0.5 font-mono text-xs font-bold text-accent">
                         ISSUE #{String(projectIndex + 1).padStart(2, "0")}
@@ -220,7 +220,7 @@ export function ProjectDeck() {
                     </div>
 
                     {/* Main Expanded Artwork / Mockup Box (Classic 16:10 or 3:2 Ratio) */}
-                    <div className="relative flex h-[210px] sm:h-[235px] md:h-[260px] w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-line/80 bg-[#0B0F14] p-4 text-center transition-colors">
+                    <div className="relative flex h-[210px] sm:h-[235px] md:h-[260px] w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-line/80 bg-canvas p-4 text-center transition-colors">
                       {/* Subtle blueprint grid background */}
                       <div
                         aria-hidden

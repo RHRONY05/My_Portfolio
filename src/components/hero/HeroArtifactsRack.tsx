@@ -149,7 +149,7 @@ export function HeroArtifactsRack() {
       {/* 2. The Horizontal Line directly under the bottom part of all images */}
       <div className="w-full relative flex items-center justify-center -mt-[1px] z-10">
         {/* Core Line with subtle golden ambient gradient */}
-        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#30363D] via-accent/60 to-transparent" />
+        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-line via-accent/60 to-transparent" />
 
         {/* Ambient Glow along the center of the baseline */}
         <div className="absolute w-3/4 h-[3px] bg-accent/20 blur-sm -top-[1px] pointer-events-none" />

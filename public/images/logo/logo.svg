@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="goldGradTech" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3C77C" />
+      <stop offset="60%" stop-color="#E5B869" />
+      <stop offset="100%" stop-color="#D49E45" />
+    </linearGradient>
+  </defs>
+
+  <!-- Dark Obsidian Base Octagon -->
+  <polygon points="50,2 84,16 98,50 84,84 50,98 16,84 2,50 16,16" 
+           fill="#0D1117" 
+           stroke="#30363D" 
+           stroke-width="1.5" />
+
+  <!-- 8 Mahoraga Adaptation Vertices / Energy Nodes -->
+  <circle cx="50" cy="2" r="2.8" fill="url(#goldGradTech)" />
+  <circle cx="84" cy="16" r="2.8" fill="url(#goldGradTech)" />
+  <circle cx="98" cy="50" r="2.8" fill="url(#goldGradTech)" />
+  <circle cx="84" cy="84" r="2.8" fill="url(#goldGradTech)" />
+  <circle cx="50" cy="98" r="2.8" fill="url(#goldGradTech)" />
+  <circle cx="16" cy="84" r="2.8" fill="url(#goldGradTech)" />
+  <circle cx="2" cy="50" r="2.8" fill="url(#goldGradTech)" />
+  <circle cx="16" cy="16" r="2.8" fill="url(#goldGradTech)" />
+
+  <!-- Inner Octagonal Track with Gold Accent -->
+  <polygon points="50,8 79,21 92,50 79,79 50,92 21,79 8,50 21,21" 
+           fill="none" 
+           stroke="url(#goldGradTech)" 
+           stroke-width="2.5" 
+           stroke-linejoin="round" />
+
+  <!-- Circular Data Orbit (Segmented) -->
+  <circle cx="50" cy="50" r="35" 
+          fill="none" 
+          stroke="#30363D" 
+          stroke-width="1.2" 
+          stroke-dasharray="4 4" />
+
+  <!-- Precision Monolithic Tech "R" (Solid Typographic Vector) -->
+  <path fill-rule="evenodd" 
+        fill="url(#goldGradTech)" 
+        d="M 32 26 H 55 C 64 26 69 31 69 39 C 69 46 64 51 55 51.5 L 68 74 H 57.5 L 45.5 52 H 40.5 V 74 H 32 V 26 Z 
+           M 40.5 33.5 V 45 H 54 C 58.5 45 61 43 61 39.2 C 61 35.5 58.5 33.5 54 33.5 H 40.5 Z" />
+</svg>

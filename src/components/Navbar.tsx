@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,14 +33,28 @@ export function Navbar() {
     <header className="fixed top-0 inset-x-0 z-50 bg-canvas/45 backdrop-blur-md border-b border-line/30 py-3 md:py-3.5 transition-all duration-300 shadow-sm shadow-black/20">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12">
         {/* Brand Logo */}
-        <Link
-          href="#top"
-          className="font-mono text-xl font-black tracking-tight text-accent transition-transform active:scale-95 drop-shadow-sm"
+        <a
+          href="#hero"
+          className="flex items-center gap-2.5 font-mono text-xl font-black tracking-tight text-accent transition-transform active:scale-95 drop-shadow-sm cursor-pointer group"
           aria-label={`${profile.brand} home`}
-          onClick={() => setMobileMenuOpen(false)}
+          onClick={(e) => {
+            e.preventDefault();
+            setMobileMenuOpen(false);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
         >
-          {profile.brand}
-        </Link>
+          <div className="relative w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_8px_rgba(229,184,105,0.4)]">
+            <Image
+              src="/images/logo/logo.svg"
+              alt={`${profile.brand} Logo`}
+              width={32}
+              height={32}
+              priority
+              className="object-contain"
+            />
+          </div>
+          <span className="transition-colors group-hover:text-secondary">{profile.brand}</span>
+        </a>
 
         {/* Desktop Navigation Links - Clean, unboxed text links */}
         <nav className="hidden items-center gap-8 md:flex">
