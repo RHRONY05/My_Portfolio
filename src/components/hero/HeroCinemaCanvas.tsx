@@ -1,11 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ArrowRight, Terminal } from "lucide-react";
 import { StreetCurbRunner } from "./StreetCurbRunner";
 
 export function HeroCinemaCanvas() {
+  const [isCleanMode, setIsCleanMode] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("clean") === "true" || window.location.hash === "#clean") {
+      setIsCleanMode(true);
+    }
+  }, []);
+
   return (
     <section
       id="hero"
@@ -123,12 +132,14 @@ export function HeroCinemaCanvas() {
         </div>
       </div>
 
-      {/* 3. Bottom Street Curb Runner (Interactive Mini-Game Easter Egg - Desktop & Tablet Only) */}
-      <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 z-30 px-3 sm:px-8 md:px-10 lg:px-12 pointer-events-none hidden sm:block">
-        <div className="w-full max-w-7xl mx-auto pointer-events-auto">
-          <StreetCurbRunner />
+      {/* 3. Bottom Street Curb Runner (Interactive Mini-Game Easter Egg - Desktop & Tablet Only, Hidden in Clean Mode) */}
+      {!isCleanMode && (
+        <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 z-30 px-3 sm:px-8 md:px-10 lg:px-12 pointer-events-none hidden sm:block">
+          <div className="w-full max-w-7xl mx-auto pointer-events-auto">
+            <StreetCurbRunner />
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

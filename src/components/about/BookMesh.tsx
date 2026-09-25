@@ -312,19 +312,28 @@ export function BookMesh({
         />
       </mesh>
 
-      {/* Paper right edge ridges */}
+      {/* Paper right edge ridges with polygonOffset to eliminate Z-fighting */}
       <mesh
-        position={[pagesWidth / 2 + 0.018, 0, 0]}
+        position={[pagesWidth / 2 + 0.0185, 0, 0]}
         rotation={[0, Math.PI / 2, 0]}
       >
-        <planeGeometry args={[pagesBlockThickness, pagesHeight]} />
-        <meshStandardMaterial color="#E8DEC9" roughness={0.95} />
+        <planeGeometry args={[pagesBlockThickness * 0.98, pagesHeight * 0.98]} />
+        <meshStandardMaterial
+          color="#E8DEC9"
+          roughness={0.95}
+          polygonOffset
+          polygonOffsetFactor={-1}
+          polygonOffsetUnits={-1}
+        />
       </mesh>
 
-      {/* 3. SPINE (The left binding connecting the covers) */}
-      <mesh position={[-width / 2 + (coverThickness * 1.3) / 2, 0, 0]} castShadow>
+      {/* 3. SPINE (The left binding connecting the covers without volume overlap) */}
+      <mesh
+        position={[-width / 2 + (coverThickness * 1.3) / 2, 0, -coverThickness / 2]}
+        castShadow
+      >
         <boxGeometry
-          args={[coverThickness * 1.3, height, pagesBlockThickness + coverThickness * 2]}
+          args={[coverThickness * 1.3, height, pagesBlockThickness + coverThickness]}
         />
         <meshStandardMaterial
           color="#0D1117"
@@ -334,12 +343,15 @@ export function BookMesh({
       </mesh>
 
       {/* Spine Emissive Accent Seam (Matching Book Typography) */}
-      <mesh position={[-width / 2 - 0.002, 0, 0]}>
+      <mesh position={[-width / 2 - 0.002, 0, -coverThickness / 2]}>
         <boxGeometry args={[0.004, height * 0.94, 0.016]} />
         <meshStandardMaterial
           color={BOOK_FONT_GOLD}
           emissive={BOOK_FONT_GOLD}
           emissiveIntensity={0.55}
+          polygonOffset
+          polygonOffsetFactor={-1}
+          polygonOffsetUnits={-1}
         />
       </mesh>
 
@@ -697,6 +709,9 @@ export function BookMesh({
               map={frontTexture}
               roughness={0.25}
               metalness={0.08}
+              polygonOffset
+              polygonOffsetFactor={-1}
+              polygonOffsetUnits={-1}
             />
           </mesh>
         )}
@@ -727,6 +742,9 @@ export function BookMesh({
               emissiveIntensity={0.45}
               roughness={0.30}
               metalness={0.75}
+              polygonOffset
+              polygonOffsetFactor={-2}
+              polygonOffsetUnits={-2}
             />
           </mesh>
           {/* Bottom Bevel */}
@@ -738,6 +756,9 @@ export function BookMesh({
               emissiveIntensity={0.45}
               roughness={0.30}
               metalness={0.75}
+              polygonOffset
+              polygonOffsetFactor={-2}
+              polygonOffsetUnits={-2}
             />
           </mesh>
           {/* Left Bevel (Spine Hinge Edge) */}
@@ -749,6 +770,9 @@ export function BookMesh({
               emissiveIntensity={0.45}
               roughness={0.30}
               metalness={0.75}
+              polygonOffset
+              polygonOffsetFactor={-2}
+              polygonOffsetUnits={-2}
             />
           </mesh>
           {/* Right Bevel (Opening Edge) */}
@@ -760,6 +784,9 @@ export function BookMesh({
               emissiveIntensity={0.45}
               roughness={0.30}
               metalness={0.75}
+              polygonOffset
+              polygonOffsetFactor={-2}
+              polygonOffsetUnits={-2}
             />
           </mesh>
         </group>

@@ -1,0 +1,46 @@
+# Muhammad Rony (RH.RONY) — Software Developer (Web & AI)
+
+> Official AI-readable profile and portfolio summary for search bots, agentic engines, and LLM crawlers.
+
+## Identity & Background
+- **Name**: Muhammad Rony
+- **Full Legal Name**: Md. Robiul Hasan Rony
+- **Certificate Name**: Md. Rony Hossain
+- **Moniker / Brand**: RH.RONY
+- **Education**: B.Sc. in Computer Science & Engineering (3rd Year, ongoing) at Chittagong University of Engineering and Technology (CUET), Bangladesh.
+- **Role**: Software Developer — Web & AI
+- **Website**: https://rhrony05.me
+- **Email**: muhammadrony147@gmail.com
+- **GitHub**: https://github.com/RHRONY05
+- **LinkedIn**: https://www.linkedin.com/in/rhrony05/
+- **Twitter/X**: https://x.com/rhrony_05
+
+## Core Competencies
+- **Full-Stack Architecture**: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Node.js, Express, REST & GraphQL APIs, PostgreSQL, MongoDB, Redis.
+- **AI Integrations & Workflows**: LLM API integrations, multi-agent systems, semantic search, RAG pipelines, n8n automation, messaging bot architectures.
+- **Interactive 3D & Creative Web**: Three.js, React Three Fiber, WebGL shaders, Framer Motion, 60-FPS physics-based animations, Lenis smooth scrolling.
+
+## Key Projects
+- **Developer Portfolio (rhrony05.me)**: High-performance, interactive 3D developer portfolio featuring real-time WebGL environments, dynamic multi-palette theme engine, and graphic novel dossier mechanics.
+  - *Stack*: Next.js, React 19, Three.js, React Three Fiber, Tailwind CSS, Framer Motion
+  - *Link*: https://rhrony05.me
+- **SabaiHealth Web Platform**: Official responsive web platform for SabaiHealth featuring bilingual internationalization (Thai & English) with integrated digital NDA e-signature workflows for patient and partner onboarding.
+  - *Stack*: Next.js, TypeScript, Tailwind CSS, E-Signature
+  - *Link*: https://sabaihealth.com
+- **Calowry: Sustainable Fibre Innovation**: Modern corporate product showcase highlighting 100% ecological coconut mesocarp micronisation technology and multi-sector industrial applications.
+  - *Stack*: React, JavaScript, Tailwind CSS, Vite
+  - *Link*: https://calowry.com
+- **Sabai: Autonomous AI Health Assistant**: Omnichannel AI health assistant deployed across WhatsApp, Telegram, and LINE, delivering contextual healthcare support, symptom guidance, and automated consultation triage.
+  - *Stack*: AI APIs, n8n, WhatsApp API, Telegram API, LINE API, PostgreSQL
+- **Project Management System**: Centralized team collaboration and sprint orchestration platform engineered for tracking sprint velocity, task dependencies, and software engineering milestones.
+  - *Stack*: React, Node.js, PostgreSQL, Tailwind CSS
+- **Apartment & Tenant Management System**: Dedicated property management platform engineered for apartment owners to oversee tenants, organize unit hierarchies, and centralize monthly utility and rent billing.
+  - *Stack*: Next.js, Node.js, PostgreSQL, Tailwind CSS
+- **House & Flat Rental Finder**: Specialized residential discovery platform connecting bachelors and relocating families with verified long-term rental houses and apartments without short-stay hospitality markups.
+  - *Stack*: Next.js, TypeScript, PostgreSQL, Tailwind CSS
+- **CinePass: Movie Ticket Booking Platform**: Interactive cinema ticketing platform offering real-time theater seat reservations, showtime schedules, and instant digital pass generation.
+  - *Stack*: React, Node.js, Express, PostgreSQL, Tailwind CSS
+
+## Collaboration & Availability
+- Open to remote software engineering, web application development, AI integrations, and freelance contracts.
+- Direct contact: muhammadrony147@gmail.com

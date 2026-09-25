@@ -18,6 +18,14 @@ const navLinks = [
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCleanMode, setIsCleanMode] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("clean") === "true" || window.location.hash === "#clean") {
+      setIsCleanMode(true);
+    }
+  }, []);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -30,6 +38,8 @@ export function Navbar() {
       document.body.style.overflow = "unset";
     };
   }, [mobileMenuOpen]);
+
+  if (isCleanMode) return null;
 
   return (
     <header

@@ -41,6 +41,7 @@ export function Book3DCanvas({
   const [rotationOffset, setRotationOffset] = useState(0);
   const [zoom, setZoom] = useState(1);
   const isDraggingRef = useRef(false);
+  const isPointerDownRef = useRef(false);
   const startXRef = useRef(0);
   const startYRef = useRef(0);
   const dragDirectionRef = useRef<"none" | "horizontal" | "vertical">("none");
@@ -165,8 +166,9 @@ export function Book3DCanvas({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, chapter, onChapterChange, handleToggleCover, handleZoomIn, handleZoomOut, handleReset]);
 
-  // Smooth pointer drag rotation with mobile touch-scroll protection
+  // Smooth pointer drag rotation with mobile touch-scroll protection and hover-guard
   const onPointerDown = useCallback((e: React.PointerEvent) => {
+    isPointerDownRef.current = true;
     startXRef.current = e.clientX;
     startYRef.current = e.clientY;
     initialOffsetRef.current = rotationOffset;
@@ -187,6 +189,15 @@ export function Book3DCanvas({
   }, [rotationOffset]);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
+    // Strict Guard: Pointer MUST be pressed down; never rotate on hover
+    if (!isPointerDownRef.current) return;
+    if (e.pointerType === "mouse" && e.buttons === 0) {
+      isPointerDownRef.current = false;
+      isDraggingRef.current = false;
+      dragDirectionRef.current = "none";
+      return;
+    }
+
     const dx = e.clientX - startXRef.current;
     const dy = e.clientY - startYRef.current;
 
@@ -219,6 +230,7 @@ export function Book3DCanvas({
   }, []);
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
+    isPointerDownRef.current = false;
     isDraggingRef.current = false;
     dragDirectionRef.current = "none";
     try {
@@ -237,39 +249,32 @@ export function Book3DCanvas({
     >
       {/* 3D Canvas Stage: Optimized viewport height so book + controls fit within browser view */}
       <div
-        className="relative h-[440px] w-full sm:h-[490px] lg:h-[530px] xl:h-[560px] cursor-grab active:cursor-grabbing touch-pan-y overflow-hidden"
+        className="relative h-[440px] w-full sm:h-[490px] lg:h-[530px] xl:h-[560px] cursor-grab active:cursor-grabbing touch-pan-y"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
+        onPointerLeave={onPointerUp}
       >
-        {/* ========================================================
-            Exact 3-Lobe Liquid Morphing Amoeba (Reference Image Match)
-            Features defined asymmetrical lobes, pinched waist, and crisp
-            feathered glowing contours extending generously past the book.
-           ======================================================== */}
-        {/* Layer 1: Ambient outer soft glow aura (Theme-reactive) */}
+        {/* Layer 1: Ambient outer soft glow aura (Theme-reactive with 100% natural radial falloff) */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-1/2 left-1/2 w-[370px] sm:w-[440px] lg:w-[500px] h-[420px] sm:h-[490px] lg:h-[540px] animate-fluid-blob-2 opacity-50 transition-colors duration-700"
+          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[400px] lg:w-[460px] h-[320px] sm:h-[420px] lg:h-[480px] rounded-full opacity-55 transition-colors duration-700"
           style={{
             background:
-              "linear-gradient(135deg, rgba(var(--color-accent-rgb, 229, 229, 229), 0.25) 0%, rgba(var(--color-accent-rgb, 229, 229, 229), 0.12) 50%, rgba(var(--color-accent-rgb, 229, 229, 229), 0.20) 100%)",
-            filter: "blur(38px)",
+              "radial-gradient(ellipse 60% 60% at center, rgba(var(--color-accent-rgb, 229, 229, 229), 0.32) 0%, rgba(var(--color-accent-rgb, 229, 229, 229), 0.12) 45%, transparent 70%)",
+            filter: "blur(28px)",
           }}
         />
 
-        {/* Layer 2: Primary defined organic blob — Dynamic Theme Reactive (60% Opacity) */}
+        {/* Layer 2: Core organic glow centered seamlessly behind the book */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-1/2 left-1/2 w-[310px] sm:w-[380px] lg:w-[430px] h-[370px] sm:h-[440px] lg:h-[490px] animate-fluid-blob-1 transition-all duration-700"
+          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[230px] sm:w-[310px] lg:w-[360px] h-[250px] sm:h-[330px] lg:h-[380px] rounded-full opacity-70 transition-all duration-700"
           style={{
             background:
-              "linear-gradient(135deg, rgba(var(--color-accent-rgb, 229, 229, 229), 0.60) 0%, rgba(var(--color-accent-rgb, 229, 229, 229), 0.52) 50%, rgba(var(--color-accent-rgb, 229, 229, 229), 0.58) 100%)",
-            border: "1px solid rgba(var(--color-accent-rgb, 229, 229, 229), 0.35)",
-            boxShadow:
-              "0 0 30px rgba(var(--color-accent-rgb, 229, 229, 229), 0.28), 0 0 60px rgba(var(--color-accent-rgb, 229, 229, 229), 0.15), inset 0 0 20px rgba(var(--color-accent-rgb, 229, 229, 229), 0.20)",
-            filter: "blur(22px)",
+              "radial-gradient(ellipse 55% 55% at center, rgba(var(--color-accent-rgb, 229, 229, 229), 0.45) 0%, rgba(var(--color-accent-rgb, 229, 229, 229), 0.16) 50%, transparent 72%)",
+            filter: "blur(16px)",
           }}
         />
 
@@ -277,7 +282,7 @@ export function Book3DCanvas({
           frameloop={isVisible ? "always" : "never"}
           shadows
           dpr={[1, 1.5]}
-          camera={{ position: [0, 0, 5.85], fov: 42 }}
+          camera={{ position: [0, 0, 5.85], fov: 42, near: 0.8, far: 25 }}
           className="h-full w-full pointer-events-none"
         >
           {/* Smooth Camera Distance Rig for Zoom In/Out */}

@@ -49,7 +49,7 @@ export function About() {
               Robiul Hasan Rony
             </h2>
             <p className="text-base sm:text-lg font-medium text-accent">
-              Aspiring Software Engineer &amp; AI Automation Builder
+              Software Developer — Web &amp; AI
             </p>
           </div>
 

@@ -359,9 +359,11 @@ export function MahoragaWheelCanvas({
   });
 
   const dragDirectionRef = useRef<"none" | "horizontal" | "vertical">("none");
+  const isPointerDownRef = useRef(false);
   const startPosRef = useRef({ x: 0, y: 0 });
 
   const handlePointerDown = (e: React.PointerEvent) => {
+    isPointerDownRef.current = true;
     startPosRef.current = { x: e.clientX, y: e.clientY };
     dragPhysicsRef.current.lastX = e.clientX;
     dragPhysicsRef.current.lastY = e.clientY;
@@ -386,6 +388,15 @@ export function MahoragaWheelCanvas({
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
+    // Strict Guard: Pointer MUST be pressed down; never rotate on hover
+    if (!isPointerDownRef.current) return;
+    if (e.pointerType === "mouse" && e.buttons === 0) {
+      isPointerDownRef.current = false;
+      dragPhysicsRef.current.isDragging = false;
+      dragDirectionRef.current = "none";
+      return;
+    }
+
     const dx = e.clientX - startPosRef.current.x;
     const dy = e.clientY - startPosRef.current.y;
 
@@ -427,6 +438,7 @@ export function MahoragaWheelCanvas({
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
+    isPointerDownRef.current = false;
     dragPhysicsRef.current.isDragging = false;
     dragDirectionRef.current = "none";
     try {
@@ -450,6 +462,7 @@ export function MahoragaWheelCanvas({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
+      onPointerLeave={handlePointerUp}
       className="relative w-[380px] sm:w-[420px] md:w-[460px] h-[175px] sm:h-[195px] cursor-grab active:cursor-grabbing touch-pan-y select-none"
     >
       <Canvas
