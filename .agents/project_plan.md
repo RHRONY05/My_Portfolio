@@ -10,21 +10,21 @@
 
 A high-performance, single-page 3D developer portfolio that replaces traditional static sections with tactile, interactive 3D artifacts inspired by high-end archival editorial designs (e.g., [Panel / Press](https://panelpress.online/)).
 
-### Approved Design System Tokens & Foundations
-- **Color Theme**: **01. Obsidian & Phosphor Neon (Dark Mode)**
-  - `bg-canvas`: `#0D1117` (Deep Terminal Ground)
-  - `bg-card` / surfaces: `#161B22` (Obsidian Container)
-  - `border-line`: `#30363D` (Hairline Blueprint Datum)
-  - `text-fg`: `#F0F6FC` (High-Contrast White)
-  - `text-muted`: `#8B949E` (Secondary Telemetry Pewter)
-  - `accent` (Primary): `#00FF94` (Electric Phosphor Neon Green)
-  - `text-on-accent`: `#00391D` (Deep Forest Green for contrast)
-  - `secondary` (Secondary Accent): `#58A6FF` (Blueprint Cyan)
-  - `accent-glow`: `rgba(0, 255, 148, 0.35)`
-- **Typography Pairing**: **Precision Engineering**
-  - **Headings & Display**: `Inter` (700/800 bold, tight letter-spacing)
-  - **Body & Editorial Prose**: `Inter` (400/500, generous line-height)
-  - **Telemetry, Code, Badges & Labels**: `JetBrains Mono` (500/700 uppercase, wide letter-spacing)
+### Approved Design System Tokens & Foundations (Strict Zero-Hardcoding Policy)
+- **4 Curated Dynamic Themes** (`src/data/themeConfig.ts`, `globals.css`):
+  1. **Monolithic Onyx & Graphite Grayscale (DEFAULT)**: `#000000` canvas | `#111111` card | `#E5E5E5` accent
+  2. **Celadon & Hunter Forest**: `#111D13` canvas | `#192B1C` card | `#A1CCA5` accent
+  3. **Midnight Amethyst & Deep Violet**: `#11001C` canvas | `#1E0030` card | `#C084FC` accent
+  4. **Prussian Blue & Space Indigo**: `#0B132B` canvas | `#131C38` card | `#5BC0BE` accent
+- **Semantic Tailwind Tokens (MANDATORY across all components)**:
+  - `bg-canvas`, `bg-card`, `border-line`, `border-accent`, `text-fg`, `text-muted`, `text-accent`, `text-secondary`, `text-on-accent`
+  - Dynamic glows/opacities: `rgba(var(--color-accent-rgb), <alpha>)` or `rgba(var(--color-card-rgb), <alpha>)`
+- **4 Curated Dynamic Fonts**:
+  1. **Original Surfer (DEFAULT)**: `'Original Surfer', cursive, sans-serif`
+  2. **Lusitana**: `'Lusitana', serif`
+  3. **Ruwudu**: `'Ruwudu', serif`
+  4. **Inter**: `'Inter', sans-serif`
+  - **Mono / Telemetry / Code**: `JetBrains Mono` (`font-mono`)
 
 ### Approved High-Performance Tech Stack
 - **Core Framework**: **Next.js 16** (App Router, Turbopack)

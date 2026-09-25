@@ -1,4 +1,6 @@
-import { Mail } from "lucide-react";
+"use client";
+
+import { ArrowUp, Mail } from "lucide-react";
 import type { ComponentType } from "react";
 import {
   GithubIcon,
@@ -37,36 +39,35 @@ const socialHref = (key: string) => {
 };
 
 export function Footer() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <footer className="w-full border-t border-line bg-canvas px-6 py-12 transition-colors duration-500">
-      <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-8 md:grid-cols-3">
-        <div className="flex flex-col gap-2 text-center md:items-start md:text-left">
-          <span className="text-mono font-black text-fg">
+    <footer className="w-full border-t border-line bg-canvas px-4 sm:px-6 md:px-8 py-6 transition-colors duration-500">
+      <div className="mx-auto flex max-w-[1360px] flex-col items-center gap-4 md:grid md:grid-cols-3 md:items-center">
+        {/* Left: Brand Identity & Tagline */}
+        <div className="flex flex-col items-center gap-0.5 text-center md:items-start md:text-left">
+          <span className="text-mono font-black tracking-tight text-fg text-base">
             {footerContent.brand}
           </span>
           <p className="text-caption text-muted">{footerContent.tagline}</p>
         </div>
 
-        <nav className="flex justify-center gap-6">
-          {footerContent.navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-mono uppercase text-muted transition-colors hover:text-accent"
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
+        {/* Center: Copyright & Precision Signature */}
+        <div className="text-center text-caption tracking-wider text-muted">
+          {footerContent.copyright}
+        </div>
 
-        <div className="flex justify-center gap-6 md:justify-end">
+        {/* Right: Social Links & Back to Top */}
+        <div className="flex items-center justify-center gap-3 md:justify-end">
           {footerContent.socials.map((key) => {
             const Icon = socialIcons[key];
             const href = socialHref(key);
             const isMail = key === "EMAIL";
             const isLive = Boolean(href);
             const className =
-              "text-muted transition-colors hover:text-accent";
+              "text-muted transition-colors hover:text-accent p-1.5 rounded-lg hover:bg-card/50 transition-all";
 
             if (!Icon) return null;
 
@@ -75,9 +76,10 @@ export function Footer() {
                 <span
                   key={key}
                   aria-label={key.toLowerCase()}
+                  title={`${key} (Coming soon)`}
                   className={`${className} opacity-50`}
                 >
-                  <Icon className="size-5" />
+                  <Icon className="size-4" />
                 </span>
               );
             }
@@ -89,19 +91,23 @@ export function Footer() {
                 target={isMail ? undefined : "_blank"}
                 rel={isMail ? undefined : "noopener noreferrer"}
                 aria-label={key.toLowerCase()}
+                title={key}
                 className={className}
               >
-                <Icon className="size-5" />
+                <Icon className="size-4" />
               </a>
             );
           })}
-        </div>
-      </div>
 
-      <div className="mx-auto mt-12 max-w-[1200px] border-t border-line/30 pt-8 text-center">
-        <p className="text-caption uppercase tracking-widest text-muted">
-          {footerContent.copyright}
-        </p>
+          <button
+            onClick={scrollToTop}
+            aria-label="Back to top"
+            title="Back to top"
+            className="group ml-1 flex size-8 items-center justify-center rounded-lg border border-line bg-card/60 text-muted transition-all hover:border-accent hover:text-accent active:scale-95"
+          >
+            <ArrowUp className="size-3.5 transition-transform duration-200 group-hover:-translate-y-0.5" />
+          </button>
+        </div>
       </div>
     </footer>
   );

@@ -3,7 +3,6 @@
 import { ArrowRight, Mail } from "lucide-react";
 import { type ComponentType, type FormEvent, useState } from "react";
 import { GithubIcon, LinkedinIcon } from "@/components/BrandIcons";
-import { SectionLabel } from "@/components/SectionLabel";
 import { contactContent } from "@/data/content";
 import { profile } from "@/data/profile";
 
@@ -11,9 +10,9 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="mx-auto w-full max-w-[1200px] px-6 py-24 md:px-12"
+      className="relative mx-auto w-full max-w-[1360px] px-4 sm:px-6 md:px-8 py-16 sm:py-20 lg:py-24 scroll-mt-0"
     >
-      <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
+      <div className="flex w-full flex-col gap-8 lg:flex-row lg:gap-12 xl:gap-16 lg:items-start">
         <ContactIntro />
         <ContactForm />
       </div>
@@ -23,9 +22,8 @@ export function Contact() {
 
 function ContactIntro() {
   return (
-    <div className="flex flex-col gap-6 lg:w-2/5">
+    <div className="flex w-full flex-col gap-6 lg:w-2/5">
       <div className="space-y-4">
-        <SectionLabel withDot>Get In Touch</SectionLabel>
         <h2 className="text-h1 text-fg">{contactContent.headline}</h2>
         <p className="text-body-lg text-muted">{contactContent.subtext}</p>
       </div>
@@ -80,7 +78,7 @@ function ContactCard({
     preview ?? (href ? href.replace(/^https?:\/\//, "") : (fallback ?? ""));
 
   const className =
-    "group flex items-center gap-4 rounded-lg border border-line bg-card p-4 transition-colors hover:border-accent";
+    "group flex w-full items-center gap-4 rounded-lg border border-line bg-card p-4 transition-colors hover:border-accent";
 
   const inner = (
     <>
@@ -133,8 +131,8 @@ function ContactForm() {
   }
 
   return (
-    <div className="lg:w-3/5">
-      <div className="glow-border relative overflow-hidden rounded-xl bg-card p-8">
+    <div className="w-full lg:w-3/5">
+      <div className="glow-border relative w-full overflow-hidden rounded-xl bg-card p-6 sm:p-8">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 opacity-30 [background-image:radial-gradient(rgba(48,54,61,0.4)_1px,transparent_1px)] [background-size:16px_16px]"

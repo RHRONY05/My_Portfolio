@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, type PanInfo } from "framer-motion";
-import { Layers, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, Layers, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { projects } from "@/data/projects";
 
@@ -44,16 +44,6 @@ export function ProjectDeck() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [next, prev]);
 
-  // Drag handler for swipe gesture on active card
-  const handleDragEnd = (_: unknown, info: PanInfo) => {
-    const threshold = 40;
-    if (info.offset.x < -threshold) {
-      next();
-    } else if (info.offset.x > threshold) {
-      prev();
-    }
-  };
-
   // Helper to calculate shortest circular distance between any card and active card
   const getOffset = (index: number) => {
     let diff = index - activeIndex;
@@ -62,7 +52,7 @@ export function ProjectDeck() {
     return diff;
   };
 
-  // 3D Horizontal spacing calibrated for 500px desktop card
+  // Horizontal spacing calibrated for 500px desktop card
   const getTranslateX = (offset: number) => {
     const sign = Math.sign(offset);
     const abs = Math.abs(offset);
@@ -82,26 +72,38 @@ export function ProjectDeck() {
       id="projects"
       className="relative mx-auto flex w-full max-w-full flex-col items-center overflow-x-clip px-4 pt-36 sm:pt-48 lg:pt-60 pb-24 md:pb-32 md:px-8 scroll-mt-0"
     >
-      {/* Ambient background gold glow */}
+      {/* Dynamic theme ambient backdrop glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[650px] rounded-full bg-accent/5 blur-[160px]"
+        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[650px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(var(--color-accent-rgb),0.12)_0%,transparent_70%)] blur-[120px]"
       />
 
       {/* ========================================================
-          3D PERSPECTIVE STAGE (Ruixen 3D Card Stack Architecture)
+          THE FANNED DECK STAGE WITH FLOATING CHEVRON CONTROLS
          ======================================================== */}
-      <div
-        style={{
-          perspective: 1200,
-          transformStyle: "preserve-3d",
-        }}
-        className="relative flex h-[640px] sm:h-[690px] md:h-[740px] lg:h-[770px] w-full max-w-[1360px] items-center justify-center overflow-visible"
-      >
-        <div
-          style={{ transformStyle: "preserve-3d" }}
-          className="relative flex h-full w-full items-center justify-center"
+      <div className="relative flex h-[640px] sm:h-[690px] md:h-[740px] lg:h-[770px] w-full max-w-[1360px] items-center justify-center overflow-visible">
+        {/* Floating Left Arrow */}
+        <button
+          type="button"
+          onClick={prev}
+          aria-label="Previous project"
+          className="absolute left-2 sm:left-4 lg:left-8 z-50 flex size-12 items-center justify-center rounded-full border border-line bg-card/90 text-muted backdrop-blur-md transition-all hover:scale-110 hover:border-accent hover:text-accent shadow-xl"
         >
+          <ChevronLeft className="size-6" />
+        </button>
+
+        {/* Floating Right Arrow */}
+        <button
+          type="button"
+          onClick={next}
+          aria-label="Next project"
+          className="absolute right-2 sm:right-4 lg:right-8 z-50 flex size-12 items-center justify-center rounded-full border border-line bg-card/90 text-muted backdrop-blur-md transition-all hover:scale-110 hover:border-accent hover:text-accent shadow-xl"
+        >
+          <ChevronRight className="size-6" />
+        </button>
+
+        {/* Card Stage Container */}
+        <div className="relative flex h-full w-full items-center justify-center">
           {projects.map((project, index) => {
             const offset = getOffset(index);
             const isCenter = offset === 0;
@@ -109,42 +111,28 @@ export function ProjectDeck() {
             const isOuterWing = Math.abs(offset) === 2;
             const isVisible = Math.abs(offset) <= 2;
 
-            // 3D Transform Coordinates (Ruixen-style continuous interpolation)
+            // Geometry calculations
             const x = getTranslateX(offset);
             const y = isCenter ? -14 : isInnerWing ? 20 : 46;
-            const z = isCenter ? 0 : isInnerWing ? -95 : -210; // True 3D depth spacing
             const rotateZ = isCenter ? 0 : isInnerWing ? offset * 5.5 : offset * 10;
-            const rotateY = isCenter ? 0 : -offset * 6.5; // Natural 3D inward card curvature
-            const rotateX = 4; // Subtle 3D desk tilt
             const scale = isCenter ? 1.05 : isInnerWing ? 0.94 : 0.8;
             const opacity = isCenter ? 1 : isInnerWing ? 0.92 : isOuterWing ? 0.22 : 0;
-            const zIndex = isCenter ? 40 : 30 - Math.abs(offset) * 8;
+            const zIndex = isCenter ? 40 : 30 - Math.abs(offset) * 5;
 
             return (
               <motion.div
                 key={project.id}
-                drag={isCenter ? "x" : false}
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.12}
-                onDragEnd={handleDragEnd}
-                onClick={() => {
-                  if (!isCenter) setActiveIndex(index);
-                }}
+                onClick={() => setActiveIndex(index)}
                 initial={false}
                 animate={{
                   x,
                   y,
-                  z: isVisible ? z : -400,
                   rotateZ,
-                  rotateY,
-                  rotateX,
                   scale,
                   opacity,
-                  zIndex,
                 }}
                 whileHover={{
                   y: isCenter ? -20 : y - 24,
-                  z: isCenter ? 30 : z + 40,
                   rotateZ: offset * 2,
                   scale: scale * 1.03,
                   opacity: isOuterWing ? 0.85 : 1,
@@ -152,26 +140,26 @@ export function ProjectDeck() {
                 }}
                 transition={{
                   type: "spring",
-                  stiffness: 260,
-                  damping: 26,
+                  stiffness: 220,
+                  damping: 24,
                   mass: 0.8,
                 }}
                 style={{
-                  transformStyle: "preserve-3d",
                   transformOrigin: "bottom center",
                   willChange: "transform, opacity",
+                  zIndex,
                   pointerEvents: isVisible ? "auto" : "none",
                 }}
                 className={`absolute top-4 flex h-[500px] w-[320px] cursor-pointer flex-col overflow-hidden rounded-2xl border select-none transition-shadow duration-300 sm:h-[540px] sm:w-[410px] md:h-[580px] md:w-[500px] ${
                   isCenter
-                    ? "border-accent bg-card shadow-[0_20px_50px_rgba(var(--color-accent-rgb,229,229,229),0.3)] ring-1 ring-accent/40"
+                    ? "border-accent bg-card shadow-[0_20px_50px_rgba(var(--color-accent-rgb),0.25)] ring-1 ring-accent/30"
                     : isInnerWing
                     ? "border-line bg-card/95 shadow-2xl hover:border-accent/70"
                     : "border-line/40 bg-card/60 shadow-md hover:border-accent/60"
                 }`}
               >
                 {/* Comic Issue Header Strip */}
-                <div className="flex items-center justify-between border-b border-line bg-canvas px-5 py-3">
+                <div className="flex items-center justify-between border-b border-line bg-canvas/80 px-5 py-3">
                   <div className="flex items-center gap-2.5">
                     <span className="rounded bg-accent/15 px-2.5 py-0.5 font-mono text-xs font-bold text-accent">
                       ISSUE #{String(index + 1).padStart(2, "0")}
@@ -208,11 +196,11 @@ export function ProjectDeck() {
                   </div>
 
                   {/* Main Expanded Artwork / Mockup Box (Classic 16:10 or 3:2 Ratio) */}
-                  <div className="relative flex h-[210px] sm:h-[235px] md:h-[260px] w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-line/80 bg-canvas/80 p-4 text-center transition-colors">
-                    {/* Subtle blueprint grid background */}
+                  <div className="relative flex h-[210px] sm:h-[235px] md:h-[260px] w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-line/80 bg-canvas/50 p-4 text-center transition-colors">
+                    {/* Dynamic theme blueprint grid background */}
                     <div
                       aria-hidden
-                      className="absolute inset-0 opacity-20 [background-image:radial-gradient(rgba(var(--color-accent-rgb,229,229,229),0.4)_1px,transparent_1px)] [background-size:14px_14px]"
+                      className="absolute inset-0 opacity-20 [background-image:radial-gradient(rgba(var(--color-accent-rgb),0.3)_1px,transparent_1px)] [background-size:14px_14px]"
                     />
 
                     {/* Placeholder Icon */}
@@ -274,6 +262,25 @@ export function ProjectDeck() {
             );
           })}
         </div>
+      </div>
+
+      {/* ========================================================
+          MINIMALIST PAGINATION DOTS (Dynamic Theme Tokens)
+         ======================================================== */}
+      <div className="mt-6 flex items-center justify-center gap-2.5 z-40">
+        {projects.map((p, i) => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => setActiveIndex(i)}
+            aria-label={`Jump to issue ${i + 1}`}
+            className={`h-2 transition-all rounded-full ${
+              i === activeIndex
+                ? "w-8 bg-accent shadow-[0_0_10px_rgba(var(--color-accent-rgb),0.5)]"
+                : "w-2 bg-line hover:bg-muted"
+            }`}
+          />
+        ))}
       </div>
     </section>
   );

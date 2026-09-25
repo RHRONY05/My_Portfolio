@@ -39,9 +39,9 @@ Deliver a clean, structured briefing to the user following this exact format:
 
 #### 📌 Workspace & Git State:
 - **Active Branch**: `v2-3d-rebuild` (Backup safe on `v1-current-backup`)
-- **Theme**: Obsidian & Phosphor Neon (`#0D1117` / `#00FF94`)
-- **Typography**: Precision Engineering (`Inter` + `JetBrains Mono`)
+- **Design Tokens**: 4 Curated Dynamic Themes (`Monolithic Onyx`, `Celadon Forest`, `Midnight Amethyst`, `Prussian Blue`) + 4 Dynamic Fonts (`Original Surfer`, `Lusitana`, `Ruwudu`, `Inter`)
 - **Dev Server**: Active (`http://localhost:3000`)
+- **Strict Rule**: Zero hardcoded colors/fonts; rely strictly on semantic Tailwind tokens and CSS variables!
 
 #### 🎯 What Was Done (Completed):
 - [Summary of locked sections and previous session deliverables]

@@ -15,11 +15,18 @@ This version has breaking changes — APIs, conventions, and file structure may 
 High-performance, single-page 3D developer portfolio for **Rony (RONY.DEV)** — Full-Stack Engineer & Autonomous AI Automation Specialist.
 
 * **Stack**: **Next.js 16 (App Router, Turbopack)**, React 19, TypeScript, Tailwind CSS v4 (CSS-first config), Framer Motion, Three.js / React Three Fiber (`@react-three/fiber` + `@react-three/drei`), Lenis Smooth Scroll.
-* **Approved Theme**: **Obsidian & Royal Sunburst Amber (Dark)**
-  - Canvas: `#0D1117` | Card Surfaces: `#161B22` | Hairline Borders: `#30363D`
-  - Primary Accent: `#E5B869` (Royal Sunburst Amber Gold) | Text on Accent: `#241800`
-  - Secondary Accent: `#F3C77C` (Warm Honey Accent)
-  - Typography: **Precision Engineering** (`Inter` display/body + `JetBrains Mono` telemetry/code).
+* **Design Token System**: **4 Curated Dynamic Themes & 4 Curated Fonts** (`src/data/themeConfig.ts`, `globals.css`):
+  - **Dynamic Theme Switcher**: Users can switch between 4 themes live from the Navbar or system preference:
+    1. **Monolithic Onyx & Graphite Grayscale (DEFAULT)**: `#000000` canvas | `#111111` card | `#E5E5E5` accent
+    2. **Celadon & Hunter Forest**: `#111D13` canvas | `#192B1C` card | `#A1CCA5` accent
+    3. **Midnight Amethyst & Deep Violet**: `#11001C` canvas | `#1E0030` card | `#C084FC` accent
+    4. **Prussian Blue & Space Indigo**: `#0B132B` canvas | `#131C38` card | `#5BC0BE` accent
+  - **Dynamic Typography Switcher**: Users can switch between 4 fonts live:
+    1. **Original Surfer (DEFAULT)**: `'Original Surfer', cursive, sans-serif` (Retro Rebel)
+    2. **Lusitana**: `'Lusitana', serif` (Noble Heritage)
+    3. **Ruwudu**: `'Ruwudu', serif` (Calligraphic Drama)
+    4. **Inter**: `'Inter', sans-serif` (Precision Standard)
+  - **Mono / Telemetry / Code**: `JetBrains Mono` (`font-mono`)
 * **Git Branches**:
   - `v1-current-backup` (Safe permanent backup of original site; do NOT modify).
   - `v2-3d-rebuild` (Active development branch).
@@ -106,11 +113,55 @@ In every response, communicate using this design & learning focused structure:
 
 ---
 
-## 6. Performance & Quality Standards
+## 6. Strict Zero-Hardcoding Policy & Standards (NON-NEGOTIABLE)
 
-1. **Zero Hardcoded Colors**: Use Tailwind tokens (`bg-canvas`, `text-accent`, `border-line`).
-2. **60-FPS Anti-Lag Rule**:
-   - Cap Three.js DPR: `dpr={[1, 1.5]}`.
-   - Dynamic lazy-loading for 3D canvases (`next/dynamic` + `ssr: false`).
-   - Pause offscreen WebGL render loops with Intersection Observers.
-3. **Zero Dummy/Inert Elements**: Every button, tab, and 3D control must have active handlers or feedback states.
+Every AI agent collaborating on this codebase MUST strictly follow these token rules without exception:
+
+### 1. Zero Hardcoded Colors in HTML/Tailwind
+- **NEVER** write raw hex colors (e.g. `#000000`, `#0D1117`, `#161B22`, `#E5B869`, `#E5E5E5`, `#30363D`, `#00FF94`) in JSX classNames or inline styles.
+- **ALWAYS** use semantic Tailwind design tokens:
+  - Backgrounds: `bg-canvas`, `bg-card`
+  - Borders: `border-line`, `border-accent`, `hover:border-accent`
+  - Typography: `text-fg`, `text-muted`, `text-accent`, `text-secondary`, `text-on-accent`
+  - Accents on Badges & Buttons: `bg-accent`, `text-on-accent`, `hover:bg-secondary`
+- **Dynamic Opacities & Glows**:
+  - Always use the RGB CSS variable: `rgba(var(--color-accent-rgb), 0.35)` or `rgba(var(--color-card-rgb), 0.80)`
+  - Example drop-shadow: `shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.25)]`
+  - Example backdrop glow: `bg-[radial-gradient(ellipse_at_center,rgba(var(--color-accent-rgb),0.2)_0%,transparent_70%)]`
+
+### 2. Zero Hardcoded Colors in Three.js / WebGL / Canvas
+- In 3D Canvas scenes (R3F), materials, lights, and wireframes must dynamically react to the active theme.
+- **Pattern**: Read colors from the live DOM computed style and listen to the window event `rony_theme_change`:
+  ```tsx
+  const [accentColor, setAccentColor] = useState("#E5E5E5");
+  useEffect(() => {
+    const updateColors = () => {
+      const comp = getComputedStyle(document.documentElement);
+      const acc = comp.getPropertyValue("--color-accent").trim();
+      if (acc) setAccentColor(acc);
+    };
+    updateColors();
+    window.addEventListener("storage", updateColors);
+    window.addEventListener("rony_theme_change", updateColors);
+    return () => {
+      window.removeEventListener("storage", updateColors);
+      window.removeEventListener("rony_theme_change", updateColors);
+    };
+  }, []);
+  ```
+- Use `accentColor` for 3D point lights, rims, glowing materials, and halo accents.
+
+### 3. Zero Hardcoded Typography
+- **NEVER** hardcode font family inline styles (e.g. `fontFamily: "Inter"`) or arbitrary Tailwind font classes (e.g. `font-['Inter']`).
+- **Headings & Display**: Rely on `globals.css` element defaults (`h1..h6`) or `font-heading`.
+- **Prose & Body**: Rely on `globals.css` `html, body` inheritance (`var(--font-primary, var(--font-sans))`).
+- **Telemetry, Badges, Labels, Metadata**: Use `font-mono` (`var(--font-jetbrains-mono)`).
+
+### 4. Drei `<Html>` Z-Index & Modal Stacking Rule
+- Any `<Html>` component from `@react-three/drei` MUST have `zIndexRange={[5, 0]}` to prevent Drei from setting an astronomical z-index (16.7 million) that breaks modals.
+- All high-priority modals rendered via React Portals must use `style={{ zIndex: 2147483647 }}` (maximum 32-bit integer) and dispatch `rony_modal_state` so 3D overlays unmount when modals are open.
+
+### 5. Performance & Quality Standards
+- **60-FPS Anti-Lag Rule**: Cap Three.js DPR (`dpr={[1, 1.5]}`), dynamic lazy-load 3D canvases (`next/dynamic` + `ssr: false`), pause offscreen render loops.
+- **Zero Horizontal Scrolling**: Enforce `overflow-x: clip; max-width: 100vw;` on `html, body` and clip wide animated backdrops with `overflow-hidden`.
+- **Zero Inert Elements**: Every button, tab, and 3D control must have active handlers or feedback states.

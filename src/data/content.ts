@@ -58,5 +58,5 @@ export const footerContent = {
     { label: "Contact", href: "#contact" },
   ],
   socials: ["GITHUB", "LINKEDIN", "TWITTER", "EMAIL"],
-  copyright: "© 2025 RONY. BUILT WITH PRECISION.",
+  copyright: "© 2026 RONY. BUILT WITH PRECISION.",
 } as const;
