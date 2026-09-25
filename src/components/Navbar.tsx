@@ -33,7 +33,7 @@ export function Navbar() {
 
   return (
     <header
-      className="fixed top-0 inset-x-0 z-50 backdrop-blur-md border-b border-line/30 py-3 md:py-3.5 transition-all duration-300 shadow-sm shadow-black/20"
+      className="fixed top-0 inset-x-0 z-[100] backdrop-blur-md border-b border-line/30 py-3 md:py-3.5 transition-all duration-300 shadow-sm shadow-black/20"
       style={{
         backgroundColor: "rgba(var(--color-canvas-rgb, 13, 17, 23), 0.55)",
       }}

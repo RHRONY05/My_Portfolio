@@ -1,4 +1,4 @@
-export type ProjectCategory = "Full Stack" | "Automation" | "AI/RAG";
+export type ProjectCategory = "Frontend" | "Full Stack" | "AI/RAG" | "Automation";
 
 export type Project = {
   id: string;
@@ -9,102 +9,140 @@ export type Project = {
   stack: readonly string[];
   github?: string;
   live?: string;
+  image?: string;
+  status?: "live" | "coming-soon";
 };
 
 export const projects: readonly Project[] = [
   {
+    id: "portfolio",
+    title: "Developer Portfolio (rhrony05.me)",
+    category: "Frontend",
+    description:
+      "High-performance, interactive 3D developer portfolio featuring real-time WebGL environments, dynamic multi-palette theme engine, and graphic novel dossier mechanics.",
+    features: [
+      "Interactive Three.js / React Three Fiber open-air cinema & 3D book dossier",
+      "Dynamic 4-palette theme switcher & real-time typography system",
+      "Smooth GPU spring physics and continuous 3D card deck interactions",
+    ],
+    stack: ["Next.js", "React 19", "Three.js", "R3F", "Tailwind CSS", "Framer Motion"],
+    github: "",
+    live: "https://rhrony05.me",
+    image: "/images/projects/my_portfolio.png",
+    status: "live",
+  },
+  {
     id: "sabaihealth",
-    title: "SabaiHealth Platform & Custom AI Agent",
-    category: "Full Stack",
+    title: "SabaiHealth Web Platform",
+    category: "Frontend",
     description:
-      "Maintained and expanded a comprehensive health platform featuring deep business logic and internationalization (Thai and English). Developed 'Sabai', a dedicated custom AI agent engineered to execute specific platform operations.",
+      "Official responsive web platform for SabaiHealth featuring multi-language internationalization (Thai and English) with integrated digital NDA e-signature workflows for patient and partner onboarding.",
     features: [
-      "Multi-language LINE campaign automation workflows using n8n",
-      "Secure NDA e-signature functionality for user onboarding",
-      "Complex workflow routing with 100+ n8n workflows",
+      "Secure digital NDA e-signature workflows for seamless onboarding",
+      "Bilingual internationalization architecture (Thai and English)",
+      "Modern responsive health platform UI/UX engineered with Next.js",
     ],
-    stack: ["Next.js", "n8n", "AI APIs", "PostgreSQL", "LINE API"],
-    github: "" /* TODO */,
-    live: "" /* TODO */,
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "E-Signature"],
+    github: "",
+    live: "https://sabaihealth.com",
+    image: "/images/projects/Sabaihealth_website.png",
+    status: "live",
   },
   {
-    id: "ten-rent",
-    title: "Ten-Rent: Tenant Management System",
-    category: "Full Stack",
+    id: "calowry",
+    title: "Calowry: Sustainable Fibre Innovation",
+    category: "Frontend",
     description:
-      "A full-stack property management application architected to streamline complex landlord-tenant operations and centralize financial tracking.",
+      "A modern corporate product showcase for Calowry Inc built during my foundational web development journey, highlighting 100% ecological coconut mesocarp micronisation technology and multi-sector applications.",
     features: [
-      "Advanced PostgreSQL schemas supporting floor hierarchies",
-      "Automated bill management for monthly invoicing",
-      "Role-based access for landlords and tenants",
+      "Interactive multi-sector application catalog (Food, Cosmetics, Pharma, Industrial)",
+      "Technical specification datasheets and direct sample inquiry pipeline",
+      "High-performance client-side SPA architecture with modern responsive UI/UX",
     ],
-    stack: ["MERN Stack", "PostgreSQL"],
-    github: "" /* TODO */,
-    live: "" /* TODO */,
+    stack: ["React", "JavaScript", "Tailwind CSS", "Vite"],
+    github: "",
+    live: "https://calowry.com",
+    image: "/images/projects/calowry_website.png",
+    status: "live",
   },
   {
-    id: "project-management-system",
-    title: "Project Management System",
-    category: "Full Stack",
-    description: "" /* TODO: 1-2 sentence description */,
-    features: [
-      "" /* TODO: feature 1 */,
-      "" /* TODO: feature 2 */,
-      "" /* TODO: feature 3 */,
-    ],
-    stack: [] /* TODO: tech stack */,
-    github: "" /* TODO */,
-    live: "" /* TODO */,
-  },
-  {
-    id: "cloud-storage-pipeline",
-    title: "Enterprise Cloud Storage Automation Pipeline",
-    category: "Automation",
-    description:
-      "An end-to-end automation workflow designed to drastically reduce manual administrative overhead for video conferencing assets and optimize cloud storage costs.",
-    features: [
-      "Automated extraction and secure transfer of Zoom cloud recordings directly to Google Drive",
-      "Scheduled storage deletion protocol to manage costs",
-    ],
-    stack: ["n8n", "Zoom API", "Google Drive API"],
-    github: "" /* TODO */,
-    live: "" /* TODO */,
-  },
-  {
-    id: "rag-chatbot-ecosystem",
-    title: "RAG Chatbot Ecosystem (Telegram/WhatsApp)",
+    id: "sabai-chatbot",
+    title: "Sabai: Autonomous AI Health Assistant",
     category: "AI/RAG",
     description:
-      "Intelligent, context-aware chatbot applications integrated across major messaging platforms using Retrieval-Augmented Generation (RAG) to deliver accurate, domain-specific responses.",
+      "An autonomous AI health assistant living across WhatsApp, Telegram, and LINE, delivering contextual healthcare support, symptom guidance, and automated triage pipelines.",
     features: [
-      "Centralized prompt management via structured PostgreSQL DB",
-      "Multi-platform integration (Telegram + WhatsApp)",
-      "Optimized data retrieval with RAG architecture",
+      "Omnichannel deployment across WhatsApp, Telegram, and LINE",
+      "Domain-specific RAG architecture with structured medical knowledge bases",
+      "Automated patient consultation routing and triage workflows",
     ],
-    stack: [
-      "PostgreSQL",
-      "RAG Architecture",
-      "n8n",
-      "LLM APIs",
-      "Telegram API",
-      "WhatsApp API",
-    ],
-    github: "" /* TODO */,
-    live: "" /* TODO */,
+    stack: ["AI APIs", "n8n", "WhatsApp API", "Telegram API", "LINE API", "PostgreSQL"],
+    github: "",
+    live: "",
+    status: "coming-soon",
   },
   {
-    id: "huawei-watch-integration",
-    title: "Watch-Fit-4 & Watch 5 Huawei Integration",
-    category: "Automation",
+    id: "project-management",
+    title: "Project Management System",
+    category: "Full Stack",
     description:
-      "Device-specific application development focusing on seamless UI/UX execution and feature refinement for Huawei wearables, including HealthKit data pipeline integration.",
+      "A centralized team collaboration and sprint orchestration platform engineered for tracking sprint velocity, task dependencies, and software engineering milestones.",
     features: [
-      "Git feature branch management for interface bug fixes",
-      "Built and compiled .hap files for device testing",
-      "Huawei HealthKit API integration",
+      "Interactive Kanban and sprint board with real-time state synchronization",
+      "Granular task dependency mapping and deadline tracking",
+      "Role-based workspace access controls and audit logging",
     ],
-    stack: ["Git", "Huawei HealthKit API", "Device build tools"],
-    github: "" /* TODO */,
-    live: "" /* TODO */,
+    stack: ["React", "Node.js", "PostgreSQL", "Tailwind CSS"],
+    github: "",
+    live: "",
+    status: "coming-soon",
+  },
+  {
+    id: "apartment-management",
+    title: "Apartment & Tenant Management System",
+    category: "Full Stack",
+    description:
+      "A dedicated property management platform engineered for apartment owners to oversee tenants, organize floor and unit hierarchies, and centralize monthly utility and rent billing.",
+    features: [
+      "Multi-tier floor, apartment, and unit hierarchy organization",
+      "Automated monthly invoicing and rent collection tracking",
+      "Tenant communication and maintenance request ticket portal",
+    ],
+    stack: ["Next.js", "Node.js", "PostgreSQL", "Tailwind CSS"],
+    github: "",
+    live: "",
+    status: "coming-soon",
+  },
+  {
+    id: "house-finder",
+    title: "House & Flat Rental Finder",
+    category: "Full Stack",
+    description:
+      "A specialized residential discovery platform connecting bachelors and relocating families with verified long-term rental houses and apartments (1+ months) without short-stay hospitality markups.",
+    features: [
+      "Targeted filtering tailored specifically for bachelors vs. family residencies",
+      "Verified long-term rental listings with lease agreement specifications",
+      "Direct landlord inquiry and in-person property visit scheduling",
+    ],
+    stack: ["Next.js", "TypeScript", "PostgreSQL", "Tailwind CSS"],
+    github: "",
+    live: "",
+    status: "coming-soon",
+  },
+  {
+    id: "movie-booking",
+    title: "CinePass: Movie Ticket Booking Platform",
+    category: "Full Stack",
+    description:
+      "An interactive cinema ticketing platform offering real-time theater seat reservations, showtime schedules, and instant digital pass generation.",
+    features: [
+      "Interactive SVG cinema hall seat map with live occupancy locking",
+      "Multi-theater showtime scheduling and movie catalog exploration",
+      "Instant digital ticket generation with payment integration",
+    ],
+    stack: ["React", "Node.js", "Express", "PostgreSQL", "Tailwind CSS"],
+    github: "",
+    live: "",
+    status: "coming-soon",
   },
 ];
