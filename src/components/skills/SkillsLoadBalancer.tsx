@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { RotateCw } from "lucide-react";
 import { SKILL_REALMS } from "./skillsData";
 import { SkillRealmCard } from "./SkillRealmCard";
+import { LazyViewportMount } from "../common/LazyViewportMount";
 
 // Dynamic import with ssr: false for the 3D horizontal halo ring
 const MahoragaWheelCanvas = dynamic(
@@ -22,6 +23,14 @@ const MahoragaWheelCanvas = dynamic(
 
 export function SkillsLoadBalancer() {
   const [isSpinningFast, setIsSpinningFast] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const leftRealms = SKILL_REALMS.filter((r) => r.side === "left");
   const rightRealms = SKILL_REALMS.filter((r) => r.side === "right");
@@ -126,9 +135,17 @@ export function SkillsLoadBalancer() {
             =======================================================================
           */}
           <div className="absolute bottom-[50%] left-1/2 -translate-x-1/2 -translate-y-1 flex flex-col items-center z-20 pointer-events-none">
-            {/* 3D Horizontal Halo Wheel (Floats strictly above Rony's head) */}
+            {/* 3D Horizontal Halo Wheel (Floats strictly above Rony's head - Viewport Gated & Desktop Only) */}
             <div className="relative z-30 mb-2 sm:mb-3 pointer-events-auto">
-              <MahoragaWheelCanvas isSpinningFast={isSpinningFast} />
+              <LazyViewportMount
+                fallback={
+                  <div className="flex w-[280px] h-[110px] items-center justify-center">
+                    <div className="size-6 animate-spin rounded-full border-2 border-line border-t-accent" />
+                  </div>
+                }
+              >
+                {() => (isDesktop ? <MahoragaWheelCanvas isSpinningFast={isSpinningFast} /> : null)}
+              </LazyViewportMount>
             </div>
 
             {/* Character Row with Flanking Lore Text beside Rony's Torso */}
@@ -147,7 +164,7 @@ export function SkillsLoadBalancer() {
                   alt="Rony seated in meditation"
                   width={500}
                   height={400}
-                  priority
+                  loading="lazy"
                   className="w-full h-auto object-contain drop-shadow-[0_12px_24px_rgba(var(--color-accent-rgb,229,184,105),0.25)]"
                 />
               </div>
@@ -255,9 +272,17 @@ export function SkillsLoadBalancer() {
       <div className="flex flex-col lg:hidden space-y-8">
         {/* Pinned Centerpiece on Mobile/Tablet */}
         <div className="flex flex-col items-center justify-center text-center">
-          {/* 3D Horizontal Wheel */}
+          {/* 3D Horizontal Wheel (Viewport Gated & Mobile/Tablet Only) */}
           <div className="mb-2">
-            <MahoragaWheelCanvas isSpinningFast={isSpinningFast} />
+            <LazyViewportMount
+              fallback={
+                <div className="flex w-[280px] h-[110px] items-center justify-center">
+                  <div className="size-6 animate-spin rounded-full border-2 border-line border-t-accent" />
+                </div>
+              }
+            >
+              {() => (!isDesktop ? <MahoragaWheelCanvas isSpinningFast={isSpinningFast} /> : null)}
+            </LazyViewportMount>
           </div>
 
           {/* Meditating Character with Lore text */}

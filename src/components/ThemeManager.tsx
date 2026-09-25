@@ -30,23 +30,19 @@ export function ThemeManager() {
         }
       }
 
-      // Default to Monolithic Onyx (Item 0)
-      if (!activeTheme) {
-        activeTheme = APPROVED_THEMES[0];
+      // Only mutate document styles if custom theme is chosen (default is already styled in CSS)
+      if (activeTheme && activeTheme.id !== APPROVED_THEMES[0].id) {
+        applyThemeToDocument(activeTheme);
       }
-      applyThemeToDocument(activeTheme);
-      localStorage.setItem("rony_theme_id", activeTheme.id);
 
       // 2. Resolve Font
       const savedFontId = localStorage.getItem("rony_font_id");
-      let activeFont = APPROVED_FONTS.find((f) => f.id === savedFontId);
+      const activeFont = APPROVED_FONTS.find((f) => f.id === savedFontId);
 
-      // Default to Original Surfer (Item 0)
-      if (!activeFont) {
-        activeFont = APPROVED_FONTS[0];
+      // Only mutate document styles if custom font is chosen (default is already styled in CSS)
+      if (activeFont && activeFont.id !== APPROVED_FONTS[0].id) {
+        applyFontToDocument(activeFont);
       }
-      applyFontToDocument(activeFont);
-      localStorage.setItem("rony_font_id", activeFont.id);
 
       // 3. Listen for dynamic theme/font custom events
       const handleThemeChange = (e: CustomEvent<{ themeId?: string; fontId?: string }>) => {

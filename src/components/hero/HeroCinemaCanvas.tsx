@@ -2,17 +2,27 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { ArrowRight, Terminal } from "lucide-react";
-import { StreetCurbRunner } from "./StreetCurbRunner";
+
+const StreetCurbRunner = dynamic(
+  () => import("./StreetCurbRunner").then((mod) => mod.StreetCurbRunner),
+  { ssr: false }
+);
 
 export function HeroCinemaCanvas() {
   const [isCleanMode, setIsCleanMode] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("clean") === "true" || window.location.hash === "#clean") {
       setIsCleanMode(true);
     }
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   return (
@@ -105,7 +115,7 @@ export function HeroCinemaCanvas() {
           </h1>
 
           {/* Subtitle */}
-          <p className="mb-6 max-w-3xl text-base sm:text-lg md:text-xl text-fg/80 leading-relaxed font-sans drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+          <p className="mb-6 max-w-3xl text-base sm:text-lg md:text-xl text-fg/80 leading-relaxed font-sans [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)]">
             CSE undergraduate focused on building production-ready web applications and autonomous systems. Experienced in{" "}
             <span className="text-fg font-semibold">full-stack architecture</span>,{" "}
             <span className="text-accent font-semibold">agentic workflows</span>, and LLM integrations, with an expanding focus on{" "}
@@ -133,7 +143,7 @@ export function HeroCinemaCanvas() {
       </div>
 
       {/* 3. Bottom Street Curb Runner (Interactive Mini-Game Easter Egg - Desktop & Tablet Only, Hidden in Clean Mode) */}
-      {!isCleanMode && (
+      {!isCleanMode && !isMobile && (
         <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 z-30 px-3 sm:px-8 md:px-10 lg:px-12 pointer-events-none hidden sm:block">
           <div className="w-full max-w-7xl mx-auto pointer-events-auto">
             <StreetCurbRunner />

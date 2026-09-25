@@ -22,7 +22,7 @@
   --color-cat-ai: #d4d4d4;
 
   /* Typography */
-  --font-sans: var(--font-primary, var(--font-inter));
+  --font-sans: var(--font-inter, sans-serif);
   --font-mono: var(--font-jetbrains-mono);
 
   --text-hero: 72px;

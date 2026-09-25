@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { ExternalLink } from "lucide-react";
 import { useState } from "react";
+import { LazyViewportMount } from "./common/LazyViewportMount";
 
 // Dynamic import with ssr: false ensures zero WebGL hydration issues
 const Book3DCanvas = dynamic(
@@ -31,9 +32,23 @@ export function About() {
       className="relative mx-auto max-w-[1400px] min-h-screen flex flex-col justify-center px-4 sm:px-6 md:px-8 lg:px-8 pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-20 lg:pb-10 scroll-mt-0 overflow-x-clip"
     >
       <div className="grid grid-cols-1 items-center gap-10 sm:gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
-        {/* LEFT COLUMN: The Interactive 3D Book Dossier */}
+        {/* LEFT COLUMN: The Interactive 3D Book Dossier (Deferred until scroll proximity) */}
         <div className="flex w-full justify-center">
-          <Book3DCanvas chapter={chapter} onChapterChange={setChapter} />
+          <LazyViewportMount
+            className="w-full flex justify-center"
+            fallback={
+              <div className="flex h-[480px] w-full sm:h-[540px] lg:h-[590px] xl:h-[620px] items-center justify-center">
+                <div className="flex flex-col items-center gap-3 text-muted">
+                  <div className="size-8 animate-spin rounded-full border-2 border-line border-t-accent" />
+                  <span className="font-mono text-xs uppercase tracking-wider text-muted">
+                    Rigging 3D Archival Dossier...
+                  </span>
+                </div>
+              </div>
+            }
+          >
+            {() => <Book3DCanvas chapter={chapter} onChapterChange={setChapter} />}
+          </LazyViewportMount>
         </div>
 
         {/* RIGHT COLUMN: Executive Summary & Clean Spec Sheet (Responsive across mobile, tablet & desktop) */}
