@@ -95,6 +95,18 @@
 - [ ] **4.4 The 60-FPS Performance Bible (DPR & Intersection Observers)**
   - *Theory*: Why retina mobile screens lag if you don't cap `dpr={[1, 1.5]}` and how to freeze the GPU loop when scrolled offscreen.
 
+## Module 5: 3D Deck Kinematics, Image Optimization, 60-FPS Performance & SEO
+*Focus: Delivering high-performance, responsive 3D web applications with rapid load times and search discovery.*
+
+- [x] **5.1 3D Deck Kinematics & Balanced Modulo Carousels (`ProjectDeck.tsx`)**
+  - *Theory*: Constructing a balanced 5-card slot window (`[-2, -1, 0, 1, 2]`) using circular array modulo math (`(index - activeIndex + total) % total`), hardware-accelerated spring animations, and continuous CSS hover scrolling.
+- [ ] **5.2 Image Optimization & Modern Next-Gen Formats (WebP & AVIF)**
+  - *Theory*: Why multi-megabyte PNGs kill web performance, and how converting uncompressed assets to WebP/AVIF with responsive `srcset` reduces payload size by ~80-90% with zero perceived loss in visual fidelity.
+- [ ] **5.3 60-FPS Performance Bible & Offscreen GPU Throttling**
+  - *Theory*: Why Three.js / R3F canvases consume battery and GPU if left running when offscreen. How `IntersectionObserver` pauses render loops, and why capping DPR to `[1, 1.5]` prevents mobile thermal throttling.
+- [ ] **5.4 Modern Technical SEO & OpenGraph Discovery**
+  - *Theory*: How search engine spiders (Googlebot, Bing) and social platforms (Twitter, LinkedIn, Discord) crawl Next.js App Router metadata, OpenGraph images, and JSON-LD structured schema.
+
 ---
 
 ## Progress Log
@@ -108,3 +120,4 @@
 | *2026-09-23* | Rotational Inertia & Damping, 2.5D Load Balancer Layout | Section 03: Skills | Mastered |
 | *2026-09-23* | Web Audio Synthesizer, 3D Vector Badges & Ratchet FX | Section 03: Skills | Mastered |
 | *2026-09-23* | Direct Turntable 1:1 Physics, Bidirectional Spin & 3D Pitch Tilt | Section 03: Skills | Mastered |
+| *2026-09-25* | 3D Deck Kinematics, Glassmorphic HUDs, Isolated Stacking Contexts | Section 04: Projects | Mastered |

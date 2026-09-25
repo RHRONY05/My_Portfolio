@@ -1,6 +1,6 @@
 # Project Progress: Rony's 3D Portfolio Rebuild
 
-> **Current Project Status**: 🟢 **Section 01 (Hero), Section 02 (About - 5-Chapter 3D Comic Book Dossier), and Section 03 (Tech Stack - Mahoraga Load Balancer) COMPLETE & LOCKED -> Ready for Section 04: Featured Projects**  
+> **Current Project Status**: 🟢 **Sections 01 (Hero), 02 (About Dossier), 03 (Mahoraga Load Balancer), and 04 (Projects Deck) COMPLETE & LOCKED -> Ready for Performance Optimization, Image Compression & SEO**  
 > Active Tracking Branch: `v2-3d-rebuild`  
 > Master Plan: [`.agents/project_plan.md`](file:///d:/Projects/Portfolio/.agents/project_plan.md)  
 > Learning Roadmap: [`.agents/learning_roadmap.md`](file:///d:/Projects/Portfolio/.agents/learning_roadmap.md)
@@ -142,6 +142,44 @@
   - Preserves the authentic load balancer architecture on mobile with a single continuous horizontal line and symmetrical 3-way forks.
   - Sized at `h-[235px]` with full cards displaying number prefix, category title, domain icon, and 1-line tech preview.
 
-### Phase 4: Quality Gate & Multi-Viewport Verification
-- [ ] Tablet and desktop verified at 60 FPS.
-- [ ] Final production build check (`npm run build`).
+### Phase 4: Section 04: Projects — "The Interactive Comic Issue Deck" [COMPLETE & LOCKED]
+- [x] **Balanced 5-Slot Circular 3D Carousel (`ProjectDeck.tsx`)**:
+  - 5-slot continuous GPU spring animation (`stiffness: 220, damping: 24, mass: 0.8`), dynamic scaling, fanned rotation angles, and inward `rotateY`.
+  - Calibrated responsive dimensions: Desktop `500px × 580px`, Tablet `410px × 540px`, Mobile `320px × 500px`.
+  - Floating chevron arrow controls and synchronized pagination dots.
+- [x] **Live Showcase Trio Layout**:
+  - **Left Wing (`offset = -1`)**: `Developer Portfolio (rhrony05.me)` with `my_portfolio.png` full-page screenshot.
+  - **Center Stage (`offset = 0`)**: `SabaiHealth Web Platform` with `Sabaihealth_website.png` full-page screenshot.
+  - **Right Wing (`offset = +1`)**: `Calowry: Sustainable Fibre Innovation` with `calowry_website.png` full-page screenshot.
+- [x] **Auto-Scrolling Screenshot Mechanics & Glassmorphic HUD**:
+  - Full-page long screenshot glides continuously on hover (~7.5s).
+  - Centered frosted glassmorphic action HUD (`rgba(var(--color-card-rgb), 0.4)` + `backdrop-blur-md`) with high-contrast text drop shadows.
+  - Direct `[ VIEW DETAILS ]` and `[ LIVE DEMO ]` actions.
+- [x] **Clean Single-Layer Coming Soon Cards**:
+  - Dedicated zero-collision UI for pipeline projects (`Sabai Chatbot`, `Project Management`, `Apartment Management`, `House/Flat Finder`, `Movie Booking`).
+  - Bold, prominent title and big pulsing `● COMING SOON` badge.
+- [x] **High-Priority Case Study Dossier Modal (`ProjectModal.tsx`)**:
+  - Mounted via React Portal at `zIndex: 2147483647`, locking body scroll and emitting `rony_modal_state` for Three.js layering.
+  - Full architectural breakdown, feature checklist, and tech tags.
+- [x] **Stacking Context & Z-Index Isolation**:
+  - Isolated `#projects` with `relative z-10 isolate` to permanently eliminate card bleed-through.
+  - Elevated `Navbar.tsx` to `z-[100]` ensuring the navbar and mobile drawer menu stay permanently on top across all viewports.
+
+### Phase 5: Image Optimization & Next-Gen Formats [UP NEXT — START OF NEXT SESSION]
+- [ ] Convert heavy raw PNGs (e.g. 10MB+ project screenshots and book textures) to modern WebP/AVIF.
+- [ ] Implement responsive image sizing / `<picture>` delivery to reduce mobile payload.
+- [ ] Measure total payload reduction (targeting ~85-90% weight drop from 30MB+ to under 3MB).
+
+### Phase 6: 60-FPS Smoothness, GPU Throttling & Anti-Lag Engine
+- [ ] Implement `IntersectionObserver` to pause Three.js render loops (`requestAnimationFrame`) when canvases are scrolled offscreen.
+- [ ] Enforce dynamic DPR capping (`dpr={[1, 1.5]}`) across all 3D scenes to eliminate thermal throttling on mobile Retina screens.
+- [ ] Verify 60-FPS smoothness across Desktop, Tablet, and Mobile.
+
+### Phase 7: Technical SEO, OpenGraph Social Previews & Structured Data
+- [ ] Configure Next.js App Router metadata (title, description, keywords, canonical URLs, favicons).
+- [ ] Create dynamic OpenGraph & Twitter preview cards for social sharing on LinkedIn, X, WhatsApp, Discord.
+- [ ] Inject JSON-LD structured schema markup (Person, Software Engineer, CUET affiliation, core engineering domains).
+
+### Phase 8: Quality Gate & Production Deployment Audit
+- [ ] Multi-viewport and browser responsiveness sign-off.
+- [ ] Final production build audit (`npm run build`).
