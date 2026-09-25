@@ -24,7 +24,7 @@ export const viewport: Viewport = {
 const siteUrl = "https://rhrony05.me";
 const siteTitle = "RH.RONY (Muhammad Rony) — Software Developer — Web & AI";
 const siteDescription =
-  "Official portfolio of Muhammad Rony (RH.RONY / Md. Robiul Hasan Rony) — Software Developer specializing in Web & AI from CUET CSE. Interactive 3D WebGL experiences, graphic novel dossier, and production web platforms.";
+  "Portfolio of Muhammad Rony (RH.RONY) — Software Developer (Web & AI) from CUET CSE. Building production web platforms & AI integrations.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
