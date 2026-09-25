@@ -15,7 +15,7 @@ export function HeroCinemaCanvas() {
       {/* 1. Full-Screen Graffiti Wall Background (Always Visible, z-0) */}
       <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
         <Image
-          src="/images/Hero/My_graphetti.png"
+          src="/images/Hero/My_graphetti.webp"
           alt="Rony - Urban Street Art Graffiti Mural"
           fill
           priority

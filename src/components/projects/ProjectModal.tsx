@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Code2, ExternalLink, Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -103,9 +104,13 @@ export function ProjectModal({ project, onClose }: Props) {
               {/* High-Res Screenshot Showcase */}
               {project.image ? (
                 <div className="relative h-[320px] md:h-[400px] w-full overflow-hidden rounded-xl border border-line bg-canvas shadow-inner group">
-                  <img
+                  <Image
                     src={project.image}
                     alt={project.title}
+                    width={1200}
+                    height={3500}
+                    sizes="(max-width: 768px) 90vw, 800px"
+                    loading="lazy"
                     className="w-full h-auto object-cover object-top transition-transform duration-[8000ms] ease-in-out hover:-translate-y-[calc(100%-360px)]"
                   />
                   <div className="pointer-events-none absolute bottom-3 right-3 rounded bg-canvas/80 px-2 py-1 font-mono text-[10px] text-muted backdrop-blur-md">

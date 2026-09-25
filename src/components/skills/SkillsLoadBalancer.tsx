@@ -143,7 +143,7 @@ export function SkillsLoadBalancer() {
               {/* Meditating Rony Cutout (Base rests directly on top of the horizontal line) */}
               <div className="relative z-10 w-[185px] xl:w-[215px] pointer-events-auto transition-transform duration-300 hover:scale-[1.02]">
                 <Image
-                  src="/images/skills/mediating_rony_final.png"
+                  src="/images/skills/mediating_rony_final.webp"
                   alt="Rony seated in meditation"
                   width={500}
                   height={400}
@@ -264,7 +264,7 @@ export function SkillsLoadBalancer() {
           <div className="relative flex items-center justify-center">
             <div className="w-[180px] sm:w-[200px]">
               <Image
-                src="/images/skills/mediating_rony_final.png"
+                src="/images/skills/mediating_rony_final.webp"
                 alt="Rony meditating"
                 width={500}
                 height={400}

@@ -28,7 +28,7 @@ export const projects: readonly Project[] = [
     stack: ["Next.js", "React 19", "Three.js", "R3F", "Tailwind CSS", "Framer Motion"],
     github: "",
     live: "https://rhrony05.me",
-    image: "/images/projects/my_portfolio.png",
+    image: "/images/projects/my_portfolio.webp",
     status: "live",
   },
   {
@@ -45,7 +45,7 @@ export const projects: readonly Project[] = [
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "E-Signature"],
     github: "",
     live: "https://sabaihealth.com",
-    image: "/images/projects/Sabaihealth_website.png",
+    image: "/images/projects/Sabaihealth_website.webp",
     status: "live",
   },
   {
@@ -62,7 +62,7 @@ export const projects: readonly Project[] = [
     stack: ["React", "JavaScript", "Tailwind CSS", "Vite"],
     github: "",
     live: "https://calowry.com",
-    image: "/images/projects/calowry_website.png",
+    image: "/images/projects/calowry_website.webp",
     status: "live",
   },
   {

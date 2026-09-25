@@ -165,10 +165,25 @@
   - Isolated `#projects` with `relative z-10 isolate` to permanently eliminate card bleed-through.
   - Elevated `Navbar.tsx` to `z-[100]` ensuring the navbar and mobile drawer menu stay permanently on top across all viewports.
 
-### Phase 5: Image Optimization & Next-Gen Formats [UP NEXT — START OF NEXT SESSION]
-- [ ] Convert heavy raw PNGs (e.g. 10MB+ project screenshots and book textures) to modern WebP/AVIF.
-- [ ] Implement responsive image sizing / `<picture>` delivery to reduce mobile payload.
-- [ ] Measure total payload reduction (targeting ~85-90% weight drop from 30MB+ to under 3MB).
+### Phase 5: Image Optimization & Next-Gen Formats [COMPLETE & LOCKED]
+- [x] **Batch 1: Section 01 Hero Optimization**:
+  - Converted `My_graphetti.png` (3.29 MB) to `My_graphetti.webp` (524 KB) — **-84.4% drop**.
+  - Purged obsolete hero backgrounds and unused `artifacts/` test folder.
+- [x] **Batch 2: Section 02 About 3D Dossier Textures**:
+  - Converted all 12 book textures (`book_cover`, `back_cover`, and all 5 chapter spreads) to WebP (`quality: 88, effort: 6`).
+  - Total About textures payload dropped from **9.78 MB → 1.03 MB** (**-89.4% drop**).
+  - Purged obsolete test JPEGs and raw PNGs.
+- [x] **Batch 3: Section 03 Tech Stack Character**:
+  - Converted `mediating_rony_final.png` (923 KB) with alpha transparency to `mediating_rony_final.webp` (134.8 KB) — **-85.4% drop**.
+  - Updated `SkillsLoadBalancer.tsx` for desktop and mobile.
+- [x] **Batch 4: Section 04 Projects Screenshots**:
+  - Downsampled 2912px oversized screenshots to 1200px width with lanczos3 interpolation + WebP compression.
+  - `Sabaihealth_website.png` (9.56 MB) → `Sabaihealth_website.webp` (331 KB, **-96.6%**).
+  - `calowry_website.png` (11.28 MB) → `calowry_website.webp` (386 KB, **-96.7%**).
+  - `my_portfolio.png` (4.52 MB) → `my_portfolio.webp` (183 KB, **-96.0%**).
+  - Updated `src/data/projects.ts` and purged raw PNGs.
+- [x] **Overall Payload Result**:
+  - Total `public/images` weight dropped from **~39.5 MB → 2.63 MB** (**93.3% total reduction** across the site!).
 
 ### Phase 6: 60-FPS Smoothness, GPU Throttling & Anti-Lag Engine
 - [ ] Implement `IntersectionObserver` to pause Three.js render loops (`requestAnimationFrame`) when canvases are scrolled offscreen.

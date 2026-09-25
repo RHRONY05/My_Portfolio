@@ -46,74 +46,74 @@ export function BookMesh({
     const textureLoader = new THREE.TextureLoader();
 
     // 1. Front Cover (1024x1536)
-    textureLoader.load("/images/about/book_cover.png", (texture) => {
+    textureLoader.load("/images/about/book_cover.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setFrontTexture(texture);
     });
 
     // 2. Back Cover (1024x1536)
-    textureLoader.load("/images/about/back_cover.png", (texture) => {
+    textureLoader.load("/images/about/back_cover.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setBackTexture(texture);
     });
 
     // Chapter 01
-    textureLoader.load("/images/about/page_01_left.png", (texture) => {
+    textureLoader.load("/images/about/page_01_left.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setPage1LeftTexture(texture);
     });
-    textureLoader.load("/images/about/page_01_right.png", (texture) => {
+    textureLoader.load("/images/about/page_01_right.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setPage1RightTexture(texture);
     });
 
     // Chapter 02
-    textureLoader.load("/images/about/page_02_left.png", (texture) => {
+    textureLoader.load("/images/about/page_02_left.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setPage2LeftTexture(texture);
     });
-    textureLoader.load("/images/about/page_02_right.png", (texture) => {
+    textureLoader.load("/images/about/page_02_right.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setPage2RightTexture(texture);
     });
 
     // Chapter 03
-    textureLoader.load("/images/about/page_03_left.png", (texture) => {
+    textureLoader.load("/images/about/page_03_left.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setPage3LeftTexture(texture);
     });
-    textureLoader.load("/images/about/page_03_right.png", (texture) => {
+    textureLoader.load("/images/about/page_03_right.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setPage3RightTexture(texture);
     });
 
     // Chapter 04
-    textureLoader.load("/images/about/page_04_left.png", (texture) => {
+    textureLoader.load("/images/about/page_04_left.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setPage4LeftTexture(texture);
     });
-    textureLoader.load("/images/about/page_04_right.png", (texture) => {
+    textureLoader.load("/images/about/page_04_right.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setPage4RightTexture(texture);
     });
 
     // Chapter 05 (The AI Horizon & Shawshank Epigraph)
-    textureLoader.load("/images/about/page_05_left.png", (texture) => {
+    textureLoader.load("/images/about/page_05_left.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setPage5LeftTexture(texture);
     });
-    textureLoader.load("/images/about/page_05_right.png", (texture) => {
+    textureLoader.load("/images/about/page_05_right.webp", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
       setPage5RightTexture(texture);

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ChevronLeft,
@@ -188,9 +189,13 @@ export function ProjectDeck() {
                     {project.image ? (
                       <>
                         {/* Full Page Long Screenshot: Smoothly scrolls on hover */}
-                        <img
+                        <Image
                           src={project.image}
                           alt={project.title}
+                          width={1200}
+                          height={3500}
+                          sizes="(max-width: 640px) 320px, (max-width: 1024px) 410px, 500px"
+                          loading="lazy"
                           className="w-full h-auto object-cover object-top transition-transform duration-[7500ms] ease-in-out group-hover/card:-translate-y-[calc(100%-520px)]"
                         />
 
