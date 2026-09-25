@@ -135,7 +135,11 @@ export function ProjectDeck() {
                 <motion.div
                   key={project.id}
                   onClick={() => {
-                    if (!isCenter) setActiveIndex(index);
+                    if (!isCenter) {
+                      setActiveIndex(index);
+                    } else {
+                      setSelectedProject(project);
+                    }
                   }}
                   initial={false}
                   animate={{
@@ -199,69 +203,39 @@ export function ProjectDeck() {
                           className="w-full h-auto object-cover object-top transition-transform duration-[7500ms] ease-in-out group-hover/card:-translate-y-[calc(100%-520px)]"
                         />
 
-                        {/* Resting Bottom Gradient Bar (Shows title & tags when not hovered) */}
-                        <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end bg-gradient-to-t from-canvas via-canvas/80 to-transparent p-5 pt-12 transition-opacity duration-300 group-hover/card:opacity-0 pointer-events-none">
-                          <span className="font-mono text-[10px] font-bold tracking-widest text-accent uppercase">
+                        {/* Bottom Gradient Shelf (Title, Stack, and Direct Action Buttons on All Devices) */}
+                        <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end bg-gradient-to-t from-canvas via-canvas/90 to-transparent p-4 sm:p-5 pt-14 z-20 pointer-events-none">
+                          <span className="font-mono text-[10px] font-bold tracking-widest text-accent uppercase drop-shadow-sm">
                             {project.category}
                           </span>
-                          <h3 className="line-clamp-1 font-sans text-lg font-bold text-fg md:text-xl">
+                          <h3 className="line-clamp-1 font-sans text-lg font-bold text-fg md:text-xl drop-shadow-sm">
                             {project.title}
                           </h3>
+
+                          {/* Tech Stack Pills */}
                           <div className="mt-2 flex flex-wrap gap-1.5">
                             {project.stack.slice(0, 3).map((tech) => (
                               <span
                                 key={tech}
-                                className="rounded border border-line bg-card/90 px-2 py-0.5 font-mono text-[9px] text-muted"
+                                className="rounded border border-line bg-card/85 px-2 py-0.5 font-mono text-[9px] text-muted backdrop-blur-xs"
                               >
                                 {tech}
                               </span>
                             ))}
                           </div>
-                        </div>
 
-                        {/* ON-HOVER CENTERED FROSTED GLASS ACTION CARD (Only for live projects with screenshots) */}
-                        <div className="absolute inset-0 flex items-center justify-center p-4 bg-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100 pointer-events-none group-hover/card:pointer-events-auto">
-                          <div className="flex flex-col items-center text-center rounded-2xl border border-[rgba(var(--color-accent-rgb),0.25)] bg-[rgba(var(--color-card-rgb),0.4)] p-5 sm:p-6 shadow-[0_16px_36px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.12)] backdrop-blur-md max-w-[90%] sm:max-w-[82%] transition-all">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className="rounded-full border border-[rgba(var(--color-accent-rgb),0.3)] bg-[rgba(var(--color-accent-rgb),0.15)] px-2.5 py-0.5 font-mono text-[10px] font-bold text-accent shadow-sm backdrop-blur-sm">
-                                {project.category}
-                              </span>
-                              <span className="flex items-center gap-1 font-mono text-[10px] text-secondary drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                                <Sparkles className="size-3 text-secondary" />
-                                DEPLOYED
-                              </span>
-                            </div>
-
-                            <h4 className="text-base font-bold text-fg sm:text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                              {project.title}
-                            </h4>
-
-                            <p className="mt-1.5 line-clamp-2 text-xs text-fg/85 leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]">
-                              {project.description}
-                            </p>
-
-                            <div className="my-3 flex flex-wrap justify-center gap-1">
-                              {project.stack.slice(0, 4).map((tech) => (
-                                <span
-                                  key={tech}
-                                  className="rounded border border-line/60 bg-[rgba(var(--color-canvas-rgb),0.5)] px-2 py-0.5 font-mono text-[9px] text-fg/90 shadow-sm backdrop-blur-sm"
-                                >
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-
-                            {/* Action Buttons Row */}
-                            <div className="mt-1 flex w-full items-center justify-center gap-2.5">
+                          {/* Direct Action Buttons (Always accessible on the active center card) */}
+                          {isCenter && (
+                            <div className="mt-3 flex items-center gap-2 sm:gap-2.5 pointer-events-auto">
                               <button
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setSelectedProject(project);
                                 }}
-                                className="flex items-center gap-1.5 rounded-lg border border-[rgba(var(--color-accent-rgb),0.3)] bg-[rgba(var(--color-card-rgb),0.6)] px-3.5 py-2 font-mono text-xs font-bold text-fg transition-all hover:bg-[rgba(var(--color-card-rgb),0.9)] hover:border-accent hover:text-accent shadow-md backdrop-blur-sm"
+                                className="flex items-center gap-1.5 rounded-lg border border-[rgba(var(--color-accent-rgb),0.3)] bg-card/90 px-3.5 py-1.5 font-mono text-xs font-bold text-fg shadow-md backdrop-blur-sm hover:border-accent hover:text-accent hover:bg-card transition-all cursor-pointer active:scale-95"
                               >
-                                <Eye className="size-3.5" />
+                                <Eye className="size-3.5 text-accent" />
                                 VIEW DETAILS
                               </button>
 
@@ -271,14 +245,14 @@ export function ProjectDeck() {
                                   target="_blank"
                                   rel="noreferrer"
                                   onClick={(e) => e.stopPropagation()}
-                                  className="flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 font-mono text-xs font-bold text-on-accent transition-all hover:opacity-90 shadow-[0_0_15px_rgba(var(--color-accent-rgb),0.3)]"
+                                  className="flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-1.5 font-mono text-xs font-bold text-on-accent shadow-[0_0_14px_rgba(var(--color-accent-rgb),0.3)] hover:opacity-90 transition-all cursor-pointer active:scale-95"
                                 >
                                   <ExternalLink className="size-3.5" />
                                   LIVE DEMO
                                 </a>
                               ) : null}
                             </div>
-                          </div>
+                          )}
                         </div>
                       </>
                     ) : (

@@ -84,6 +84,39 @@ body {
   max-width: 100vw;
 }
 
+/* ========================================================
+   Custom Sleek Minimal Scrollbar (Theme-Reactive)
+   ======================================================== */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--color-accent-rgb, 229, 229, 229), 0.35) transparent;
+}
+
+/* Chrome, Edge, Safari (WebKit) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-accent-rgb, 229, 229, 229), 0.30);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--color-accent-rgb, 229, 229, 229), 0.65);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(var(--color-accent-rgb, 229, 229, 229), 0.90);
+}
+
 .dot-grid {
   background-image: radial-gradient(
     circle,

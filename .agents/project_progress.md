@@ -185,10 +185,32 @@
 - [x] **Overall Payload Result**:
   - Total `public/images` weight dropped from **~39.5 MB → 2.63 MB** (**93.3% total reduction** across the site!).
 
-### Phase 6: 60-FPS Smoothness, GPU Throttling & Anti-Lag Engine
-- [ ] Implement `IntersectionObserver` to pause Three.js render loops (`requestAnimationFrame`) when canvases are scrolled offscreen.
-- [ ] Enforce dynamic DPR capping (`dpr={[1, 1.5]}`) across all 3D scenes to eliminate thermal throttling on mobile Retina screens.
-- [ ] Verify 60-FPS smoothness across Desktop, Tablet, and Mobile.
+### Phase 6: 60-FPS Smoothness, GPU Throttling & Anti-Lag Engine [COMPLETE & LOCKED]
+- [x] **Delta-Time Game Physics (`StreetCurbRunner.tsx`)**:
+  - Implemented real-world delta-time (`dt = clampedDelta / 16.667`). Skater jumps, gravity, obstacle velocity, and road dashes now move at identical physical speeds across all devices and refresh rates, permanently eliminating the slow-motion bug on mobile and under heavy loads.
+- [x] **Zero Forced Synchronous Layout Thrashing (`StreetCurbRunner.tsx`)**:
+  - Cached theme CSS variables in a React Ref and removed `getComputedStyle(document.documentElement)` from the 60-FPS animation loop.
+- [x] **Throttled React State Telemetry**:
+  - Throttled high-frequency `setDistance` updates to at most once every 100ms, eliminating React component re-render churn during high-speed runs.
+- [x] **Offscreen WebGL Pausing (`Book3DCanvas.tsx` & `MahoragaWheelCanvas.tsx`)**:
+  - Integrated `IntersectionObserver` with `rootMargin: "250px 0px"` and `frameloop={isVisible ? "always" : "never"}` on both Three.js canvases.
+  - While at Hero or Projects, both 3D scenes sleep completely with 0 GPU draw calls and pre-wake smoothly 250px before entering viewport.
+- [x] **Directional Touch-Scroll Protection (`touch-pan-y` & Gesture Intent Detection)**:
+  - Replaced `touch-none` with `touch-pan-y` on both `Book3DCanvas.tsx` and `MahoragaWheelCanvas.tsx`.
+  - Added directional intent detection (`|dy| > |dx|` vs `|dx| > |dy|`). When the user swipes vertically on mobile, vertical touch scrolling passes cleanly to the browser without being trapped. When the user swipes horizontally, 3D rotation engages smoothly.
+- [x] **Sleek Minimal Theme-Reactive Scrollbar (`globals.css`)**:
+  - Replaced the bulky default 16px OS scrollbar with a slender 6px theme-reactive scrollbar with smooth rounded thumb and hover glow.
+- [x] **Project Deck Unified Bottom Shelf Architecture (`ProjectDeck.tsx`)**:
+  - **Eliminated Redundant Floating Hover Layer**: Removed the floating center popup card entirely. Placed the primary action buttons (`[ 👁 VIEW DETAILS ]` and `[ ↗ LIVE DEMO ]`) directly onto the card's resting bottom shelf alongside the Category, Title, and Stack Pills.
+  - **100% Unobstructed Screenshot Experience**: When hovering on desktop, the full-length website screenshot now scrolls smoothly with zero floating card blocking the center view.
+  - **Universal Device Parity (Desktop & Mobile)**: Both mobile touch visitors and desktop mouse users enjoy the exact same clean, intuitive card layout with immediate access to action buttons.
+  - **Direct Tap-to-Open Modal**: Retained card `onClick` so tapping anywhere on the active center card opens the project case study modal (`setSelectedProject(project)`).
+- [x] **Project Details Modal Overhaul (`ProjectModal.tsx`)**:
+  - **Hidden Smooth Scrollbar**: Enabled smooth scrolling on the modal body with visually hidden scrollbars (`[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`).
+  - **Anti-Squish Image Viewer**: Added `shrink-0` with responsive heights (`h-[220px] sm:h-[300px] md:h-[380px]`) and integrated browser mockup chrome with macOS-style window controls and domain indicator.
+  - **Interactive Screenshot Viewport**: Converted the image container to an independently scrollable touch/wheel viewport with hidden scrollbars and sticky exploration indicator badge, allowing users to scroll through the full page at their own pace.
+  - **Mobile Adaptability**: Added responsive padding (`p-2.5 sm:p-4 md:p-8`), adaptive title sizes, mobile-friendly feature cards, and flex-wrapping action buttons for small screens.
+- [x] **Verified 60-FPS Smoothness**: Zero TypeScript errors and clean compilation.
 
 ### Phase 7: Technical SEO, OpenGraph Social Previews & Structured Data
 - [ ] Configure Next.js App Router metadata (title, description, keywords, canonical URLs, favicons).

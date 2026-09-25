@@ -304,6 +304,22 @@ export function MahoragaWheelCanvas({
     card: "#111111",
   });
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Sleep Three.js render loop when offscreen to preserve 60-FPS and GPU battery
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { rootMargin: "250px 0px" } // Pre-wakes 250px before entering viewport
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const handleModalState = (e: Event) => {
@@ -342,31 +358,77 @@ export function MahoragaWheelCanvas({
     releaseVelocity: 0,
   });
 
+  const dragDirectionRef = useRef<"none" | "horizontal" | "vertical">("none");
+  const startPosRef = useRef({ x: 0, y: 0 });
+
   const handlePointerDown = (e: React.PointerEvent) => {
-    dragPhysicsRef.current.isDragging = true;
+    startPosRef.current = { x: e.clientX, y: e.clientY };
     dragPhysicsRef.current.lastX = e.clientX;
     dragPhysicsRef.current.lastY = e.clientY;
     dragPhysicsRef.current.dragDeltaX = 0;
     dragPhysicsRef.current.dragDeltaY = 0;
     dragPhysicsRef.current.releaseVelocity = 0;
-    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
-    ratchetSynth.playClick();
+
+    // For mouse, engage immediately. For touch, wait for directional intent so vertical page scrolling is never blocked.
+    if (e.pointerType === "mouse") {
+      dragPhysicsRef.current.isDragging = true;
+      dragDirectionRef.current = "horizontal";
+      try {
+        (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+      } catch {
+        // Ignore
+      }
+      ratchetSynth.playClick();
+    } else {
+      dragPhysicsRef.current.isDragging = false;
+      dragDirectionRef.current = "none";
+    }
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!dragPhysicsRef.current.isDragging) return;
-    const dx = e.clientX - dragPhysicsRef.current.lastX;
-    const dy = e.clientY - dragPhysicsRef.current.lastY;
-    dragPhysicsRef.current.lastX = e.clientX;
-    dragPhysicsRef.current.lastY = e.clientY;
-    dragPhysicsRef.current.dragDeltaX += dx;
-    dragPhysicsRef.current.dragDeltaY += dy;
-    // Track smoothed release flick velocity
-    dragPhysicsRef.current.releaseVelocity = dx * 0.0025;
+    const dx = e.clientX - startPosRef.current.x;
+    const dy = e.clientY - startPosRef.current.y;
+
+    // Detect direction for touch gestures
+    if (dragDirectionRef.current === "none") {
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+        if (Math.abs(dx) > Math.abs(dy)) {
+          // Horizontal intent: lock to 3D wheel spin
+          dragDirectionRef.current = "horizontal";
+          dragPhysicsRef.current.isDragging = true;
+          dragPhysicsRef.current.lastX = e.clientX;
+          dragPhysicsRef.current.lastY = e.clientY;
+          try {
+            (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+          } catch {
+            // Ignore
+          }
+          ratchetSynth.playClick();
+        } else {
+          // Vertical intent: let the browser scroll natively without interruption
+          dragDirectionRef.current = "vertical";
+          dragPhysicsRef.current.isDragging = false;
+        }
+      }
+      return;
+    }
+
+    if (dragDirectionRef.current === "vertical") return;
+
+    if (dragPhysicsRef.current.isDragging) {
+      const stepX = e.clientX - dragPhysicsRef.current.lastX;
+      const stepY = e.clientY - dragPhysicsRef.current.lastY;
+      dragPhysicsRef.current.lastX = e.clientX;
+      dragPhysicsRef.current.lastY = e.clientY;
+      dragPhysicsRef.current.dragDeltaX += stepX;
+      dragPhysicsRef.current.dragDeltaY += stepY;
+      dragPhysicsRef.current.releaseVelocity = stepX * 0.0025;
+    }
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
     dragPhysicsRef.current.isDragging = false;
+    dragDirectionRef.current = "none";
     try {
       (e.currentTarget as HTMLElement).releasePointerCapture?.(e.pointerId);
     } catch {
@@ -383,13 +445,15 @@ export function MahoragaWheelCanvas({
 
   return (
     <div
+      ref={containerRef}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
-      className="relative w-[380px] sm:w-[420px] md:w-[460px] h-[175px] sm:h-[195px] cursor-grab active:cursor-grabbing touch-none select-none"
+      className="relative w-[380px] sm:w-[420px] md:w-[460px] h-[175px] sm:h-[195px] cursor-grab active:cursor-grabbing touch-pan-y select-none"
     >
       <Canvas
+        frameloop={isVisible ? "always" : "never"}
         camera={{ position: [0, 3.1, 4.1], fov: 36 }}
         dpr={[1, 1.5]}
         className="size-full pointer-events-auto"

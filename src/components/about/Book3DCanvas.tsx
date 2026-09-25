@@ -42,9 +42,26 @@ export function Book3DCanvas({
   const [zoom, setZoom] = useState(1);
   const isDraggingRef = useRef(false);
   const startXRef = useRef(0);
+  const startYRef = useRef(0);
+  const dragDirectionRef = useRef<"none" | "horizontal" | "vertical">("none");
   const initialOffsetRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const [accentColor, setAccentColor] = useState("#E5E5E5");
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Sleep Three.js render loop when offscreen to preserve 60-FPS and GPU battery
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { rootMargin: "250px 0px" } // Pre-wakes 250px before entering viewport
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const updateColors = () => {
@@ -148,22 +165,62 @@ export function Book3DCanvas({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, chapter, onChapterChange, handleToggleCover, handleZoomIn, handleZoomOut, handleReset]);
 
-  // Smooth pointer drag rotation
+  // Smooth pointer drag rotation with mobile touch-scroll protection
   const onPointerDown = useCallback((e: React.PointerEvent) => {
-    isDraggingRef.current = true;
     startXRef.current = e.clientX;
+    startYRef.current = e.clientY;
     initialOffsetRef.current = rotationOffset;
-    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+
+    // For mouse, engage immediately. For touch, wait for directional intent so vertical page scrolling is never blocked.
+    if (e.pointerType === "mouse") {
+      isDraggingRef.current = true;
+      dragDirectionRef.current = "horizontal";
+      try {
+        (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+      } catch {
+        // Ignore
+      }
+    } else {
+      isDraggingRef.current = false;
+      dragDirectionRef.current = "none";
+    }
   }, [rotationOffset]);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
-    if (!isDraggingRef.current) return;
-    const deltaX = e.clientX - startXRef.current;
-    setRotationOffset(initialOffsetRef.current + deltaX * 0.008);
+    const dx = e.clientX - startXRef.current;
+    const dy = e.clientY - startYRef.current;
+
+    // Detect direction for touch gestures
+    if (dragDirectionRef.current === "none") {
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+        if (Math.abs(dx) > Math.abs(dy)) {
+          // Horizontal intent: lock to 3D book rotation
+          dragDirectionRef.current = "horizontal";
+          isDraggingRef.current = true;
+          try {
+            (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+          } catch {
+            // Ignore
+          }
+        } else {
+          // Vertical intent: let the browser scroll natively without interruption
+          dragDirectionRef.current = "vertical";
+          isDraggingRef.current = false;
+        }
+      }
+      return;
+    }
+
+    if (dragDirectionRef.current === "vertical") return;
+
+    if (isDraggingRef.current && dragDirectionRef.current === "horizontal") {
+      setRotationOffset(initialOffsetRef.current + dx * 0.008);
+    }
   }, []);
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
     isDraggingRef.current = false;
+    dragDirectionRef.current = "none";
     try {
       (e.target as HTMLElement).releasePointerCapture?.(e.pointerId);
     } catch {
@@ -180,7 +237,7 @@ export function Book3DCanvas({
     >
       {/* 3D Canvas Stage: Optimized viewport height so book + controls fit within browser view */}
       <div
-        className="relative h-[440px] w-full sm:h-[490px] lg:h-[530px] xl:h-[560px] cursor-grab active:cursor-grabbing touch-none overflow-hidden"
+        className="relative h-[440px] w-full sm:h-[490px] lg:h-[530px] xl:h-[560px] cursor-grab active:cursor-grabbing touch-pan-y overflow-hidden"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -217,6 +274,7 @@ export function Book3DCanvas({
         />
 
         <Canvas
+          frameloop={isVisible ? "always" : "never"}
           shadows
           dpr={[1, 1.5]}
           camera={{ position: [0, 0, 5.85], fov: 42 }}

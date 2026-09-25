@@ -102,8 +102,8 @@
   - *Theory*: Constructing a balanced 5-card slot window (`[-2, -1, 0, 1, 2]`) using circular array modulo math (`(index - activeIndex + total) % total`), hardware-accelerated spring animations, and continuous CSS hover scrolling.
 - [x] **5.2 Image Optimization & Modern Next-Gen Formats (WebP & AVIF)**
   - *Theory*: Why multi-megabyte PNGs kill web performance, and how converting uncompressed assets to WebP/AVIF with dimensional downsampling reduces payload size by ~80-95% with zero perceived loss in visual fidelity.
-- [ ] **5.3 60-FPS Performance Bible & Offscreen GPU Throttling**
-  - *Theory*: Why Three.js / R3F canvases consume battery and GPU if left running when offscreen. How `IntersectionObserver` pauses render loops, and why capping DPR to `[1, 1.5]` prevents mobile thermal throttling.
+- [x] **5.3 60-FPS Performance Bible & Offscreen GPU Throttling**
+  - *Theory*: Why Three.js / R3F canvases consume battery and GPU if left running when offscreen. How `IntersectionObserver` pauses render loops (`frameloop="never"`), and why delta-time physics and eliminating `getComputedStyle` layout thrashing restores silky 60-FPS execution.
 - [ ] **5.4 Modern Technical SEO & OpenGraph Discovery**
   - *Theory*: How search engine spiders (Googlebot, Bing) and social platforms (Twitter, LinkedIn, Discord) crawl Next.js App Router metadata, OpenGraph images, and JSON-LD structured schema.
 
@@ -122,3 +122,4 @@
 | *2026-09-23* | Direct Turntable 1:1 Physics, Bidirectional Spin & 3D Pitch Tilt | Section 03: Skills | Mastered |
 | *2026-09-25* | 3D Deck Kinematics, Glassmorphic HUDs, Isolated Stacking Contexts | Section 04: Projects | Mastered |
 | *2026-09-25* | Image Optimization, Dimensional Resizing, WebP Encoding & VRAM Savings | Phase 5: Image Optimization | Mastered |
+| *2026-09-25* | Delta-Time Physics, Zero Layout Thrashing & Offscreen WebGL Sleep | Phase 6: 60-FPS Engine | Mastered |

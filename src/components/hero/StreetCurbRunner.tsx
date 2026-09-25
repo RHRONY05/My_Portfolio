@@ -96,7 +96,7 @@ export function StreetCurbRunner() {
   const stateRef = useRef({
     mode: "IDLE" as GameMode,
     isVisible: true,
-    baseSpeed: 2.6,
+    baseSpeed: 6.8, // Adrenaline-pumping arcade cruise velocity!
     distanceAccumulator: 0,
     health: 100,
     dodged: 0,
@@ -110,8 +110,8 @@ export function StreetCurbRunner() {
       height: 40,
       vx: 0,
       vy: 0,
-      jumpForce: -7.2,
-      gravity: 0.40,
+      jumpForce: -8.4,
+      gravity: 0.46,
       isGrounded: true,
       boardAngle: 0,
       crashTimer: 0,
@@ -127,7 +127,7 @@ export function StreetCurbRunner() {
 
     roadOffset: 0,
     obstacles: [] as Obstacle[],
-    nextObstacleTimer: 140,
+    nextObstacleTimer: 65,
     obstacleIdCounter: 1,
     particles: [] as Particle[],
   });
@@ -148,6 +148,21 @@ export function StreetCurbRunner() {
     }
   }, []);
 
+  // Cached dynamic theme in Ref to eliminate 60 forced reflows/second in render loop
+  const themeRef = useRef<DynamicTheme>(RUNNER_THEME);
+  useEffect(() => {
+    const updateTheme = () => {
+      themeRef.current = getDynamicTheme();
+    };
+    updateTheme();
+    window.addEventListener("rony_theme_change", updateTheme);
+    window.addEventListener("storage", updateTheme);
+    return () => {
+      window.removeEventListener("rony_theme_change", updateTheme);
+      window.removeEventListener("storage", updateTheme);
+    };
+  }, []);
+
   // Jump trigger
   const triggerJump = useCallback(() => {
     const s = stateRef.current.skater;
@@ -156,17 +171,18 @@ export function StreetCurbRunner() {
     // If IDLE, clicking starts the game and jumps
     if (mode === "IDLE") {
       stateRef.current.mode = "RUNNING";
+      stateRef.current.nextObstacleTimer = 65;
       setGameMode("RUNNING");
     }
 
     if (stateRef.current.mode === "RUNNING" && s.isGrounded && s.crashTimer <= 0) {
       s.vy = s.jumpForce;
-      s.vx = 3.2; // Forward horizontal surge!
+      s.vx = 4.2; // Powerful forward horizontal surge!
       s.isGrounded = false;
       s.boardAngle = -0.34;
 
       // Ollie launch sparks behind rear wheel
-      const dynTheme = getDynamicTheme();
+      const currentTheme = themeRef.current;
       for (let i = 0; i < 7; i++) {
         stateRef.current.particles.push({
           x: s.x + 2,
@@ -175,7 +191,7 @@ export function StreetCurbRunner() {
           vy: Math.random() * -2.2,
           size: Math.random() * 2.5 + 1.2,
           alpha: 1,
-          color: dynTheme.accent,
+          color: currentTheme.accent,
         });
       }
     }
@@ -202,7 +218,7 @@ export function StreetCurbRunner() {
     st.dodged = 0;
     st.obstacles = [];
     st.particles = [];
-    st.nextObstacleTimer = 120;
+    st.nextObstacleTimer = 65;
     st.skater.vx = 0;
     st.skater.vy = 0;
     st.skater.isGrounded = true;
@@ -295,14 +311,26 @@ export function StreetCurbRunner() {
     );
     observer.observe(container);
 
-    // The 60-FPS Flipbook Game Loop
-    const renderLoop = () => {
+    // Delta-Time 60-FPS Flipbook Game Loop
+    let lastFrameTime = performance.now();
+    let lastUiUpdateTime = performance.now();
+
+    const renderLoop = (now: number) => {
       if (!stateRef.current.isVisible) {
+        lastFrameTime = now;
         animationFrameId = requestAnimationFrame(renderLoop);
         return;
       }
 
-      const theme = getDynamicTheme();
+      // 0. DELTA TIME CALCULATION (Normalized to 60 FPS standard: 1.0 = 16.667ms)
+      const deltaMs = now - lastFrameTime;
+      lastFrameTime = now;
+      // Clamp delta to prevent insane jumps when tab resumes or during lag spike (4ms to 66ms)
+      const clampedDelta = Math.min(Math.max(deltaMs, 4), 66);
+      const dt = clampedDelta / 16.667;
+
+      // Read pre-cached theme without triggering synchronous DOM reflow!
+      const theme = themeRef.current;
       const st = stateRef.current;
       const s = st.skater;
       const groundY = height - groundMargin;
@@ -321,28 +349,32 @@ export function StreetCurbRunner() {
 
       // 2. UPDATE PHYSICS (IDLE, RUNNING, or GAME_OVER)
       if (st.mode !== "GAME_OVER") {
-        // Dynamic speed tier scaling: every 500m covered increases speed by 18%!
-        const speedTier = Math.floor(st.distanceAccumulator / 500);
-        const tierMultiplier = 1 + speedTier * 0.18;
-        const effectiveSpeed = st.baseSpeed * tierMultiplier;
+        // Continuous progressive speed scaling: increases smoothly every 150m!
+        const tierMultiplier = 1 + (st.distanceAccumulator / 150) * 0.12;
+        // Scale speed by delta-time so speed in pixels/sec is identical across all devices and framerates
+        const effectiveSpeed = st.baseSpeed * tierMultiplier * dt;
 
         // Distance accumulates only when RUNNING
         if (st.mode === "RUNNING") {
           st.distanceAccumulator += effectiveSpeed * 0.05;
-          const roundedDist = Math.floor(st.distanceAccumulator);
-          setDistance((prev) => (prev !== roundedDist ? roundedDist : prev));
+          // Throttle React state update to at most once every 100ms to eliminate UI thrashing
+          if (now - lastUiUpdateTime > 100) {
+            lastUiUpdateTime = now;
+            const roundedDist = Math.floor(st.distanceAccumulator);
+            setDistance(roundedDist);
+          }
         }
 
         // Road dashes scrolling
         st.roadOffset = (st.roadOffset + effectiveSpeed) % 40;
 
-        // Skater jumping physics
+        // Skater jumping physics with dt
         if (!s.isGrounded) {
-          s.vy += s.gravity;
-          s.y += s.vy;
-          s.x += s.vx;
-          s.vx *= 0.985;
-          s.boardAngle = Math.min(0.12, s.boardAngle + 0.016);
+          s.vy += s.gravity * dt;
+          s.y += s.vy * dt;
+          s.x += s.vx * dt;
+          s.vx *= Math.pow(0.985, dt);
+          s.boardAngle = Math.min(0.12, s.boardAngle + 0.016 * dt);
 
           if (s.y >= groundY - s.height) {
             s.y = groundY - s.height;
@@ -365,11 +397,11 @@ export function StreetCurbRunner() {
             }
           }
         } else {
-          // Grounded spring restitution
+          // Grounded spring restitution with dt
           const distFromBase = s.targetBaseX - s.x;
-          s.x += distFromBase * 0.045;
+          s.x += distFromBase * 0.045 * dt;
           const ambientCarve = Math.sin(st.distanceAccumulator * 0.25) * 0.4;
-          s.x += ambientCarve;
+          s.x += ambientCarve * dt;
 
           // Rolling sparks
           if (Math.random() > 0.65) {
@@ -386,12 +418,12 @@ export function StreetCurbRunner() {
         }
 
         if (s.crashTimer > 0) {
-          s.crashTimer -= 1;
+          s.crashTimer = Math.max(0, s.crashTimer - 1 * dt);
         }
 
         // OBSTACLES: Only spawn and move when in RUNNING mode
         if (st.mode === "RUNNING") {
-          st.nextObstacleTimer -= 1;
+          st.nextObstacleTimer -= 1 * dt;
           if (st.nextObstacleTimer <= 0) {
             const types: ObstacleType[] = ["404", "BUG", "NULL"];
             const chosenType = types[Math.floor(Math.random() * types.length)];
@@ -422,8 +454,8 @@ export function StreetCurbRunner() {
               passed: false,
             });
 
-            // Spawn interval dynamically tightens as speed accelerates
-            st.nextObstacleTimer = Math.floor((Math.random() * 90 + 130) / Math.sqrt(tierMultiplier));
+            // Spawn interval dynamically tightens as speed accelerates (every 50-85 frames / ~0.8-1.4s)
+            st.nextObstacleTimer = Math.floor((Math.random() * 35 + 50) / Math.sqrt(tierMultiplier));
           }
 
           // Update Obstacles & Check Collisions
@@ -508,16 +540,16 @@ export function StreetCurbRunner() {
       } else {
         // --- GAME OVER WIPEOUT ANIMATION ---
         if (s.wipeoutTimer > 0) {
-          s.wipeoutTimer -= 1;
+          s.wipeoutTimer = Math.max(0, s.wipeoutTimer - 1 * dt);
           // Skater tumbles forward and falls
-          s.wipeoutSkaterX += 1.8;
-          s.wipeoutSkaterRot += 0.08;
+          s.wipeoutSkaterX += 1.8 * dt;
+          s.wipeoutSkaterRot += 0.08 * dt;
           if (s.wipeoutSkaterY < groundY - 14) {
-            s.wipeoutSkaterY += 1.5;
+            s.wipeoutSkaterY += 1.5 * dt;
           }
           // Board skids forward with friction sparks
-          s.wipeoutBoardX += 2.8;
-          s.wipeoutBoardRot += 0.04;
+          s.wipeoutBoardX += 2.8 * dt;
+          s.wipeoutBoardRot += 0.04 * dt;
           if (Math.random() > 0.4) {
             st.particles.push({
               x: s.wipeoutBoardX,
@@ -532,12 +564,12 @@ export function StreetCurbRunner() {
         }
       }
 
-      // Update Particles
+      // Update Particles with dt
       for (let i = st.particles.length - 1; i >= 0; i--) {
         const p = st.particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.alpha -= 0.032;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.alpha -= 0.032 * dt;
         if (p.alpha <= 0) {
           st.particles.splice(i, 1);
         }
