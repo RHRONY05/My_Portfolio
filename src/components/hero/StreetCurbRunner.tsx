@@ -251,6 +251,7 @@ export function StreetCurbRunner() {
     const resizeCanvas = () => {
       if (!container || !canvas) return;
       const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = rect.width;
       height = rect.height;

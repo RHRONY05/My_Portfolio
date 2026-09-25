@@ -210,6 +210,10 @@
   - **Anti-Squish Image Viewer**: Added `shrink-0` with responsive heights (`h-[220px] sm:h-[300px] md:h-[380px]`) and integrated browser mockup chrome with macOS-style window controls and domain indicator.
   - **Interactive Screenshot Viewport**: Converted the image container to an independently scrollable touch/wheel viewport with hidden scrollbars and sticky exploration indicator badge, allowing users to scroll through the full page at their own pace.
   - **Mobile Adaptability**: Added responsive padding (`p-2.5 sm:p-4 md:p-8`), adaptive title sizes, mobile-friendly feature cards, and flex-wrapping action buttons for small screens.
+- [x] **Hero Mobile Cleanliness & Runner Scoping (`HeroCinemaCanvas.tsx` & `StreetCurbRunner.tsx`)**:
+  - **Scoped to Desktop & Tablet (`hidden sm:block`)**: Completely removed the runner game canvas from mobile screens, eliminating vertical crowding on small viewports and avoiding confusing touch interactions on short roadways.
+  - **Spacious Mobile Hero Framing**: Reduced mobile bottom padding from `pb-44` to `pb-16`, giving the main headline, CUET/Full-Stack narrative, and CTA buttons spacious, balanced breathing room.
+  - **Zero Mobile CPU Overhead**: Canvas resize and render loop early-exit when hidden on mobile, saving battery and ensuring 60-FPS scrolling.
 - [x] **Verified 60-FPS Smoothness**: Zero TypeScript errors and clean compilation.
 
 ### Phase 7: Technical SEO, OpenGraph Social Previews & Structured Data

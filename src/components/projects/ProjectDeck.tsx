@@ -10,7 +10,7 @@ import {
   Layers,
   Sparkles,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { projects, type Project } from "@/data/projects";
 import { ProjectModal } from "./ProjectModal";
 
@@ -19,6 +19,7 @@ export function ProjectDeck() {
   const [activeIndex, setActiveIndex] = useState(defaultIndex >= 0 ? defaultIndex : 0);
   const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">("desktop");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const total = projects.length;
 
@@ -84,10 +85,10 @@ export function ProjectDeck() {
         id="projects"
         className="relative z-10 isolate mx-auto flex w-full max-w-full flex-col items-center overflow-x-clip px-4 pt-36 sm:pt-48 lg:pt-60 pb-24 md:pb-32 md:px-8 scroll-mt-0"
       >
-        {/* Dynamic theme ambient backdrop glow */}
+        {/* Dynamic theme ambient backdrop glow (desktop only to prevent mobile scroll compositor lag) */}
         <div
           aria-hidden
-          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[650px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(var(--color-accent-rgb),0.12)_0%,transparent_70%)] blur-[120px]"
+          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[650px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(var(--color-accent-rgb),0.12)_0%,transparent_70%)] hidden md:block"
         />
 
         {/* ========================================================
@@ -114,8 +115,31 @@ export function ProjectDeck() {
             <ChevronRight className="size-6" />
           </button>
 
-          {/* Card Stage Container */}
-          <div className="relative flex h-full w-full items-center justify-center">
+          {/* Card Stage Container with Native Mobile Touch-Swipe */}
+          <div
+            onTouchStart={(e) => {
+              touchStartRef.current = {
+                x: e.touches[0].clientX,
+                y: e.touches[0].clientY,
+              };
+            }}
+            onTouchEnd={(e) => {
+              if (!touchStartRef.current) return;
+              const dx = touchStartRef.current.x - e.changedTouches[0].clientX;
+              const dy = touchStartRef.current.y - e.changedTouches[0].clientY;
+              touchStartRef.current = null;
+
+              // Horizontal swipe intent: dx dominates dy and exceeds 35px threshold
+              if (Math.abs(dx) > Math.abs(dy) * 1.2 && Math.abs(dx) > 35) {
+                if (dx > 0) {
+                  next();
+                } else {
+                  prev();
+                }
+              }
+            }}
+            className="relative flex h-full w-full items-center justify-center touch-pan-y"
+          >
             {projects.map((project, index) => {
               const offset = getOffset(index);
               const isCenter = offset === 0;
@@ -123,10 +147,14 @@ export function ProjectDeck() {
               const isOuterWing = Math.abs(offset) === 2;
               const isVisible = Math.abs(offset) <= 2;
 
+              // On mobile, skip outer wings (> 1 away) to eliminate GPU texture memory bloat
+              if (screenSize === "mobile" && Math.abs(offset) > 1) return null;
+
               // Geometry calculations
               const x = getTranslateX(offset);
               const y = isCenter ? -14 : isInnerWing ? 20 : 46;
-              const rotateZ = isCenter ? 0 : isInnerWing ? offset * 5.5 : offset * 10;
+              // Removing rotation on mobile yields 60-FPS integer GPU texture blits
+              const rotateZ = screenSize === "mobile" ? 0 : isCenter ? 0 : isInnerWing ? offset * 5.5 : offset * 10;
               const scale = isCenter ? 1.05 : isInnerWing ? 0.94 : 0.8;
               const opacity = isCenter ? 1 : isInnerWing ? 0.92 : isOuterWing ? 0.22 : 0;
               const zIndex = isCenter ? 40 : 30 - Math.abs(offset) * 5;
@@ -151,29 +179,28 @@ export function ProjectDeck() {
                   }}
                   whileHover={{
                     y: isCenter ? -20 : y - 24,
-                    rotateZ: offset * 2,
+                    rotateZ: screenSize === "mobile" ? 0 : offset * 2,
                     scale: scale * 1.03,
                     opacity: isOuterWing ? 0.85 : 1,
                     zIndex: 50,
                   }}
                   transition={{
                     type: "spring",
-                    stiffness: 220,
-                    damping: 24,
+                    stiffness: screenSize === "mobile" ? 280 : 220,
+                    damping: screenSize === "mobile" ? 28 : 24,
                     mass: 0.8,
                   }}
                   style={{
                     transformOrigin: "bottom center",
-                    willChange: "transform, opacity",
                     zIndex,
                     pointerEvents: isVisible ? "auto" : "none",
                   }}
-                  className={`group/card absolute top-4 flex h-[500px] w-[320px] cursor-pointer flex-col overflow-hidden rounded-2xl border select-none transition-shadow duration-300 sm:h-[540px] sm:w-[410px] md:h-[580px] md:w-[500px] ${
+                  className={`group/card absolute top-4 flex h-[500px] w-[320px] cursor-pointer flex-col overflow-hidden rounded-2xl border select-none sm:h-[540px] sm:w-[410px] md:h-[580px] md:w-[500px] ${
                     isCenter
-                      ? "border-accent bg-card shadow-[0_20px_50px_rgba(var(--color-accent-rgb),0.25)] ring-1 ring-accent/30"
+                      ? "border-accent bg-card shadow-lg md:shadow-[0_20px_50px_rgba(var(--color-accent-rgb),0.25)] ring-1 ring-accent/30"
                       : isInnerWing
-                      ? "border-line bg-card/95 shadow-2xl hover:border-accent/70"
-                      : "border-line/40 bg-card/60 shadow-md hover:border-accent/60"
+                      ? "border-line bg-card/95 shadow-md md:shadow-2xl hover:border-accent/70"
+                      : "border-line/40 bg-card/60 shadow-sm md:shadow-md hover:border-accent/60"
                   }`}
                 >
                   {/* Top Minimal Browser Frame Bar */}
@@ -192,7 +219,7 @@ export function ProjectDeck() {
                   <div className="relative flex-1 w-full overflow-hidden bg-canvas">
                     {project.image ? (
                       <>
-                        {/* Full Page Long Screenshot: Smoothly scrolls on hover */}
+                        {/* Full Page Long Screenshot: Smoothly scrolls on desktop hover */}
                         <Image
                           src={project.image}
                           alt={project.title}
@@ -200,7 +227,7 @@ export function ProjectDeck() {
                           height={3500}
                           sizes="(max-width: 640px) 320px, (max-width: 1024px) 410px, 500px"
                           loading="lazy"
-                          className="w-full h-auto object-cover object-top transition-transform duration-[7500ms] ease-in-out group-hover/card:-translate-y-[calc(100%-520px)]"
+                          className="w-full h-auto object-cover object-top md:transition-transform md:duration-[7500ms] md:ease-in-out md:group-hover/card:-translate-y-[calc(100%-520px)]"
                         />
 
                         {/* Bottom Gradient Shelf (Title, Stack, and Direct Action Buttons on All Devices) */}

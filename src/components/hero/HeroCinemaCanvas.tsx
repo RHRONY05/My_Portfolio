@@ -85,7 +85,7 @@ export function HeroCinemaCanvas() {
       </div>
 
       {/* 2. Content: Wide Spanning Headline, Subhead & CTAs (z-20) */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-10 lg:px-12 py-12 pb-44 sm:pb-36 lg:py-12">
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-10 lg:px-12 py-12 pb-16 sm:pb-36 lg:py-12">
         <div className="max-w-md sm:max-w-lg md:max-w-lg lg:max-w-3xl xl:max-w-4xl flex flex-col items-start text-left">
           {/* Main Headline */}
           <h1 className="mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-fg leading-[1.08]">
@@ -123,8 +123,8 @@ export function HeroCinemaCanvas() {
         </div>
       </div>
 
-      {/* 3. Bottom Street Curb Runner (Interactive Mini-Game Easter Egg) */}
-      <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 z-30 px-3 sm:px-8 md:px-10 lg:px-12 pointer-events-none">
+      {/* 3. Bottom Street Curb Runner (Interactive Mini-Game Easter Egg - Desktop & Tablet Only) */}
+      <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 z-30 px-3 sm:px-8 md:px-10 lg:px-12 pointer-events-none hidden sm:block">
         <div className="w-full max-w-7xl mx-auto pointer-events-auto">
           <StreetCurbRunner />
         </div>
