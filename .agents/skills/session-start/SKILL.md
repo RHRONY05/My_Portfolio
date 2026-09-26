@@ -1,67 +1,63 @@
 ---
 name: session-start
-description: Initializes a new conversation/session by inspecting git status, active branch, project specifications (.agents/project_plan.md), progress tracker (.agents/project_progress.md), and the 3D learning roadmap (.agents/learning_roadmap.md). Delivers an immediate context briefing to ensure zero loss of context. Trigger with /session-start, 'session start', 'start session', or at the beginning of any new chat.
+description: Initializes a new conversation/session for Rony's Portfolio. Inspects git state, verifies the completed baseline in context.md, reviews progress tracker (.agents/project_progress.md), and presents a rapid maintenance & evolution briefing so future updates preserve performance and design tokens. Trigger with /session-start, 'session start', 'start session', or at the beginning of any new chat.
 ---
 
-# Session Start Workflow & Context Restorer
+# Session Start Workflow: Maintenance & Evolution Mode
 
-When the user triggers this skill (e.g., typing `/session-start`, `session start`, starting a new chat, or asking "what are we doing?"), execute the following procedure to re-anchor full context:
+When Rony triggers this skill (typing `/session-start`, `session start`, starting a new chat, or returning after time away to edit the portfolio), execute this procedure to establish immediate context:
 
 ---
 
-## Step 1: Automatic State & Workspace Audit
+## Step 1: Silent Workspace & Git Health Check
 
-Silently execute these inspections:
+Silently perform these checks without verbose logs:
 
 1. **Git State & Active Branch**:
    - Run `git branch --show-current` and `git status -s`.
-   - Verify that the active branch is `v2-3d-rebuild` (and that `v1-current-backup` remains safe).
-2. **Current System Spec & Section Blueprints**:
-   - Read `.agents/project_plan.md` using `view_file`.
-   - Identify the approved theme, typography, tech stack, and the 3 locked sections (Hero, About, Tech Stack).
-3. **Milestone Tracker**:
-   - Read `.agents/project_progress.md` using `view_file`.
-   - Identify the active phase and completed milestones.
-4. **Active 3D Learning Module**:
-   - Read `.agents/learning_roadmap.md` using `view_file`.
-   - Identify which theory/concept is currently up next for Rony to learn.
-5. **Dev Server Status**:
-   - Verify whether Next.js (`npm run dev`) is currently active.
+   - Identify any uncommitted edits or dirty files.
+2. **Review Knowledge Base & Guardrails**:
+   - Check `.agents/context.md` for current section architecture, stack, and profile links.
+   - Re-anchor to `AGENTS.md` core rules (Zero-hardcoded colors/fonts, `LazyViewportMount` render props, no LaTeX).
+3. **Verify Build Health (if changes exist)**:
+   - If the workspace has uncommitted changes, verify with `npx tsc --noEmit`.
 
 ---
 
-## Step 2: Present the Executive Session Briefing
+## Step 2: Present the Executive Maintenance Briefing
 
-Deliver a clean, structured briefing to the user following this exact format:
+Deliver a concise, structured status report tailored for website updates:
 
 ```markdown
-### ⚡ Session Briefing: Rony's 3D Portfolio Rebuild
+### ⚡ Portfolio Status Briefing (Maintenance & Updates)
 
-#### 📌 Workspace & Git State:
-- **Active Branch**: `v2-3d-rebuild` (Backup safe on `v1-current-backup`)
-- **Design Tokens**: 4 Curated Dynamic Themes (`Monolithic Onyx`, `Celadon Forest`, `Midnight Amethyst`, `Prussian Blue`) + 4 Dynamic Fonts (`Original Surfer`, `Lusitana`, `Ruwudu`, `Inter`)
-- **Dev Server**: Active (`http://localhost:3000`)
-- **Strict Rule**: Zero hardcoded colors/fonts; rely strictly on semantic Tailwind tokens and CSS variables!
+#### 📌 System State:
+- **Baseline**: 🟢 Production-Ready & Locked (99 Desktop / 86+ Mobile Lighthouse)
+- **Active Branch**: `[branch-name]` (Status: `[clean / dirty]`)
+- **Tokens**: 4 Themes & 4 Fonts (`src/data/themeConfig.ts`)
+- **Operating Contract**: Active (`AGENTS.md` zero-hardcoding & render-prop 3D mounting enforced)
 
-#### 🎯 What Was Done (Completed):
-- [Summary of locked sections and previous session deliverables]
+#### 🗺️ Quick-Reference Navigation:
+- **Add / Edit Projects**: `src/data/projects.ts` (Auto-populates Project Deck & Case Study Modal)
+- **Update Skills / Tools**: `src/data/skillsData.ts` (Feeds Mahoraga Wheel & Realm Orbs)
+- **Update Bio / Links**: `src/data/profile.ts`
+- **Section Code**: `src/components/hero/`, `about/`, `skills/`, `projects/`, `Contact.tsx`
+- **Full Dossier**: [`.agents/context.md`](.agents/context.md)
 
-#### 📍 What We Are Doing Right Now:
-- [Current active section and implementation focus]
-
-#### 🧠 Up Next on Your 3D Learning Roadmap:
-- **Current Module**: [e.g. Module 1: 2.5D Multi-Plane Parallax & Mouse Physics]
-- **Core Concept**: [Brief 1-sentence teaser of the mental model to cover]
-
-#### 🚀 Ready to Proceed:
-- [Clear prompt asking the user if they're ready to dive into the next specific step]
+#### 🛠️ What would you like to update or build today?
+- [ ] Add or modify a project case study
+- [ ] Update tech stack, tools, or skills data
+- [ ] Refine 3D canvas animations or interaction
+- [ ] Update bio, experience, or copy
+- [ ] Performance, SEO, or new feature addition
 ```
 
 ---
 
-## Step 3: Enforce Mentorship Persona
+## Step 3: Enforce Collaboration Rules for Any Edits
 
-Remember our master rule in `AGENTS.md`:
-* **Never jump straight into bulk coding.**
-* Explain the **"Why"**, the **mental model**, and the **vocabulary** first.
-* Keep steps bite-sized so Rony learns the architecture alongside the build.
+For any updates requested by Rony during this session:
+1. **Zero Hardcoded Colors/Fonts**: Always use semantic Tailwind tokens (`bg-canvas`, `bg-card`, `text-fg`, `text-accent`) and existing font variables.
+2. **Performance Preservation**: Wrap any new/heavy WebGL components in `LazyViewportMount` using render functions: `{() => <Component />}`.
+3. **Verification Before Concluding**: Always run `npx tsc --noEmit` before finishing any task.
+4. **No LaTeX**: Never use LaTeX math delimiters in chat.
