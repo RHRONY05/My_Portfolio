@@ -43,6 +43,7 @@ export const contactContent = {
     "Web Application",
     "AI Automation Workflow",
     "Custom AI Agent / RAG",
+    "Say Hi / Quick Chat 👋",
     "Other",
   ],
   submitLabel: "Send Message →",

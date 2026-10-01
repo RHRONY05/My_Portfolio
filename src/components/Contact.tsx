@@ -1,6 +1,13 @@
 "use client";
 
-import { ArrowRight, Mail } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowRight,
+  CheckCircle2,
+  Loader2,
+  Mail,
+  RotateCcw,
+} from "lucide-react";
 import { type ComponentType, type FormEvent, useState } from "react";
 import { GithubIcon, LinkedinIcon } from "@/components/BrandIcons";
 import { contactContent } from "@/data/content";
@@ -106,6 +113,8 @@ function ContactCard({
   );
 }
 
+type FormStatus = "idle" | "submitting" | "success" | "error";
+
 function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -113,21 +122,54 @@ function ContactForm() {
     contactContent.projectTypes[0]
   );
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [status, setStatus] = useState<FormStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const subject = `Project inquiry: ${projectType}`;
-    const body = [
-      `Hi Rony,`,
-      ``,
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Project type: ${projectType}`,
-      ``,
-      message,
-    ].join("\n");
+    if (status === "submitting") return;
 
-    window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setStatus("submitting");
+    setErrorMessage("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          projectType,
+          message,
+          honeypot,
+        }),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to send message. Please try again.");
+      }
+
+      setStatus("success");
+      setName("");
+      setEmail("");
+      setMessage("");
+      setProjectType(contactContent.projectTypes[0]);
+    } catch (err: unknown) {
+      setStatus("error");
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : "Failed to dispatch message. Please try again or reach out directly."
+      );
+    }
+  }
+
+  function handleReset() {
+    setStatus("idle");
+    setErrorMessage("");
   }
 
   return (
@@ -137,67 +179,138 @@ function ContactForm() {
           aria-hidden
           className="absolute inset-0 -z-10 opacity-30 [background-image:radial-gradient(rgba(48,54,61,0.4)_1px,transparent_1px)] [background-size:16px_16px]"
         />
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <Field id="name" label="Name">
-              <input
-                id="name"
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
-                className={inputClass}
-              />
-            </Field>
-            <Field id="email" label="Email">
-              <input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                className={inputClass}
-              />
-            </Field>
-          </div>
 
-          <Field id="project-type" label="Project type">
-            <select
-              id="project-type"
-              value={projectType}
-              onChange={(e) => setProjectType(e.target.value)}
-              className={`${inputClass} appearance-none`}
+        {status === "success" ? (
+          <div className="flex flex-col items-center justify-center py-10 text-center">
+            <div className="mb-4 flex size-14 items-center justify-center rounded-full border border-line bg-canvas text-accent">
+              <CheckCircle2 className="size-7" aria-hidden />
+            </div>
+            <h3 className="text-h2 text-fg mb-2">Message Dispatched!</h3>
+            <p className="max-w-md text-body text-muted mb-6">
+              Thank you for reaching out. Your transmission has been sent directly to{" "}
+              <span className="text-fg font-medium">{profile.email}</span>. I will review it and get back to you shortly.
+            </p>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="inline-flex items-center gap-2 rounded-lg border border-line bg-canvas px-5 py-2.5 text-mono text-fg transition-colors hover:border-accent hover:text-accent active:scale-[0.99] cursor-pointer"
             >
-              {contactContent.projectTypes.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          </Field>
+              <RotateCcw className="size-4" aria-hidden />
+              Send Another Message
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            {/* Hidden honeypot field for bot trap */}
+            <div className="hidden" aria-hidden="true">
+              <input
+                type="text"
+                name="company_url"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
 
-          <Field id="message" label="Message">
-            <textarea
-              id="message"
-              rows={5}
-              required
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Tell me about your project..."
-              className={`${inputClass} resize-none`}
-            />
-          </Field>
+            {status === "error" && (
+              <div
+                role="alert"
+                className="flex items-start gap-3 rounded-lg border border-line bg-canvas p-4 text-body text-fg"
+              >
+                <AlertCircle className="size-5 shrink-0 text-accent mt-0.5" aria-hidden />
+                <div className="flex flex-col gap-1 text-caption">
+                  <span className="font-semibold text-fg">Transmission notice</span>
+                  <span className="text-muted">{errorMessage}</span>
+                  <span className="text-muted mt-1">
+                    You can also reach me directly at{" "}
+                    <a
+                      href={`mailto:${profile.email}`}
+                      className="text-accent underline hover:opacity-80"
+                    >
+                      {profile.email}
+                    </a>
+                    .
+                  </span>
+                </div>
+              </div>
+            )}
 
-          <button
-            type="submit"
-            className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-4 text-mono text-on-accent transition-opacity hover:opacity-90 active:scale-[0.99]"
-          >
-            {contactContent.submitLabel.replace(/→\s*$/, "").trim()}
-            <ArrowRight className="size-4" aria-hidden />
-          </button>
-        </form>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Field id="name" label="Name">
+                <input
+                  id="name"
+                  type="text"
+                  required
+                  disabled={status === "submitting"}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  className={inputClass}
+                />
+              </Field>
+              <Field id="email" label="Email">
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  disabled={status === "submitting"}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  className={inputClass}
+                />
+              </Field>
+            </div>
+
+            <Field id="project-type" label="Project type / topic">
+              <select
+                id="project-type"
+                disabled={status === "submitting"}
+                value={projectType}
+                onChange={(e) => setProjectType(e.target.value)}
+                className={`${inputClass} appearance-none cursor-pointer`}
+              >
+                {contactContent.projectTypes.map((opt) => (
+                  <option key={opt} value={opt} className="bg-card text-fg">
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            </Field>
+
+            <Field id="message" label="Message">
+              <textarea
+                id="message"
+                rows={5}
+                required
+                disabled={status === "submitting"}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Tell me about your project or say hi..."
+                className={`${inputClass} resize-none`}
+              />
+            </Field>
+
+            <button
+              type="submit"
+              disabled={status === "submitting"}
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-4 text-mono text-on-accent transition-all hover:opacity-90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+            >
+              {status === "submitting" ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" aria-hidden />
+                  <span>Transmitting Message...</span>
+                </>
+              ) : (
+                <>
+                  <span>{contactContent.submitLabel.replace(/→\s*$/, "").trim()}</span>
+                  <ArrowRight className="size-4" aria-hidden />
+                </>
+              )}
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
