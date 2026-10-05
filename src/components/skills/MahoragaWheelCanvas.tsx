@@ -49,59 +49,6 @@ const AI_TOOLS = [
   },
 ];
 
-// Lightweight procedural Web Audio ratchet synthesizer (zero external mp3 download)
-class RatchetSoundSynthesizer {
-  private ctx: AudioContext | null = null;
-  private lastClickTime = 0;
-
-  private init() {
-    if (!this.ctx && typeof window !== "undefined") {
-      const AudioCtx =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext;
-      if (AudioCtx) {
-        this.ctx = new AudioCtx();
-      }
-    }
-    if (this.ctx && this.ctx.state === "suspended") {
-      this.ctx.resume().catch(() => {});
-    }
-  }
-
-  playClick(pitchMultiplier = 1.0) {
-    try {
-      this.init();
-      if (!this.ctx) return;
-      const now = this.ctx.currentTime;
-      // Debounce slightly to prevent harsh distortion on ultra-fast frames
-      if (now - this.lastClickTime < 0.02) return;
-      this.lastClickTime = now;
-
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-
-      // Metallic high-frequency click transient
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(1600 * pitchMultiplier, now);
-      osc.frequency.exponentialRampToValueAtTime(160, now + 0.022);
-
-      // Sharp mechanical percussive decay (22ms)
-      gain.gain.setValueAtTime(0.18, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.022);
-
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.025);
-    } catch {
-      // Audio not supported or gesture blocked - fail silently
-    }
-  }
-}
-
-const ratchetSynth = new RatchetSoundSynthesizer();
 
 interface DragPhysicsState {
   isDragging: boolean;
@@ -133,7 +80,6 @@ function HorizontalHaloRing({
   const rotationYRef = useRef(0);
   const pitchXRef = useRef(RESTING_PITCH);
   const momentumVelocityRef = useRef(0);
-  const lastSectorRef = useRef(0);
 
   useFrame((_, delta) => {
     if (!ringGroupRef.current) return;
@@ -205,23 +151,7 @@ function HorizontalHaloRing({
     ringGroupRef.current.rotation.y = rotationYRef.current;
     ringGroupRef.current.rotation.x = pitchXRef.current;
 
-    // Trigger mechanical ratchet audio on 60-degree sector threshold crossings
-    const currentAngle = rotationYRef.current;
-    const sectorAngle = Math.PI / 3; // 60 degrees (6 spokes)
-    const currentSector = Math.floor(currentAngle / sectorAngle);
 
-    // Audio triggers on active user drag, release flick, or summon spin
-    const isActivelyRotating =
-      physics.isDragging ||
-      isSpinningFast ||
-      Math.abs(momentumVelocityRef.current) > 0.012;
-
-    if (currentSector !== lastSectorRef.current) {
-      lastSectorRef.current = currentSector;
-      if (isActivelyRotating) {
-        ratchetSynth.playClick();
-      }
-    }
   });
 
   const RADIUS = 1.76;
@@ -380,7 +310,6 @@ export function MahoragaWheelCanvas({
       } catch {
         // Ignore
       }
-      ratchetSynth.playClick();
     } else {
       dragPhysicsRef.current.isDragging = false;
       dragDirectionRef.current = "none";
@@ -414,7 +343,6 @@ export function MahoragaWheelCanvas({
           } catch {
             // Ignore
           }
-          ratchetSynth.playClick();
         } else {
           // Vertical intent: let the browser scroll natively without interruption
           dragDirectionRef.current = "vertical";
@@ -448,12 +376,6 @@ export function MahoragaWheelCanvas({
     }
   };
 
-  // Trigger click sound when adaptation fast spin is triggered
-  useEffect(() => {
-    if (isSpinningFast) {
-      ratchetSynth.playClick(1.2);
-    }
-  }, [isSpinningFast]);
 
   return (
     <div
