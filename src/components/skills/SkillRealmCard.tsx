@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Layers,
   Cpu,
@@ -8,6 +8,7 @@ import {
   Bot,
   Terminal,
   Wrench,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { SkillRealm } from "./skillsData";
@@ -17,6 +18,8 @@ interface SkillRealmCardProps {
   variant?: "default" | "compact";
   isActiveRouting?: boolean;
   isDimmed?: boolean;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const REALM_ICONS: Record<string, LucideIcon> = {
@@ -33,8 +36,14 @@ export function SkillRealmCard({
   variant = "default",
   isActiveRouting = false,
   isDimmed = false,
+  isOpen: controlledIsOpen,
+  onOpenChange,
 }: SkillRealmCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
+  const [internalHovered, setInternalHovered] = useState(false);
+  const isControlled = controlledIsOpen !== undefined;
+  const isOpen = isControlled ? controlledIsOpen : internalHovered;
+  const lastHoverTimeRef = useRef<number>(0);
+
   const IconComponent = REALM_ICONS[realm.id] ?? Layers;
 
   // Determine popover vertical anchor based on card position so it stays cleanly in viewport
@@ -55,12 +64,55 @@ export function SkillRealmCard({
       : "bottom-0 right-0 origin-bottom-right";
   };
 
+  const handleMouseEnter = () => {
+    // Only trigger hover on devices that support true pointer hover
+    if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+      lastHoverTimeRef.current = Date.now();
+      if (onOpenChange) {
+        onOpenChange(true);
+      } else {
+        setInternalHovered(true);
+      }
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+      if (onOpenChange) {
+        onOpenChange(false);
+      } else {
+        setInternalHovered(false);
+      }
+    }
+  };
+
+  const handleCardClick = () => {
+    // Prevent synthetic click immediately after mouseenter on hybrid touchscreens
+    if (Date.now() - lastHoverTimeRef.current < 300) {
+      return;
+    }
+    if (onOpenChange) {
+      onOpenChange(!isOpen);
+    } else {
+      setInternalHovered((prev) => !prev);
+    }
+  };
+
+  const handleClose = () => {
+    if (onOpenChange) {
+      onOpenChange(false);
+    } else {
+      setInternalHovered(false);
+    }
+  };
+
   return (
     <div
       id={`realm-card-${realm.id}`}
-      className="group relative w-full"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className={`group relative w-full ${isOpen ? "z-50" : "z-10"}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleCardClick}
     >
       {/* 
         =======================================================================
@@ -70,14 +122,14 @@ export function SkillRealmCard({
         =======================================================================
       */}
       <div
-        className={`relative w-full rounded-xl border transition-all duration-300 cursor-default select-none ${
+        className={`relative w-full rounded-xl border transition-all duration-300 cursor-pointer select-none ${
           variant === "compact"
             ? "px-2.5 py-2 sm:px-3 sm:py-2"
             : "px-3 py-2.5 sm:px-3.5 sm:py-3"
         } ${
-          isDimmed && !isHovered ? "opacity-40" : "opacity-100"
+          isDimmed && !isOpen ? "opacity-40" : "opacity-100"
         } ${
-          isHovered
+          isOpen
             ? "border-accent bg-card shadow-[0_0_18px_rgba(var(--color-accent-rgb),0.25)] scale-[1.01]"
             : isActiveRouting
             ? "border-accent/90 bg-card/95 shadow-[0_0_16px_rgba(var(--color-accent-rgb),0.22)] ring-1 ring-accent/40"
@@ -210,13 +262,15 @@ export function SkillRealmCard({
         =======================================================================
       */}
       <div
-        className={`absolute z-50 ${getAnchorClass()} w-[265px] sm:w-[285px] xl:w-[305px] p-3 sm:p-3.5 rounded-xl border border-accent/80 bg-card/95 backdrop-blur-xl shadow-[0_0_35px_rgba(0,0,0,0.9),0_0_20px_rgba(var(--color-accent-rgb),0.25)] transition-all duration-200 ease-out ${
-          isHovered
+        style={{ zIndex: 2147483647 }}
+        className={`absolute ${getAnchorClass()} w-[265px] sm:w-[285px] xl:w-[305px] max-w-[calc(100vw-24px)] p-3 sm:p-3.5 rounded-xl border border-accent/80 bg-card/95 backdrop-blur-xl shadow-[0_0_35px_rgba(0,0,0,0.9),0_0_20px_rgba(var(--color-accent-rgb),0.25)] transition-all duration-200 ease-out ${
+          isOpen
             ? "opacity-100 visible scale-100 pointer-events-auto"
             : "opacity-0 invisible scale-95 pointer-events-none"
         }`}
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Hover Header: Number + Realm Title + Tool Count Badge */}
+        {/* Hover Header: Number + Realm Title + Tool Count Badge + Mobile Close */}
         <div className="flex items-center justify-between gap-2 pb-2 border-b border-line/60">
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="font-mono text-xs font-bold text-accent shrink-0">
@@ -234,6 +288,19 @@ export function SkillRealmCard({
             <div className="flex size-5 shrink-0 items-center justify-center rounded border border-line/60 bg-canvas/80 text-accent">
               <IconComponent className="size-2.5" />
             </div>
+            {/* Mobile tap dismiss button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClose();
+              }}
+              className="lg:hidden flex size-5 shrink-0 items-center justify-center rounded border border-line/70 bg-canvas/90 text-muted hover:border-accent hover:text-accent transition-colors cursor-pointer"
+              aria-label="Close details"
+              title="Close"
+            >
+              <X className="size-2.5" />
+            </button>
           </div>
         </div>
 

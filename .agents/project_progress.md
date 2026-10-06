@@ -137,9 +137,11 @@
   - Mounted via `createPortal` to `document.body` at `zIndex: 999999` so it is unconditionally on top of all fixed bars, canvases, and layers.
   - Mobile-First Flex-Column Architecture: Sticky header with persistent `[ ✕ ]` close button, smooth touch-scroll body (`max-h-[88dvh]`), and sticky thumb-friendly footer dismiss button.
   - 36+ authentic brand SVG vectors rendered beside tool names.
-- [x] **Mobile Single-Bus Load Balancer (`SkillsLoadBalancer.tsx`)**:
+- [x] **Mobile Single-Bus Load Balancer & Top-Level Modals (`SkillsLoadBalancer.tsx` & `SkillRealmCard.tsx`)**:
   - Preserves the authentic load balancer architecture on mobile with a single continuous horizontal line and symmetrical 3-way forks.
   - Sized at `h-[235px]` with full cards displaying number prefix, category title, domain icon, and 1-line tech preview.
+  - **Dynamic Stacking Context & Top-Level Z-Index**: Completely resolved mobile stacking trap where sibling cards and opposite cluster painted over open popovers. Active cluster elevates to `z-50`, active card to `z-50`, and popover to `style={{ zIndex: 2147483647 }}`.
+  - **Mobile Touch Experience**: Added responsive tap toggling, synthetic touch race protection, outside-click/tap dismissal, and an explicit `[X]` close button in the header.
 
 ### Phase 4: Section 04: Projects — "The Interactive Comic Issue Deck" [COMPLETE & LOCKED]
 - [x] **Balanced 5-Slot Circular 3D Carousel (`ProjectDeck.tsx`)**:

@@ -50,6 +50,7 @@ export function SkillsLoadBalancer() {
   const [showPulseRing, setShowPulseRing] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [flyingTools, setFlyingTools] = useState<FlyingToken[]>([]);
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
 
   const wheelRef = useRef<HTMLDivElement>(null);
 
@@ -63,6 +64,31 @@ export function SkillsLoadBalancer() {
   const currentScenario: AdaptationScenario = ADAPTATION_SCENARIOS[scenarioIndex];
   const leftRealms = SKILL_REALMS.filter((r) => r.side === "left");
   const rightRealms = SKILL_REALMS.filter((r) => r.side === "right");
+
+  const isLeftActive = leftRealms.some((r) => r.id === activeCardId);
+  const isRightActive = rightRealms.some((r) => r.id === activeCardId);
+
+  // Dismiss open card popovers when tapping or clicking outside
+  useEffect(() => {
+    if (!activeCardId) return;
+
+    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      if (target.closest('[id^="realm-card-"]')) {
+        return;
+      }
+      setActiveCardId(null);
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown, { passive: true });
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+    };
+  }, [activeCardId]);
 
   const handleSolveProblem = () => {
     if (isSolving) return;
@@ -183,9 +209,13 @@ export function SkillsLoadBalancer() {
       `}</style>
 
       {/* DESKTOP 1:1 LOAD BALANCER STAGE (Hidden on Mobile/Tablet) */}
-      <div className="hidden lg:flex items-center justify-between h-[440px] xl:h-[460px] w-full max-w-[1280px] mx-auto relative select-none">
+      <div className={`hidden lg:flex items-center justify-between h-[440px] xl:h-[460px] w-full max-w-[1280px] mx-auto relative select-none transition-all ${
+        activeCardId ? "z-40" : "z-20"
+      }`}>
         {/* 1. LEFT CLUSTER: 3 Cards */}
-        <div className="w-[215px] xl:w-[240px] h-full flex flex-col justify-between py-1 z-20">
+        <div className={`w-[215px] xl:w-[240px] h-full flex flex-col justify-between py-1 transition-all ${
+          isLeftActive ? "z-50" : "z-20"
+        }`}>
           {leftRealms.map((realm) => {
             const isTarget = currentScenario.activeRealmIds.includes(realm.id);
             return (
@@ -194,6 +224,8 @@ export function SkillsLoadBalancer() {
                 realm={realm}
                 isActiveRouting={isSolving && isTarget}
                 isDimmed={isSolving && !isTarget}
+                isOpen={activeCardId === realm.id}
+                onOpenChange={(open) => setActiveCardId(open ? realm.id : null)}
               />
             );
           })}
@@ -560,7 +592,9 @@ export function SkillsLoadBalancer() {
         </div>
 
         {/* 5. RIGHT CLUSTER: 3 Cards */}
-        <div className="w-[215px] xl:w-[240px] h-full flex flex-col justify-between py-1 z-20">
+        <div className={`w-[215px] xl:w-[240px] h-full flex flex-col justify-between py-1 transition-all ${
+          isRightActive ? "z-50" : "z-20"
+        }`}>
           {rightRealms.map((realm) => {
             const isTarget = currentScenario.activeRealmIds.includes(realm.id);
             return (
@@ -569,6 +603,8 @@ export function SkillsLoadBalancer() {
                 realm={realm}
                 isActiveRouting={isSolving && isTarget}
                 isDimmed={isSolving && !isTarget}
+                isOpen={activeCardId === realm.id}
+                onOpenChange={(open) => setActiveCardId(open ? realm.id : null)}
               />
             );
           })}
@@ -622,14 +658,20 @@ export function SkillsLoadBalancer() {
         </div>
 
         {/* MOBILE 1:1 LOAD BALANCER STAGE */}
-        <div className="relative w-full max-w-[430px] mx-auto flex items-center justify-between h-[235px] sm:h-[250px] px-1 select-none">
+        <div className={`relative w-full max-w-[430px] mx-auto flex items-center justify-between h-[235px] sm:h-[250px] px-1 select-none transition-all ${
+          activeCardId ? "z-40" : "z-20"
+        }`}>
           {/* Left Cluster: 3 Compact Cards */}
-          <div className="w-[135px] sm:w-[155px] h-full flex flex-col justify-between py-1 z-20">
+          <div className={`w-[135px] sm:w-[155px] h-full flex flex-col justify-between py-1 transition-all ${
+            isLeftActive ? "z-50" : "z-20"
+          }`}>
             {leftRealms.map((realm) => (
               <SkillRealmCard
                 key={realm.id}
                 realm={realm}
                 variant="compact"
+                isOpen={activeCardId === realm.id}
+                onOpenChange={(open) => setActiveCardId(open ? realm.id : null)}
               />
             ))}
           </div>
@@ -739,12 +781,16 @@ export function SkillsLoadBalancer() {
           </div>
 
           {/* Right Cluster: 3 Compact Cards */}
-          <div className="w-[135px] sm:w-[155px] h-full flex flex-col justify-between py-1 z-20">
+          <div className={`w-[135px] sm:w-[155px] h-full flex flex-col justify-between py-1 transition-all ${
+            isRightActive ? "z-50" : "z-20"
+          }`}>
             {rightRealms.map((realm) => (
               <SkillRealmCard
                 key={realm.id}
                 realm={realm}
                 variant="compact"
+                isOpen={activeCardId === realm.id}
+                onOpenChange={(open) => setActiveCardId(open ? realm.id : null)}
               />
             ))}
           </div>
