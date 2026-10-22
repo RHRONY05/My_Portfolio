@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { X } from "lucide-react";
 import type { Project, ProjectScreenshot, GallerySlot } from "@/data/projects";
@@ -32,6 +33,11 @@ function getBoxAspectStyle(
 
 export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
   const [activeLightbox, setActiveLightbox] = useState<ProjectScreenshot | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const gallery = project.gallery || [];
   if (gallery.length === 0) return null;
@@ -191,7 +197,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
             </div>
           )}
 
-          {/* Col 1 Bottom Split Row (when project has two smaller items like SabaiHealth) */}
+          {/* Col 1 Bottom Split Row (when project has two smaller items like SabaiHealth or CineReserve) */}
           {(imgCol1BottomLeft || imgCol1BottomRight) && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
               {imgCol1BottomLeft && (
@@ -340,51 +346,55 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
       )}
 
       {/* =======================================================
-          SHAPE-ADAPTIVE LIGHTBOX MODAL
-          - Adapts width & height to the natural shape of the image
+          PORTALED SHAPE-ADAPTIVE LIGHTBOX MODAL
+          - Portaled directly to document.body to escape <main> stacking context
+          - z-index: 2147483647 guarantees it is ALWAYS above the fixed Navbar (z-[100])
+          - pt-20 / pt-24 ensures comfortable clearance from top of screen
           - Mobile UI screenshot renders in a sleek mobile portrait frame
           - Desktop screenshot renders in a wide landscape frame
-          - Guaranteed 100% visible: uses native <img> with max-h/max-w
          ======================================================= */}
-      {activeLightbox && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          onClick={closeLightbox}
-          className="fixed inset-0 bg-canvas/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
-          style={{ zIndex: 2147483647 }}
-        >
+      {mounted &&
+        activeLightbox &&
+        createPortal(
           <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative flex flex-col rounded-2xl border border-line bg-card shadow-2xl overflow-hidden max-w-[95vw] max-h-[94vh] w-fit mx-auto"
+            role="dialog"
+            aria-modal="true"
+            onClick={closeLightbox}
+            className="fixed inset-0 bg-canvas/90 backdrop-blur-md flex items-center justify-center pt-20 sm:pt-24 pb-8 px-4 sm:px-8 animate-in fade-in duration-200"
+            style={{ zIndex: 2147483647 }}
           >
-            {/* Modal Header */}
-            <div className="flex h-10 items-center justify-between border-b border-line bg-canvas/90 px-4 gap-4">
-              <span className="font-mono text-xs font-bold text-fg truncate">
-                {activeLightbox.title || "Screenshot Preview"}
-              </span>
-              <button
-                type="button"
-                onClick={closeLightbox}
-                className="rounded-lg p-1 text-muted hover:text-fg hover:bg-line/40 transition-colors shrink-0"
-                aria-label="Close image modal"
-              >
-                <X className="size-4" />
-              </button>
-            </div>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="relative flex flex-col rounded-2xl border border-line bg-card shadow-2xl overflow-hidden max-w-[95vw] max-h-[88vh] w-fit mx-auto"
+            >
+              {/* Modal Header */}
+              <div className="flex h-11 items-center justify-between border-b border-line bg-canvas/95 px-4 gap-4 shrink-0">
+                <span className="font-mono text-xs font-bold text-fg truncate">
+                  {activeLightbox.title || "Screenshot Preview"}
+                </span>
+                <button
+                  type="button"
+                  onClick={closeLightbox}
+                  className="rounded-lg p-1.5 text-muted hover:text-fg hover:bg-line/40 transition-colors shrink-0 cursor-pointer"
+                  aria-label="Close image modal"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
 
-            {/* Modal Image Viewport - Naturally hugs the image shape */}
-            <div className="relative p-2 sm:p-3 bg-canvas/40 flex items-center justify-center overflow-auto max-h-[85vh]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={activeLightbox.src}
-                alt={activeLightbox.title || "Preview"}
-                className="max-h-[80vh] max-w-[88vw] w-auto h-auto object-contain rounded-xl shadow-lg block mx-auto"
-              />
+              {/* Modal Image Viewport - Naturally hugs the image shape */}
+              <div className="relative p-2 sm:p-3 bg-canvas/40 flex items-center justify-center overflow-auto max-h-[78vh]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={activeLightbox.src}
+                  alt={activeLightbox.title || "Preview"}
+                  className="max-h-[74vh] max-w-[88vw] w-auto h-auto object-contain rounded-xl shadow-lg block mx-auto"
+                />
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
