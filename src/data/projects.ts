@@ -79,7 +79,7 @@ export const projects: readonly Project[] = [
     ],
     github: "https://github.com/RHRONY05/ShopMate_AI",
     live: "",
-    image: "/images/projects/shopmate_ai.png",
+    image: "/images/projects/shopmate-ai/scrolling_img.png",
     gallery: [
       {
         title: "Catalog & Semantic Vector Discovery",
@@ -171,8 +171,16 @@ export const projects: readonly Project[] = [
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "E-Signature"],
     github: "",
     live: "https://sabaihealth.com",
-    image: "/images/projects/sabaihealth/desktop_landing_page.webp",
+    image: "/images/projects/sabaihealth/scrolling_img.webp",
     gallery: [
+      {
+        title: "Desktop Primary Interface",
+        src: "/images/projects/sabaihealth/desktop_landing_page.webp",
+        type: "desktop",
+        aspectRatio: "1894/917",
+        width: 1894,
+        height: 917,
+      },
       {
         title: "Medical Knowledge & Article Directory",
         src: "/images/projects/sabaihealth/article_page.webp",
@@ -180,7 +188,6 @@ export const projects: readonly Project[] = [
         aspectRatio: "1708/917",
         width: 1708,
         height: 917,
-        caption: "Categorized health articles with bilingual Thai/English search",
       },
       {
         title: "Mobile Native Healthcare Platform",
@@ -189,7 +196,6 @@ export const projects: readonly Project[] = [
         aspectRatio: "820/1600",
         width: 820,
         height: 1600,
-        caption: "Touch-optimized mobile experience tested on Southeast Asian networks",
       },
       {
         title: "Partner Intake & Feedback Flow",
@@ -198,7 +204,6 @@ export const projects: readonly Project[] = [
         aspectRatio: "495/709",
         width: 495,
         height: 709,
-        caption: "Accessible multi-step inquiry form compliant with WCAG 2.1 AA",
       },
       {
         title: "Instant Action & Consultation Drawer",
@@ -207,7 +212,6 @@ export const projects: readonly Project[] = [
         aspectRatio: "801/824",
         width: 801,
         height: 824,
-        caption: "Low-friction patient inquiry modal with instant validation",
       },
       {
         title: "Google PageSpeed Core Web Vitals",
@@ -216,7 +220,6 @@ export const projects: readonly Project[] = [
         aspectRatio: "943/517",
         width: 943,
         height: 517,
-        caption: "Verified 98 performance score and <1.4s LCP under overseas latency",
       },
       {
         title: "Reading View & Normalized Typography",
@@ -225,7 +228,6 @@ export const projects: readonly Project[] = [
         aspectRatio: "1617/908",
         width: 1617,
         height: 908,
-        caption: "Custom typographic line-height normalizers preventing Thai script ascender clipping",
       },
     ],
     status: "live",
@@ -301,7 +303,7 @@ export const projects: readonly Project[] = [
     ],
     github: "https://github.com/RHRONY05/Movie_Booking_System",
     live: "https://movies.rhrony05.me",
-    image: "/images/projects/movie_booking_system.webp",
+    image: "/images/projects/movie-booking/scrolling_img.webp",
     status: "live",
     caseStudy: {
       context: "High-Volume Ticketing & Distributed Systems",
@@ -367,7 +369,7 @@ export const projects: readonly Project[] = [
     stack: ["React", "JavaScript", "Tailwind CSS", "Vite"],
     github: "",
     live: "https://calowry.com",
-    image: "/images/projects/calowry_website.webp",
+    image: "/images/projects/calowry/scrolling_img.webp",
     status: "live",
     caseStudy: {
       context: "Sustainable Biomaterials & Industrial Showcase",
@@ -441,7 +443,7 @@ export const projects: readonly Project[] = [
     ],
     github: "https://github.com/RHRONY05/Vocab_App",
     live: "https://vocab-rony.vercel.app",
-    image: "/images/projects/Vocab_App.png",
+    image: "/images/projects/vocab-app/scrolling_img.png",
     gallery: [
       {
         title: "Structured Word Breakdown & Bangla Guide",
