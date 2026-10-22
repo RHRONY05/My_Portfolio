@@ -32,16 +32,20 @@ export function ProjectCard({ project, className = "", priority = false }: Proje
       <div className="relative flex-1 w-full overflow-hidden bg-canvas">
         {project.image ? (
           <>
-            {/* Full Page Long Screenshot: Smoothly scrolls on desktop hover */}
+            {/* Viewport Image: Smoothly scrolls on desktop hover for long pages, or stays crisp with subtle scale for single-page cards */}
             <Image
               src={project.image}
               alt={project.title}
               width={1200}
-              height={3500}
+              height={project.hasScroll === false ? 800 : 3500}
               priority={priority}
               loading={priority ? undefined : "lazy"}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
-              className="w-full h-auto object-cover object-top md:transition-transform md:duration-[7500ms] md:ease-in-out md:group-hover/card:-translate-y-[calc(100%-520px)]"
+              className={`w-full object-cover object-top ${
+                project.hasScroll === false
+                  ? "h-full transition-transform duration-500 ease-out md:group-hover/card:scale-103"
+                  : "h-auto md:transition-transform md:duration-[7500ms] md:ease-in-out md:group-hover/card:-translate-y-[calc(100%-520px)]"
+              }`}
             />
 
             {/* Bottom Gradient Shelf (Title, Stack, and Direct Action Buttons on All Devices) */}
