@@ -31,6 +31,9 @@ export type ProjectScreenshot = {
   src: string;
   caption?: string;
   type?: "desktop" | "mobile" | "diagram" | "feature";
+  aspectRatio?: string;
+  width?: number;
+  height?: number;
 };
 
 export type Project = {
@@ -168,7 +171,63 @@ export const projects: readonly Project[] = [
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "E-Signature"],
     github: "",
     live: "https://sabaihealth.com",
-    image: "/images/projects/Sabaihealth_website.webp",
+    image: "/images/projects/sabaihealth/desktop_landing_page.webp",
+    gallery: [
+      {
+        title: "Medical Knowledge & Article Directory",
+        src: "/images/projects/sabaihealth/article_page.webp",
+        type: "desktop",
+        aspectRatio: "1708/917",
+        width: 1708,
+        height: 917,
+        caption: "Categorized health articles with bilingual Thai/English search",
+      },
+      {
+        title: "Mobile Native Healthcare Platform",
+        src: "/images/projects/sabaihealth/mobile_landing_page.webp",
+        type: "mobile",
+        aspectRatio: "820/1600",
+        width: 820,
+        height: 1600,
+        caption: "Touch-optimized mobile experience tested on Southeast Asian networks",
+      },
+      {
+        title: "Partner Intake & Feedback Flow",
+        src: "/images/projects/sabaihealth/feedback_form.webp",
+        type: "feature",
+        aspectRatio: "495/709",
+        width: 495,
+        height: 709,
+        caption: "Accessible multi-step inquiry form compliant with WCAG 2.1 AA",
+      },
+      {
+        title: "Instant Action & Consultation Drawer",
+        src: "/images/projects/sabaihealth/quick_action_modal.webp",
+        type: "feature",
+        aspectRatio: "801/824",
+        width: 801,
+        height: 824,
+        caption: "Low-friction patient inquiry modal with instant validation",
+      },
+      {
+        title: "Google PageSpeed Core Web Vitals",
+        src: "/images/projects/sabaihealth/pagespeed_insight.webp",
+        type: "feature",
+        aspectRatio: "943/517",
+        width: 943,
+        height: 517,
+        caption: "Verified 98 performance score and <1.4s LCP under overseas latency",
+      },
+      {
+        title: "Reading View & Normalized Typography",
+        src: "/images/projects/sabaihealth/article_view.webp",
+        type: "desktop",
+        aspectRatio: "1617/908",
+        width: 1617,
+        height: 908,
+        caption: "Custom typographic line-height normalizers preventing Thai script ascender clipping",
+      },
+    ],
     status: "live",
     caseStudy: {
       context: "International Healthcare & Patient Onboarding",

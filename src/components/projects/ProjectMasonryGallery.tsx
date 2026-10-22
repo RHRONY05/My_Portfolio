@@ -1,7 +1,16 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Cpu, Terminal, TrendingUp, CheckCircle2, Layers, Smartphone } from "lucide-react";
+import {
+  Cpu,
+  TrendingUp,
+  CheckCircle2,
+  Layers,
+  Smartphone,
+  Maximize2,
+  X,
+} from "lucide-react";
 import type { Project, ProjectScreenshot } from "@/data/projects";
 
 interface ProjectMasonryGalleryProps {
@@ -39,14 +48,34 @@ const seal = crypto.subtle.digest("SHA-256", new TextEncoder().encode(payload));
   },
 };
 
+/**
+ * Helper to compute an appropriate Tailwind aspect class or inline style
+ * based on the natural shape of the screenshot (wide, tall, square, or mobile)
+ */
+function getImageAspectStyle(screenshot?: ProjectScreenshot): React.CSSProperties {
+  if (!screenshot) return { aspectRatio: "16/9" };
+  if (screenshot.aspectRatio) {
+    return { aspectRatio: screenshot.aspectRatio };
+  }
+  if (screenshot.width && screenshot.height) {
+    return { aspectRatio: `${screenshot.width} / ${screenshot.height}` };
+  }
+  if (screenshot.type === "mobile") {
+    return { aspectRatio: "9 / 18" };
+  }
+  return { aspectRatio: "16 / 9" };
+}
+
 export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
+  const [activeLightbox, setActiveLightbox] = useState<ProjectScreenshot | null>(null);
+
   const cs = project.caseStudy;
   const stat1 = cs.stats[0];
   const stat2 = cs.stats[1];
   const snippet = PROJECT_SNIPPETS[project.id];
   const gallery = project.gallery || [];
 
-  // Separate mobile screenshots from desktop/feature screenshots to avoid duplicates
+  // Separate mobile screenshots from desktop/feature screenshots to preserve phone mockups
   const mobileScreenshot = gallery.find((g) => g.type === "mobile");
   const nonMobileScreenshots = gallery.filter((g) => g !== mobileScreenshot);
 
@@ -55,6 +84,22 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
   const screenshot5 = nonMobileScreenshots[2];
   const screenshot6 = nonMobileScreenshots[3] || (!mobileScreenshot ? gallery[4] : undefined);
   const remainingScreenshots = nonMobileScreenshots.slice(mobileScreenshot ? 4 : 5);
+
+  // Keyboard navigation for lightbox
+  const closeLightbox = useCallback(() => setActiveLightbox(null), []);
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+    };
+    if (activeLightbox) {
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "unset";
+    };
+  }, [activeLightbox, closeLightbox]);
 
   return (
     <div className="w-full my-8 sm:my-12">
@@ -75,7 +120,18 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
         <div className="md:col-span-12 lg:col-span-6 flex flex-col gap-5">
           {/* Primary UI Screenshot 1 (Wide Browser Frame) */}
           {project.image && (
-            <div className="group relative overflow-hidden rounded-2xl border border-line bg-card shadow-lg transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)]">
+            <div
+              onClick={() =>
+                setActiveLightbox({
+                  title: `${project.title} Primary UI`,
+                  src: project.image!,
+                  caption: "Primary production interface overview",
+                  type: "desktop",
+                  aspectRatio: "1894 / 917",
+                })
+              }
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-lg transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)]"
+            >
               {/* Browser Window Chrome */}
               <div className="flex h-9 items-center justify-between border-b border-line bg-canvas/90 px-3.5 backdrop-blur-sm">
                 <div className="flex items-center gap-1.5">
@@ -86,38 +142,53 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
                     rhrony05.me/projects/{project.id}
                   </span>
                 </div>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-accent font-bold">
-                  PRIMARY INTERFACE
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-accent font-bold">
+                    PRIMARY INTERFACE
+                  </span>
+                  <Maximize2 className="size-3 text-muted group-hover:text-accent transition-colors" />
+                </div>
               </div>
 
-              {/* Viewport Image */}
-              <div className="relative h-[280px] sm:h-[340px] md:h-[360px] w-full overflow-hidden bg-canvas">
+              {/* Viewport Image - Natural desktop landscape aspect ratio */}
+              <div
+                className="relative w-full overflow-hidden bg-canvas aspect-[16/9] sm:aspect-[2/1]"
+                style={{ aspectRatio: "1894 / 917" }}
+              >
                 <Image
                   src={project.image}
                   alt={`${project.title} Primary UI`}
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-102"
                 />
               </div>
             </div>
           )}
 
           {/* Bottom Split Row: Screenshot 5 + Metric Card 1 */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
             {/* Screenshot 5 or Code Snippet */}
             {screenshot5 ? (
-              <div className="group relative overflow-hidden rounded-2xl border border-line bg-card p-2 flex flex-col justify-between">
-                <div className="relative h-[160px] w-full overflow-hidden rounded-xl bg-canvas">
+              <div
+                onClick={() => setActiveLightbox(screenshot5)}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card p-2 flex flex-col justify-between transition-all duration-300 hover:border-accent hover:shadow-md"
+              >
+                <div
+                  className="relative w-full overflow-hidden rounded-xl bg-canvas"
+                  style={getImageAspectStyle(screenshot5)}
+                >
                   <Image
                     src={screenshot5.src}
                     alt={screenshot5.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 25vw"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    className="object-contain sm:object-cover object-center transition-transform duration-500 group-hover:scale-105"
                   />
+                  <div className="absolute top-2 right-2 rounded-md bg-canvas/80 p-1 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Maximize2 className="size-3 text-accent" />
+                  </div>
                 </div>
                 <div className="pt-2 px-1">
                   <span className="font-mono text-[10px] text-accent block line-clamp-1">
@@ -148,7 +219,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
 
             {/* Metric Card 1 */}
             {stat1 && (
-              <div className="relative flex flex-col justify-between overflow-hidden rounded-2xl border border-line bg-card p-5 transition-all hover:border-accent">
+              <div className="relative flex flex-col justify-between min-h-[160px] overflow-hidden rounded-2xl border border-line bg-card p-5 transition-all hover:border-accent">
                 <div className="flex items-center justify-between text-muted mb-2">
                   <span className="font-mono text-[10px] uppercase tracking-widest text-accent font-bold">
                     PRIMARY METRIC
@@ -178,10 +249,16 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
             Screenshot 2 (Sub-feature) + Screenshot 4 (Architecture / Flow)
            ======================================================= */}
         <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-5">
-          {/* Screenshot 2 (Sub-feature / Catalog) */}
+          {/* Screenshot 2 (Sub-feature / Wide Desktop View) */}
           {screenshot2 ? (
-            <div className="group relative overflow-hidden rounded-2xl border border-line bg-card p-2 flex flex-col">
-              <div className="relative h-[220px] sm:h-[240px] w-full overflow-hidden rounded-xl bg-canvas">
+            <div
+              onClick={() => setActiveLightbox(screenshot2)}
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card p-2 flex flex-col transition-all duration-300 hover:border-accent hover:shadow-md"
+            >
+              <div
+                className="relative w-full overflow-hidden rounded-xl bg-canvas"
+                style={getImageAspectStyle(screenshot2)}
+              >
                 <Image
                   src={screenshot2.src}
                   alt={screenshot2.title}
@@ -189,6 +266,9 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
                   sizes="(max-width: 1024px) 50vw, 25vw"
                   className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
+                <div className="absolute top-2 right-2 rounded-md bg-canvas/80 p-1 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Maximize2 className="size-3 text-accent" />
+                </div>
               </div>
               <div className="pt-2 px-1">
                 <span className="font-mono text-[10px] text-accent block line-clamp-1">
@@ -221,17 +301,26 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
             </div>
           )}
 
-          {/* Screenshot 4 (Architecture Flow or Architecture Nodes) */}
+          {/* Screenshot 4 (Architecture Flow or Tall Feature Form) */}
           {screenshot4 ? (
-            <div className="group relative overflow-hidden rounded-2xl border border-line bg-card p-2 flex flex-col">
-              <div className="relative h-[220px] sm:h-[240px] w-full overflow-hidden rounded-xl bg-canvas">
+            <div
+              onClick={() => setActiveLightbox(screenshot4)}
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card p-2 flex flex-col transition-all duration-300 hover:border-accent hover:shadow-md"
+            >
+              <div
+                className="relative w-full overflow-hidden rounded-xl bg-canvas"
+                style={getImageAspectStyle(screenshot4)}
+              >
                 <Image
                   src={screenshot4.src}
                   alt={screenshot4.title}
                   fill
                   sizes="(max-width: 1024px) 50vw, 25vw"
-                  className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  className="object-contain sm:object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
+                <div className="absolute top-2 right-2 rounded-md bg-canvas/80 p-1 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Maximize2 className="size-3 text-accent" />
+                </div>
               </div>
               <div className="pt-2 px-1">
                 <span className="font-mono text-[10px] text-accent block line-clamp-1">
@@ -276,13 +365,22 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
         <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-5">
           {/* Screenshot 3 (Mobile UI with Phone Viewport Frame) */}
           {mobileScreenshot ? (
-            <div className="group relative overflow-hidden rounded-2xl border border-line bg-card p-3 flex flex-col items-center">
-              <div className="flex items-center gap-1.5 font-mono text-[9px] text-muted mb-2 self-start uppercase">
-                <Smartphone className="size-3 text-accent" />
-                <span>Mobile UI View</span>
+            <div
+              onClick={() => setActiveLightbox(mobileScreenshot)}
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card p-3 flex flex-col items-center transition-all duration-300 hover:border-accent hover:shadow-md"
+            >
+              <div className="flex items-center justify-between w-full font-mono text-[9px] text-muted mb-2 px-1 uppercase">
+                <div className="flex items-center gap-1.5">
+                  <Smartphone className="size-3 text-accent" />
+                  <span>Mobile UI View</span>
+                </div>
+                <Maximize2 className="size-3 opacity-0 group-hover:opacity-100 text-accent transition-opacity" />
               </div>
-              {/* Phone Mockup Frame */}
-              <div className="relative h-[280px] sm:h-[300px] w-full max-w-[210px] overflow-hidden rounded-2xl border border-line/80 bg-canvas shadow-inner">
+              {/* Phone Mockup Frame - Authentic 9:18 Mobile Shape */}
+              <div
+                className="relative w-full max-w-[210px] overflow-hidden rounded-2xl border border-line/80 bg-canvas shadow-inner"
+                style={getImageAspectStyle(mobileScreenshot)}
+              >
                 <Image
                   src={mobileScreenshot.src}
                   alt={mobileScreenshot.title}
@@ -319,15 +417,24 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
 
           {/* Screenshot 6 or Fallback Metric Card 2 */}
           {screenshot6 ? (
-            <div className="group relative overflow-hidden rounded-2xl border border-line bg-card p-2 flex flex-col">
-              <div className="relative h-[180px] sm:h-[200px] w-full overflow-hidden rounded-xl bg-canvas">
+            <div
+              onClick={() => setActiveLightbox(screenshot6)}
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card p-2 flex flex-col transition-all duration-300 hover:border-accent hover:shadow-md"
+            >
+              <div
+                className="relative w-full overflow-hidden rounded-xl bg-canvas"
+                style={getImageAspectStyle(screenshot6)}
+              >
                 <Image
                   src={screenshot6.src}
                   alt={screenshot6.title}
                   fill
                   sizes="(max-width: 1024px) 50vw, 25vw"
-                  className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  className="object-contain sm:object-cover object-center transition-transform duration-500 group-hover:scale-105"
                 />
+                <div className="absolute top-2 right-2 rounded-md bg-canvas/80 p-1 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Maximize2 className="size-3 text-accent" />
+                </div>
               </div>
               <div className="pt-2 px-1">
                 <span className="font-mono text-[10px] text-accent block line-clamp-1">
@@ -341,7 +448,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
               </div>
             </div>
           ) : stat2 ? (
-            <div className="relative flex flex-col justify-between overflow-hidden rounded-2xl border border-line bg-card p-5 transition-all hover:border-accent">
+            <div className="relative flex flex-col justify-between min-h-[160px] overflow-hidden rounded-2xl border border-line bg-card p-5 transition-all hover:border-accent">
               <div className="flex items-center justify-between text-muted mb-2">
                 <span className="font-mono text-[10px] uppercase tracking-widest text-accent font-bold">
                   VERIFIED IMPACT
@@ -366,35 +473,120 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
         </div>
       </div>
 
-      {/* Optional remaining screenshots row if project has > 6 images */}
+      {/* Extended Showcase Row for Remaining Screenshots (e.g. Article View, etc.) */}
       {remainingScreenshots.length > 0 && (
-        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {remainingScreenshots.map((item, idx) => (
-            <div
-              key={idx}
-              className="group relative overflow-hidden rounded-2xl border border-line bg-card p-2 flex flex-col"
-            >
-              <div className="relative h-[200px] w-full overflow-hidden rounded-xl bg-canvas">
-                <Image
-                  src={item.src}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                />
+        <div className="mt-6 pt-6 border-t border-line/60">
+          <div className="flex items-center gap-2 mb-4 font-mono text-[11px] text-muted uppercase tracking-wider">
+            <Layers className="size-3.5 text-accent" />
+            <span>Additional Feature Interfaces & Deep Dive Views</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {remainingScreenshots.map((item, idx) => (
+              <div
+                key={idx}
+                onClick={() => setActiveLightbox(item)}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card p-3 flex flex-col transition-all duration-300 hover:border-accent hover:shadow-lg"
+              >
+                <div
+                  className="relative w-full overflow-hidden rounded-xl bg-canvas"
+                  style={getImageAspectStyle(item)}
+                >
+                  <Image
+                    src={item.src}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-103"
+                  />
+                  <div className="absolute top-2.5 right-2.5 rounded-md bg-canvas/80 p-1.5 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Maximize2 className="size-3.5 text-accent" />
+                  </div>
+                </div>
+                <div className="pt-3 px-1 flex items-baseline justify-between gap-2">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-accent block">
+                      {item.title}
+                    </span>
+                    {item.caption && (
+                      <span className="font-sans text-xs text-muted mt-0.5 block">
+                        {item.caption}
+                      </span>
+                    )}
+                  </div>
+                  <span className="font-mono text-[10px] text-muted uppercase shrink-0">
+                    {item.type || "View"}
+                  </span>
+                </div>
               </div>
-              <div className="pt-2 px-1">
-                <span className="font-mono text-[10px] text-accent block line-clamp-1">
-                  {item.title}
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* =======================================================
+          INTERACTIVE FULLSCREEN LIGHTBOX MODAL
+          Preserves 100% natural shape, aspect ratio, and resolution
+         ======================================================= */}
+      {activeLightbox && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeLightbox.title}
+          onClick={closeLightbox}
+          className="fixed inset-0 bg-canvas/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-200"
+          style={{ zIndex: 2147483647 }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-w-5xl w-full max-h-[92vh] flex flex-col rounded-2xl border border-line bg-card shadow-2xl overflow-hidden"
+          >
+            {/* Modal Header */}
+            <div className="flex h-11 items-center justify-between border-b border-line bg-canvas/90 px-4">
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs font-bold text-fg">
+                  {activeLightbox.title}
                 </span>
-                {item.caption && (
-                  <span className="font-sans text-[11px] text-muted line-clamp-1">
-                    {item.caption}
+                {activeLightbox.type && (
+                  <span className="rounded bg-accent/10 px-2 py-0.5 font-mono text-[10px] text-accent uppercase font-bold">
+                    {activeLightbox.type}
                   </span>
                 )}
               </div>
+              <button
+                type="button"
+                onClick={closeLightbox}
+                className="rounded-lg p-1 text-muted hover:text-fg hover:bg-line/40 transition-colors"
+                aria-label="Close image modal"
+              >
+                <X className="size-5" />
+              </button>
             </div>
-          ))}
+
+            {/* Modal Image Viewport - Full Natural Aspect Ratio with object-contain */}
+            <div className="relative w-full flex-1 min-h-[300px] max-h-[75vh] bg-canvas flex items-center justify-center p-2 sm:p-4">
+              <div
+                className="relative w-full h-full max-h-[70vh]"
+                style={getImageAspectStyle(activeLightbox)}
+              >
+                <Image
+                  src={activeLightbox.src}
+                  alt={activeLightbox.title}
+                  fill
+                  sizes="100vw"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </div>
+
+            {/* Modal Caption Footer */}
+            {activeLightbox.caption && (
+              <div className="border-t border-line bg-card px-4 py-2.5 flex items-center justify-between text-xs text-muted">
+                <span className="font-sans">{activeLightbox.caption}</span>
+                <span className="font-mono text-[10px] text-accent">ESC to close</span>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
