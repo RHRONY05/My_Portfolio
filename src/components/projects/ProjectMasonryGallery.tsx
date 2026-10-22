@@ -9,6 +9,27 @@ interface ProjectMasonryGalleryProps {
   project: Project;
 }
 
+/**
+ * Computes an inline aspectRatio style based on the screenshot's natural dimensions
+ * so the card container exactly matches the image's shape with zero cropping.
+ */
+function getBoxAspectStyle(
+  screenshot?: ProjectScreenshot,
+  fallback = "16 / 9"
+): React.CSSProperties {
+  if (!screenshot) return { aspectRatio: fallback };
+  if (screenshot.aspectRatio) {
+    return { aspectRatio: screenshot.aspectRatio.replace("/", " / ") };
+  }
+  if (screenshot.width && screenshot.height) {
+    return { aspectRatio: `${screenshot.width} / ${screenshot.height}` };
+  }
+  if (screenshot.type === "mobile") {
+    return { aspectRatio: "820 / 1600" };
+  }
+  return { aspectRatio: fallback };
+}
+
 export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
   const [activeLightbox, setActiveLightbox] = useState<ProjectScreenshot | null>(null);
 
@@ -79,26 +100,28 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
     <div className="w-full my-8 sm:my-12">
       {/* 
         ========================================================================
-        PURE IMAGE BENTO / PINTEREST GALLERY
-        Every box is 100% image filled edge-to-edge. No text explanations.
-        Column 1: 6 cols (Top: Wide Image 1 | Bottom: Image 5 + Image 7)
-        Column 2: 3 cols (Top: Wide Image 2 | Bottom: Tall Image 4)
-        Column 3: 3 cols (Top: Tall Mobile Image 3 | Bottom: Wide Image 6)
+        SHAPE-PRESERVING PURE IMAGE GALLERY
+        - Every card container uses the image's exact natural aspect ratio
+        - object-contain ensures 100% of the image is visible with zero cropping
+        - Column 1: Wide 6 cols (Top: Primary Desktop | Bottom: Modal + Article View)
+        - Column 2: 3 cols (Top: Article Page | Bottom: Tall Feedback Form)
+        - Column 3: 3 cols (Top: Tall Mobile Phone UI | Bottom: PageSpeed Score)
         ========================================================================
       */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
         
         {/* =======================================================
             COLUMN 1 (WIDE LEFT: 6 COLS)
-            Top: Primary UI Image 1 (Wide)
-            Bottom: Split Row with Image 5 + Image 7
+            Top: Primary UI Image 1 (Wide Landscape)
+            Bottom: Split Row with Image 5 (Modal) + Image 7 (Article View)
            ======================================================= */}
         <div className="md:col-span-12 lg:col-span-6 flex flex-col gap-5">
-          {/* Box 1 (Wide Landscape) */}
+          {/* Box 1 (Wide Primary Desktop UI) */}
           {img1 && (
             <div
               onClick={() => setActiveLightbox(img1)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)] h-[280px] sm:h-[320px] md:h-[340px] w-full"
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)] w-full"
+              style={getBoxAspectStyle(img1, "1894 / 917")}
             >
               <Image
                 src={img1.src}
@@ -106,45 +129,47 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover object-top w-full h-full transition-transform duration-700 ease-out group-hover:scale-102"
+                className="object-contain w-full h-full transition-transform duration-700 ease-out group-hover:scale-102"
               />
               <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
             </div>
           )}
 
           {/* Bottom Split Row: Box 5 + Box 7 */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
             {/* Box 5 (Square / Modal) */}
             {img5 && (
               <div
                 onClick={() => setActiveLightbox(img5)}
-                className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md h-[210px] sm:h-[220px] w-full ${
+                className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full ${
                   !img7 ? "sm:col-span-2" : ""
                 }`}
+                style={getBoxAspectStyle(img5, "801 / 824")}
               >
                 <Image
                   src={img5.src}
                   alt=""
                   fill
                   sizes="(max-width: 768px) 100vw, 25vw"
-                  className="object-cover object-center w-full h-full transition-transform duration-500 group-hover:scale-103"
+                  className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
                 />
                 <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
               </div>
             )}
 
-            {/* Box 7 (Article View / Wide Reader) */}
+            {/* Box 7 (Article View / Wide Reader Table) */}
             {img7 && (
               <div
                 onClick={() => setActiveLightbox(img7)}
-                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md h-[210px] sm:h-[220px] w-full"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                style={getBoxAspectStyle(img7, "1617 / 908")}
               >
                 <Image
                   src={img7.src}
                   alt=""
                   fill
                   sizes="(max-width: 768px) 100vw, 25vw"
-                  className="object-cover object-top w-full h-full transition-transform duration-500 group-hover:scale-103"
+                  className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
                 />
                 <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
               </div>
@@ -154,39 +179,41 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
 
         {/* =======================================================
             COLUMN 2 (MIDDLE: 3 COLS)
-            Top: Image 2 (Wide Desktop)
-            Bottom: Image 4 (Tall Portrait)
+            Top: Image 2 (Wide Desktop Article Page)
+            Bottom: Image 4 (Tall Portrait Feedback Form)
            ======================================================= */}
         <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-5">
-          {/* Box 2 (Wide Desktop) */}
+          {/* Box 2 (Wide Desktop Article Page) */}
           {img2 && (
             <div
               onClick={() => setActiveLightbox(img2)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md h-[220px] sm:h-[230px] w-full"
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+              style={getBoxAspectStyle(img2, "1708 / 917")}
             >
               <Image
                 src={img2.src}
                 alt=""
                 fill
                 sizes="(max-width: 1024px) 50vw, 25vw"
-                className="object-cover object-top w-full h-full transition-transform duration-500 group-hover:scale-103"
+                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
               />
               <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
             </div>
           )}
 
-          {/* Box 4 (Tall Portrait Form) */}
+          {/* Box 4 (Tall Portrait Feedback Form) */}
           {img4 && (
             <div
               onClick={() => setActiveLightbox(img4)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md h-[310px] sm:h-[330px] w-full"
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+              style={getBoxAspectStyle(img4, "495 / 709")}
             >
               <Image
                 src={img4.src}
                 alt=""
                 fill
                 sizes="(max-width: 1024px) 50vw, 25vw"
-                className="object-cover object-top w-full h-full transition-transform duration-500 group-hover:scale-103"
+                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
               />
               <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
             </div>
@@ -195,39 +222,41 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
 
         {/* =======================================================
             COLUMN 3 (RIGHT: 3 COLS)
-            Top: Image 3 (Tall Mobile View)
-            Bottom: Image 6 (Wide Performance / Feature View)
+            Top: Image 3 (Tall Mobile Native Healthcare UI)
+            Bottom: Image 6 (Wide PageSpeed Insights Score)
            ======================================================= */}
         <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-5">
-          {/* Box 3 (Tall Mobile View) */}
+          {/* Box 3 (Tall Mobile View - Full shape preserved) */}
           {img3 && (
             <div
               onClick={() => setActiveLightbox(img3)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md h-[350px] sm:h-[370px] w-full"
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+              style={getBoxAspectStyle(img3, "820 / 1600")}
             >
               <Image
                 src={img3.src}
                 alt=""
                 fill
                 sizes="(max-width: 1024px) 50vw, 25vw"
-                className="object-cover object-top w-full h-full transition-transform duration-500 group-hover:scale-103"
+                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
               />
               <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
             </div>
           )}
 
-          {/* Box 6 (Wide Performance / Metric Image) */}
+          {/* Box 6 (Wide PageSpeed Performance Gauge) */}
           {img6 && (
             <div
               onClick={() => setActiveLightbox(img6)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md h-[170px] sm:h-[190px] w-full"
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+              style={getBoxAspectStyle(img6, "943 / 517")}
             >
               <Image
                 src={img6.src}
                 alt=""
                 fill
                 sizes="(max-width: 1024px) 50vw, 25vw"
-                className="object-cover object-center w-full h-full transition-transform duration-500 group-hover:scale-103"
+                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
               />
               <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
             </div>
@@ -237,19 +266,20 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
 
       {/* Optional extra images row if project has > 7 screenshots */}
       {extraImages.length > 0 && (
-        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 items-start">
           {extraImages.map((item, idx) => (
             <div
               key={idx}
               onClick={() => setActiveLightbox(item)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md h-[220px] w-full"
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+              style={getBoxAspectStyle(item, "16 / 9")}
             >
               <Image
                 src={item.src}
                 alt=""
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover object-top w-full h-full transition-transform duration-500 group-hover:scale-103"
+                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
               />
               <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
             </div>
@@ -258,48 +288,47 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
       )}
 
       {/* =======================================================
-          INTERACTIVE FULLSCREEN LIGHTBOX MODAL
-          View any screenshot at 100% natural resolution and aspect ratio
+          SHAPE-ADAPTIVE LIGHTBOX MODAL
+          - Adapts width & height to the natural shape of the image
+          - Mobile UI screenshot renders in a sleek mobile portrait frame
+          - Desktop screenshot renders in a wide landscape frame
+          - Guaranteed 100% visible: uses native <img> with max-h/max-w
          ======================================================= */}
       {activeLightbox && (
         <div
           role="dialog"
           aria-modal="true"
           onClick={closeLightbox}
-          className="fixed inset-0 bg-canvas/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-200"
+          className="fixed inset-0 bg-canvas/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
           style={{ zIndex: 2147483647 }}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-5xl w-full max-h-[92vh] flex flex-col rounded-2xl border border-line bg-card shadow-2xl overflow-hidden"
+            className="relative flex flex-col rounded-2xl border border-line bg-card shadow-2xl overflow-hidden max-w-[95vw] max-h-[94vh] w-fit mx-auto"
           >
             {/* Modal Header */}
-            <div className="flex h-11 items-center justify-between border-b border-line bg-canvas/90 px-4">
+            <div className="flex h-10 items-center justify-between border-b border-line bg-canvas/90 px-4 gap-4">
               <span className="font-mono text-xs font-bold text-fg truncate">
-                {activeLightbox.title || "Screenshot View"}
+                {activeLightbox.title || "Screenshot Preview"}
               </span>
               <button
                 type="button"
                 onClick={closeLightbox}
-                className="rounded-lg p-1 text-muted hover:text-fg hover:bg-line/40 transition-colors"
+                className="rounded-lg p-1 text-muted hover:text-fg hover:bg-line/40 transition-colors shrink-0"
                 aria-label="Close image modal"
               >
-                <X className="size-5" />
+                <X className="size-4" />
               </button>
             </div>
 
-            {/* Modal Image Viewport */}
-            <div className="relative w-full flex-1 min-h-[300px] max-h-[80vh] bg-canvas flex items-center justify-center p-2 sm:p-4">
-              <div className="relative w-full h-full max-h-[75vh]">
-                <Image
-                  src={activeLightbox.src}
-                  alt=""
-                  fill
-                  sizes="100vw"
-                  className="object-contain"
-                  priority
-                />
-              </div>
+            {/* Modal Image Viewport - Naturally hugs the image shape */}
+            <div className="relative p-2 sm:p-3 bg-canvas/40 flex items-center justify-center overflow-auto max-h-[85vh]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={activeLightbox.src}
+                alt={activeLightbox.title || "Preview"}
+                className="max-h-[80vh] max-w-[88vw] w-auto h-auto object-contain rounded-xl shadow-lg block mx-auto"
+              />
             </div>
           </div>
         </div>
