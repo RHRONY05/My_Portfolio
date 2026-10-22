@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, ExternalLink, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Code2,
+  ExternalLink,
+} from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
@@ -9,7 +14,7 @@ import {
   getProject,
   getAdjacentProjects,
 } from "@/data/projects";
-import { CaseStudyDossierView } from "./CaseStudyDossierView";
+import { ProjectMasonryGallery } from "@/components/projects/ProjectMasonryGallery";
 
 interface CaseStudyPageProps {
   params: Promise<{ id: string }>;
@@ -27,14 +32,14 @@ export async function generateMetadata({
   const { id } = await params;
   const project = getProject(id);
   if (!project) {
-    return { title: "Case Study Not Found" };
+    return { title: "Project Not Found" };
   }
 
   return {
-    title: `${project.title} // Case Study & Architecture`,
-    description: `${project.tagline}. Architectural dossier and engineering write-up by Muhammad Rony.`,
+    title: `${project.title} // Project Details`,
+    description: `${project.tagline}. Case study and system architecture by Muhammad Rony.`,
     openGraph: {
-      title: `${project.title} // Case Study`,
+      title: `${project.title} // Project Details`,
       description: project.description,
       images: project.image ? [{ url: project.image }] : undefined,
     },
@@ -56,106 +61,55 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-canvas text-fg pt-28 sm:pt-36 lg:pt-40 pb-20 overflow-x-clip">
-        {/* Dynamic theme ambient backdrop glow */}
-        <div
-          aria-hidden
-          className="pointer-events-none fixed top-20 left-1/2 -translate-x-1/2 size-[700px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(var(--color-accent-rgb),0.06)_0%,transparent_70%)]"
-        />
-
+      <main className="min-h-screen bg-canvas text-fg pt-24 sm:pt-28 pb-20 overflow-x-clip">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb Navigation */}
-          <div className="flex items-center gap-2 mb-8">
+          {/* =========================================================
+              TOP HEADER SECTION
+              [<- Back]                           [Role • Timeline]
+             ========================================================= */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-6 border-b border-line/40">
             <Link
               href="/projects"
-              className="group inline-flex items-center gap-1.5 font-mono text-xs text-muted transition-colors hover:text-accent"
+              className="inline-flex items-center gap-2 font-mono text-xs font-bold text-muted hover:text-accent transition-colors group w-fit"
             >
               <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
-              <span>All Projects</span>
+              <span>Back to Projects</span>
             </Link>
-            <span className="font-mono text-xs text-line">/</span>
-            <span className="font-mono text-xs text-muted">{project.category}</span>
-            <span className="font-mono text-xs text-line">/</span>
-            <span className="font-mono text-xs text-accent truncate max-w-[200px] sm:max-w-xs">
-              {project.id}
-            </span>
+
+            <div className="flex items-center gap-2 font-mono text-xs text-muted">
+              <span className="text-fg font-medium">{cs.role}</span>
+              <span className="text-line">•</span>
+              <span>{cs.timeline}</span>
+            </div>
           </div>
 
-          {/* Case Study Header & Title */}
-          <div className="max-w-4xl mb-10 sm:mb-14">
-            <div className="inline-flex items-center gap-2 rounded-full border border-line bg-card/80 px-3.5 py-1 backdrop-blur-md">
+          {/* PROJECT TITLE & INSTANT 2-SENTENCE OVERVIEW */}
+          <div className="py-8 sm:py-10">
+            <div className="inline-flex items-center gap-2 mb-3">
               <span className="size-2 rounded-full bg-accent animate-pulse" />
               <span className="font-mono text-xs font-bold tracking-widest text-accent uppercase">
-                CASE STUDY // {project.category}
+                {project.category}
               </span>
             </div>
 
-            <h1 className="mt-4 font-sans text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-fg leading-tight">
+            <h1 className="font-sans text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-fg leading-tight">
               {project.title}
             </h1>
 
-            <p className="mt-4 text-base sm:text-xl text-accent/90 font-sans font-medium leading-relaxed">
-              {project.tagline}
+            <p className="mt-4 text-base sm:text-lg text-muted max-w-3xl leading-relaxed">
+              {project.description}
             </p>
-          </div>
 
-          {/* XenZolve-Style Case Study Meta Row */}
-          <div className="mb-12 sm:mb-16 grid grid-cols-2 md:grid-cols-4 gap-6 py-6 border-y border-line/60 bg-card/30 rounded-2xl px-6 backdrop-blur-sm">
-            <div>
-              <span className="block font-mono text-[11px] font-bold text-muted uppercase tracking-wider">
-                Context / Domain
-              </span>
-              <span className="mt-1 block font-sans text-sm font-semibold text-fg">
-                {cs.context}
-              </span>
-            </div>
-
-            <div>
-              <span className="block font-mono text-[11px] font-bold text-muted uppercase tracking-wider">
-                My Role
-              </span>
-              <span className="mt-1 block font-sans text-sm font-semibold text-fg">
-                {cs.role}
-              </span>
-            </div>
-
-            <div>
-              <span className="block font-mono text-[11px] font-bold text-muted uppercase tracking-wider">
-                Timeline
-              </span>
-              <span className="mt-1 block font-sans text-sm font-semibold text-fg">
-                {cs.timeline}
-              </span>
-            </div>
-
-            <div>
-              <span className="block font-mono text-[11px] font-bold text-muted uppercase tracking-wider">
-                Core Stack
-              </span>
-              <div className="mt-1 flex flex-wrap gap-1">
-                {project.stack.slice(0, 3).map((s) => (
-                  <span
-                    key={s}
-                    className="rounded border border-line bg-card px-1.5 py-0.5 font-mono text-[10px] text-fg"
-                  >
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Action Row (Live Demo / GitHub) */}
-          {(project.live || project.github) && (
-            <div className="mb-10 flex flex-wrap items-center gap-3">
+            {/* ACTION BUTTONS & STACK PILLS */}
+            <div className="mt-6 flex flex-wrap items-center gap-3 pt-2">
               {project.live && (
                 <a
                   href={project.live}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 font-mono text-xs font-bold text-on-accent transition-all hover:bg-secondary active:scale-95 shadow-md cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-accent px-4 py-2 font-mono text-xs font-bold text-on-accent transition-all hover:bg-secondary active:scale-95 shadow-sm"
                 >
-                  <span>LAUNCH LIVE APPLICATION</span>
+                  <span>Check Live Website</span>
                   <ExternalLink className="size-3.5" />
                 </a>
               )}
@@ -165,21 +119,119 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                   href={project.github}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-line bg-card px-5 py-2.5 font-mono text-xs font-bold text-fg transition-all hover:border-accent hover:text-accent cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-line bg-card/80 px-4 py-2 font-mono text-xs font-bold text-fg transition-all hover:border-accent hover:text-accent"
                 >
-                  <span>INSPECT SOURCE CODE</span>
-                  <ArrowUpRight className="size-3.5" />
+                  <Code2 className="size-3.5 text-accent" />
+                  <span>View Source Code</span>
                 </a>
               )}
-            </div>
-          )}
 
-          {/* Interactive Multi-Chapter Dossier View */}
-          <CaseStudyDossierView
-            project={project}
-            prevProject={prev}
-            nextProject={next}
-          />
+              {/* Stack Pills */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                {project.stack.map((tech) => (
+                  <span
+                    key={tech}
+                    className="rounded-md border border-line bg-card/60 px-2.5 py-1 font-mono text-[11px] text-muted"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* =========================================================
+              PINTEREST MASONRY GALLERY (Immediate Visual Hook)
+             ========================================================= */}
+          <ProjectMasonryGallery project={project} />
+
+          {/* =========================================================
+              01. THE PROBLEM SOLVED  |  02. THE ENGINEERED SOLUTION
+             ========================================================= */}
+          <section className="my-12 sm:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 pt-8 border-t border-line/50">
+            {/* Left Column: 01. THE PROBLEM SOLVED */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 font-mono text-xs font-bold tracking-widest text-accent uppercase mb-3">
+                <span>01.</span>
+                <span>THE PROBLEM SOLVED</span>
+              </div>
+              <h2 className="font-sans text-2xl sm:text-3xl font-black text-fg mb-3">
+                Why this needed to exist
+              </h2>
+              <p className="text-sm sm:text-base text-muted leading-relaxed font-sans mb-6">
+                {cs.challenge.summary}
+              </p>
+
+              {/* 3 Bullet Points */}
+              <div className="space-y-3 mt-auto">
+                {cs.challenge.points.slice(0, 3).map((pt, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-3 rounded-xl border border-line bg-card/50 p-4"
+                  >
+                    <span className="mt-1 size-1.5 rounded-full bg-accent shrink-0" />
+                    <span className="text-xs sm:text-sm text-fg/90 leading-relaxed">
+                      {pt}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column: 02. THE ENGINEERED SOLUTION */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 font-mono text-xs font-bold tracking-widest text-accent uppercase mb-3">
+                <span>02.</span>
+                <span>THE ENGINEERED SOLUTION</span>
+              </div>
+              <h2 className="font-sans text-2xl sm:text-3xl font-black text-fg mb-3">
+                How it was architected
+              </h2>
+              <p className="text-sm sm:text-base text-muted leading-relaxed font-sans mb-6">
+                {cs.solution.summary}
+              </p>
+
+              {/* 3 Key Architecture Cards */}
+              <div className="space-y-3 mt-auto">
+                {cs.solution.architecturePoints.slice(0, 3).map((arch, i) => (
+                  <div
+                    key={i}
+                    className="rounded-xl border border-line bg-card/60 p-4 transition-all hover:border-accent/60"
+                  >
+                    <div className="flex items-center gap-2 font-mono text-xs font-bold text-accent">
+                      <span>0{i + 1} //</span>
+                      <span>{arch.title}</span>
+                    </div>
+                    <p className="mt-1.5 text-xs sm:text-sm text-muted leading-relaxed">
+                      {arch.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* =========================================================
+              BOTTOM NAVIGATION
+              [<- Prev Project]                      [Next Project ->]
+             ========================================================= */}
+          <div className="flex items-center justify-between gap-4 pt-8 mt-12 sm:mt-16 border-t border-line/60">
+            <Link
+              href={`/projects/${prev.id}`}
+              className="group inline-flex items-center gap-2 font-mono text-xs font-bold text-muted hover:text-accent transition-colors max-w-[45%]"
+            >
+              <ArrowLeft className="size-4 shrink-0 transition-transform group-hover:-translate-x-1" />
+              <span className="truncate">PREV: {prev.title}</span>
+            </Link>
+
+            <Link
+              href={`/projects/${next.id}`}
+              className="group inline-flex items-center gap-2 font-mono text-xs font-bold text-muted hover:text-accent transition-colors max-w-[45%] text-right ml-auto"
+            >
+              <span className="truncate">NEXT: {next.title}</span>
+              <ArrowRight className="size-4 shrink-0 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
       </main>
 
