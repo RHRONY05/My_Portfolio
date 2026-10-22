@@ -26,6 +26,16 @@ export type ProjectCaseStudy = {
   keyHighlights: readonly string[];
 };
 
+export type GallerySlot =
+  | "col1-top"
+  | "col1-bottom"
+  | "col1-bottom-left"
+  | "col1-bottom-right"
+  | "col2-top"
+  | "col2-bottom"
+  | "col3-top"
+  | "col3-bottom";
+
 export type ProjectScreenshot = {
   title: string;
   src: string;
@@ -34,6 +44,7 @@ export type ProjectScreenshot = {
   aspectRatio?: string;
   width?: number;
   height?: number;
+  slot?: GallerySlot;
 };
 
 export type Project = {
@@ -180,6 +191,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "1894/917",
         width: 1894,
         height: 917,
+        slot: "col1-top",
       },
       {
         title: "Medical Knowledge & Article Directory",
@@ -188,6 +200,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "1708/917",
         width: 1708,
         height: 917,
+        slot: "col2-top",
       },
       {
         title: "Mobile Native Healthcare Platform",
@@ -196,6 +209,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "820/1600",
         width: 820,
         height: 1600,
+        slot: "col3-top",
       },
       {
         title: "Partner Intake & Feedback Flow",
@@ -204,6 +218,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "495/709",
         width: 495,
         height: 709,
+        slot: "col2-bottom",
       },
       {
         title: "Instant Action & Consultation Drawer",
@@ -212,6 +227,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "801/824",
         width: 801,
         height: 824,
+        slot: "col1-bottom-left",
       },
       {
         title: "Google PageSpeed Core Web Vitals",
@@ -220,6 +236,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "943/517",
         width: 943,
         height: 517,
+        slot: "col3-bottom",
       },
       {
         title: "Reading View & Normalized Typography",
@@ -228,6 +245,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "1617/908",
         width: 1617,
         height: 908,
+        slot: "col1-bottom-right",
       },
     ],
     status: "live",
@@ -378,6 +396,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "1887/915",
         width: 1887,
         height: 915,
+        slot: "col1-top",
       },
       {
         title: "Interactive Product Showcase Carousel",
@@ -386,6 +405,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "1837/796",
         width: 1837,
         height: 796,
+        slot: "col1-bottom",
       },
       {
         title: "All Products Directory",
@@ -394,6 +414,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "1182/890",
         width: 1182,
         height: 890,
+        slot: "col2-top",
       },
       {
         title: "Secure Account Access & Inquiry",
@@ -402,6 +423,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "613/698",
         width: 613,
         height: 698,
+        slot: "col2-bottom",
       },
       {
         title: "Enterprise Footer & Global Contact",
@@ -410,6 +432,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "1885/661",
         width: 1885,
         height: 661,
+        slot: "col3-top",
       },
     ],
     status: "live",
