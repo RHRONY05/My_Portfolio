@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { X } from "lucide-react";
-import type { Project, ProjectScreenshot, GallerySlot } from "@/data/projects";
+import type { Project, ProjectScreenshot, GallerySlot, GalleryColumn } from "@/data/projects";
 
 interface ProjectMasonryGalleryProps {
   project: Project;
@@ -31,6 +31,40 @@ function getBoxAspectStyle(
   return { aspectRatio: fallback };
 }
 
+function GalleryItemCard({
+  item,
+  onClick,
+  sizes,
+  priority = false,
+  fallbackAspect = "16 / 9",
+  className = "",
+}: {
+  item: ProjectScreenshot;
+  onClick: () => void;
+  sizes: string;
+  priority?: boolean;
+  fallbackAspect?: string;
+  className?: string;
+}) {
+  return (
+    <div
+      onClick={onClick}
+      className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)] w-full ${className}`}
+      style={getBoxAspectStyle(item, fallbackAspect)}
+    >
+      <Image
+        src={item.src}
+        alt=""
+        fill
+        priority={priority}
+        sizes={sizes}
+        className="object-contain w-full h-full transition-transform duration-700 ease-out group-hover:scale-102"
+      />
+      <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+    </div>
+  );
+}
+
 export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
   const [activeLightbox, setActiveLightbox] = useState<ProjectScreenshot | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -43,10 +77,17 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
   if (gallery.length === 0) return null;
 
   // --------------------------------------------------------------------------
-  // SLOT RESOLUTION:
-  // 1. First, check if the project has explicit `slot` assignments.
-  // 2. If slots are not explicitly assigned, fall back to smart auto-matching.
+  // LAYOUT RESOLUTION:
+  // 1. If project has explicit `column` assignments ("left" | "middle" | "right"),
+  //    render the direct 3-column custom layout (e.g. Vocab App, Movie Booking).
+  // 2. Otherwise, check for `slot` assignments or fall back to smart auto-matching.
   // --------------------------------------------------------------------------
+  const hasColumnAssignments = gallery.some((g) => g.column);
+  const leftImages = gallery.filter((g) => g.column === "left");
+  const middleImages = gallery.filter((g) => g.column === "middle");
+  const rightImages = gallery.filter((g) => g.column === "right");
+  const unassignedColImages = gallery.filter((g) => !g.column);
+
   const hasExplicitSlots = gallery.some((g) => g.slot);
 
   let imgCol1Top: ProjectScreenshot | undefined;
@@ -59,70 +100,72 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
   let imgCol3Bottom: ProjectScreenshot | undefined;
   let extraImages: ProjectScreenshot[] = [];
 
-  if (hasExplicitSlots) {
-    imgCol1Top = gallery.find((g) => g.slot === "col1-top");
-    imgCol1BottomWide = gallery.find((g) => g.slot === "col1-bottom");
-    imgCol1BottomLeft = gallery.find((g) => g.slot === "col1-bottom-left");
-    imgCol1BottomRight = gallery.find((g) => g.slot === "col1-bottom-right");
-    imgCol2Top = gallery.find((g) => g.slot === "col2-top");
-    imgCol2Bottom = gallery.find((g) => g.slot === "col2-bottom");
-    imgCol3Top = gallery.find((g) => g.slot === "col3-top");
-    imgCol3Bottom = gallery.find((g) => g.slot === "col3-bottom");
+  if (!hasColumnAssignments) {
+    if (hasExplicitSlots) {
+      imgCol1Top = gallery.find((g) => g.slot === "col1-top");
+      imgCol1BottomWide = gallery.find((g) => g.slot === "col1-bottom");
+      imgCol1BottomLeft = gallery.find((g) => g.slot === "col1-bottom-left");
+      imgCol1BottomRight = gallery.find((g) => g.slot === "col1-bottom-right");
+      imgCol2Top = gallery.find((g) => g.slot === "col2-top");
+      imgCol2Bottom = gallery.find((g) => g.slot === "col2-bottom");
+      imgCol3Top = gallery.find((g) => g.slot === "col3-top");
+      imgCol3Bottom = gallery.find((g) => g.slot === "col3-bottom");
 
-    // Any items without an assigned slot go to extraImages
-    const assignedSrcs = new Set(
-      [
-        imgCol1Top,
-        imgCol1BottomWide,
-        imgCol1BottomLeft,
-        imgCol1BottomRight,
-        imgCol2Top,
-        imgCol2Bottom,
-        imgCol3Top,
-        imgCol3Bottom,
-      ]
-        .filter(Boolean)
-        .map((g) => g!.src)
-    );
-    extraImages = gallery.filter((g) => !assignedSrcs.has(g.src));
-  } else {
-    // Smart auto-distribution
-    const assigned = new Set<string>();
+      // Any items without an assigned slot go to extraImages
+      const assignedSrcs = new Set(
+        [
+          imgCol1Top,
+          imgCol1BottomWide,
+          imgCol1BottomLeft,
+          imgCol1BottomRight,
+          imgCol2Top,
+          imgCol2Bottom,
+          imgCol3Top,
+          imgCol3Bottom,
+        ]
+          .filter(Boolean)
+          .map((g) => g!.src)
+      );
+      extraImages = gallery.filter((g) => !assignedSrcs.has(g.src));
+    } else {
+      // Smart auto-distribution
+      const assigned = new Set<string>();
 
-    imgCol1Top =
-      gallery.find((g) => g.src.includes("desktop") || g.src.includes("landing")) || gallery[0];
-    if (imgCol1Top) assigned.add(imgCol1Top.src);
+      imgCol1Top =
+        gallery.find((g) => g.src.includes("desktop") || g.src.includes("landing")) || gallery[0];
+      if (imgCol1Top) assigned.add(imgCol1Top.src);
 
-    const img3Mobile = gallery.find((g) => g.type === "mobile" && !assigned.has(g.src));
-    if (img3Mobile) assigned.add(img3Mobile.src);
+      const img3Mobile = gallery.find((g) => g.type === "mobile" && !assigned.has(g.src));
+      if (img3Mobile) assigned.add(img3Mobile.src);
 
-    const img5Modal = gallery.find(
-      (g) =>
-        !assigned.has(g.src) &&
-        (g.src.includes("modal") ||
-          g.src.includes("auth") ||
-          (g.width && g.height && Math.abs(g.width / g.height - 1) < 0.25))
-    );
-    if (img5Modal) assigned.add(img5Modal.src);
+      const img5Modal = gallery.find(
+        (g) =>
+          !assigned.has(g.src) &&
+          (g.src.includes("modal") ||
+            g.src.includes("auth") ||
+            (g.width && g.height && Math.abs(g.width / g.height - 1) < 0.25))
+      );
+      if (img5Modal) assigned.add(img5Modal.src);
 
-    const img4Tall = gallery.find(
-      (g) =>
-        !assigned.has(g.src) &&
-        (g.src.includes("form") ||
-          g.src.includes("feedback") ||
-          (g.height && g.width && g.height > g.width))
-    );
-    if (img4Tall) assigned.add(img4Tall.src);
+      const img4Tall = gallery.find(
+        (g) =>
+          !assigned.has(g.src) &&
+          (g.src.includes("form") ||
+            g.src.includes("feedback") ||
+            (g.height && g.width && g.height > g.width))
+      );
+      if (img4Tall) assigned.add(img4Tall.src);
 
-    const pool = gallery.filter((g) => !assigned.has(g.src));
+      const pool = gallery.filter((g) => !assigned.has(g.src));
 
-    imgCol2Top = pool.shift();
-    imgCol3Top = img3Mobile || pool.shift();
-    imgCol2Bottom = img4Tall || pool.shift();
-    imgCol1BottomLeft = img5Modal || pool.shift();
-    imgCol3Bottom = pool.shift();
-    imgCol1BottomRight = pool.shift();
-    extraImages = pool;
+      imgCol2Top = pool.shift();
+      imgCol3Top = img3Mobile || pool.shift();
+      imgCol2Bottom = img4Tall || pool.shift();
+      imgCol1BottomLeft = img5Modal || pool.shift();
+      imgCol3Bottom = pool.shift();
+      imgCol1BottomRight = pool.shift();
+      extraImages = pool;
+    }
   }
 
   // Keyboard navigation for lightbox modal
@@ -152,195 +195,235 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
         - Column 3: 3 cols (Top: Box 3 | Bottom: Box 6)
         ========================================================================
       */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
-        
-        {/* =======================================================
-            COLUMN 1 (WIDE LEFT: 6 COLS)
-            Top: Primary UI (Wide Landscape)
-            Bottom: Either Wide Banner (e.g. Carousel) OR Split Left/Right
-           ======================================================= */}
-        <div className="md:col-span-12 lg:col-span-6 flex flex-col gap-5">
-          {/* Col 1 Top Box */}
-          {imgCol1Top && (
-            <div
-              onClick={() => setActiveLightbox(imgCol1Top)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)] w-full"
-              style={getBoxAspectStyle(imgCol1Top, "1894 / 917")}
-            >
-              <Image
-                src={imgCol1Top.src}
-                alt=""
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-contain w-full h-full transition-transform duration-700 ease-out group-hover:scale-102"
-              />
-              <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+      {hasColumnAssignments ? (
+        /* 
+          ========================================================================
+          CUSTOM 3-COLUMN MASONRY GALLERY (User explicit column placement)
+          - Left Column: md:col-span-12 lg:col-span-6
+          - Middle Column: md:col-span-6 lg:col-span-3
+          - Right Column: md:col-span-6 lg:col-span-3
+          All boxes preserve natural image aspect ratio with zero pixel cropping.
+          ========================================================================
+        */
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+          {/* Column 1 (Left Side: 6 Cols on Desktop) */}
+          {leftImages.length > 0 && (
+            <div className="md:col-span-12 lg:col-span-6 flex flex-col gap-5">
+              {leftImages.map((item, idx) => (
+                <GalleryItemCard
+                  key={item.src}
+                  item={item}
+                  onClick={() => setActiveLightbox(item)}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority={idx === 0}
+                />
+              ))}
             </div>
           )}
 
-          {/* Col 1 Bottom Wide Box (e.g. Calowry Product Carousel) */}
-          {imgCol1BottomWide && (
-            <div
-              onClick={() => setActiveLightbox(imgCol1BottomWide)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)] w-full"
-              style={getBoxAspectStyle(imgCol1BottomWide, "1837 / 796")}
-            >
-              <Image
-                src={imgCol1BottomWide.src}
-                alt=""
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-contain w-full h-full transition-transform duration-700 ease-out group-hover:scale-102"
-              />
-              <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+          {/* Column 2 (Middle Side: 3 Cols on Desktop) */}
+          {middleImages.length > 0 && (
+            <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-5">
+              {middleImages.map((item) => (
+                <GalleryItemCard
+                  key={item.src}
+                  item={item}
+                  onClick={() => setActiveLightbox(item)}
+                  sizes="(max-width: 1024px) 50vw, 25vw"
+                />
+              ))}
             </div>
           )}
 
-          {/* Col 1 Bottom Split Row (when project has two smaller items like SabaiHealth or CineReserve) */}
-          {(imgCol1BottomLeft || imgCol1BottomRight) && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
-              {imgCol1BottomLeft && (
-                <div
-                  onClick={() => setActiveLightbox(imgCol1BottomLeft)}
-                  className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full ${
-                    !imgCol1BottomRight ? "sm:col-span-2" : ""
-                  }`}
-                  style={getBoxAspectStyle(imgCol1BottomLeft, "1 / 1")}
-                >
-                  <Image
-                    src={imgCol1BottomLeft.src}
-                    alt=""
-                    fill
-                    sizes="(max-width: 768px) 100vw, 25vw"
-                    className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
-                  />
-                  <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
-                </div>
-              )}
-
-              {imgCol1BottomRight && (
-                <div
-                  onClick={() => setActiveLightbox(imgCol1BottomRight)}
-                  className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
-                  style={getBoxAspectStyle(imgCol1BottomRight, "16 / 9")}
-                >
-                  <Image
-                    src={imgCol1BottomRight.src}
-                    alt=""
-                    fill
-                    sizes="(max-width: 768px) 100vw, 25vw"
-                    className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
-                  />
-                  <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
-                </div>
-              )}
+          {/* Column 3 (Right Side: 3 Cols on Desktop) */}
+          {rightImages.length > 0 && (
+            <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-5">
+              {rightImages.map((item) => (
+                <GalleryItemCard
+                  key={item.src}
+                  item={item}
+                  onClick={() => setActiveLightbox(item)}
+                  sizes="(max-width: 1024px) 50vw, 25vw"
+                />
+              ))}
             </div>
           )}
         </div>
+      ) : (
+        /* 
+          ========================================================================
+          SLOT / SMART AUTO-DISTRIBUTION BENTO GALLERY
+          ========================================================================
+        */
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+          
+          {/* COLUMN 1 (WIDE LEFT: 6 COLS) */}
+          <div className="md:col-span-12 lg:col-span-6 flex flex-col gap-5">
+            {/* Col 1 Top Box */}
+            {imgCol1Top && (
+              <div
+                onClick={() => setActiveLightbox(imgCol1Top)}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)] w-full"
+                style={getBoxAspectStyle(imgCol1Top, "1894 / 917")}
+              >
+                <Image
+                  src={imgCol1Top.src}
+                  alt=""
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-contain w-full h-full transition-transform duration-700 ease-out group-hover:scale-102"
+                />
+                <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+              </div>
+            )}
 
-        {/* =======================================================
-            COLUMN 2 (MIDDLE: 3 COLS)
-            Top: Image 2
-            Bottom: Image 4
-           ======================================================= */}
-        <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-5">
-          {imgCol2Top && (
-            <div
-              onClick={() => setActiveLightbox(imgCol2Top)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
-              style={getBoxAspectStyle(imgCol2Top, "16 / 9")}
-            >
-              <Image
-                src={imgCol2Top.src}
-                alt=""
-                fill
-                sizes="(max-width: 1024px) 50vw, 25vw"
-                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
-              />
-              <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
-            </div>
-          )}
+            {/* Col 1 Bottom Wide Box (e.g. Calowry Product Carousel) */}
+            {imgCol1BottomWide && (
+              <div
+                onClick={() => setActiveLightbox(imgCol1BottomWide)}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)] w-full"
+                style={getBoxAspectStyle(imgCol1BottomWide, "1837 / 796")}
+              >
+                <Image
+                  src={imgCol1BottomWide.src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-contain w-full h-full transition-transform duration-700 ease-out group-hover:scale-102"
+                />
+                <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+              </div>
+            )}
 
-          {imgCol2Bottom && (
-            <div
-              onClick={() => setActiveLightbox(imgCol2Bottom)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
-              style={getBoxAspectStyle(imgCol2Bottom, "495 / 709")}
-            >
-              <Image
-                src={imgCol2Bottom.src}
-                alt=""
-                fill
-                sizes="(max-width: 1024px) 50vw, 25vw"
-                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
-              />
-              <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
-            </div>
-          )}
+            {/* Col 1 Bottom Split Row (when project has two smaller items like SabaiHealth or CineReserve) */}
+            {(imgCol1BottomLeft || imgCol1BottomRight) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
+                {imgCol1BottomLeft && (
+                  <div
+                    onClick={() => setActiveLightbox(imgCol1BottomLeft)}
+                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full ${
+                      !imgCol1BottomRight ? "sm:col-span-2" : ""
+                    }`}
+                    style={getBoxAspectStyle(imgCol1BottomLeft, "1 / 1")}
+                  >
+                    <Image
+                      src={imgCol1BottomLeft.src}
+                      alt=""
+                      fill
+                      sizes="(max-width: 768px) 100vw, 25vw"
+                      className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
+                    />
+                    <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+                  </div>
+                )}
+
+                {imgCol1BottomRight && (
+                  <div
+                    onClick={() => setActiveLightbox(imgCol1BottomRight)}
+                    className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                    style={getBoxAspectStyle(imgCol1BottomRight, "16 / 9")}
+                  >
+                    <Image
+                      src={imgCol1BottomRight.src}
+                      alt=""
+                      fill
+                      sizes="(max-width: 768px) 100vw, 25vw"
+                      className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
+                    />
+                    <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* COLUMN 2 (MIDDLE: 3 COLS) */}
+          <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-5">
+            {imgCol2Top && (
+              <div
+                onClick={() => setActiveLightbox(imgCol2Top)}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                style={getBoxAspectStyle(imgCol2Top, "16 / 9")}
+              >
+                <Image
+                  src={imgCol2Top.src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1024px) 50vw, 25vw"
+                  className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
+                />
+                <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+              </div>
+            )}
+
+            {imgCol2Bottom && (
+              <div
+                onClick={() => setActiveLightbox(imgCol2Bottom)}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                style={getBoxAspectStyle(imgCol2Bottom, "495 / 709")}
+              >
+                <Image
+                  src={imgCol2Bottom.src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1024px) 50vw, 25vw"
+                  className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
+                />
+                <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+              </div>
+            )}
+          </div>
+
+          {/* COLUMN 3 (RIGHT: 3 COLS) */}
+          <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-5">
+            {imgCol3Top && (
+              <div
+                onClick={() => setActiveLightbox(imgCol3Top)}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                style={getBoxAspectStyle(imgCol3Top, "820 / 1600")}
+              >
+                <Image
+                  src={imgCol3Top.src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1024px) 50vw, 25vw"
+                  className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
+                />
+                <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+              </div>
+            )}
+
+            {imgCol3Bottom && (
+              <div
+                onClick={() => setActiveLightbox(imgCol3Bottom)}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                style={getBoxAspectStyle(imgCol3Bottom, "16 / 9")}
+              >
+                <Image
+                  src={imgCol3Bottom.src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1024px) 50vw, 25vw"
+                  className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
+                />
+                <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* =======================================================
-            COLUMN 3 (RIGHT: 3 COLS)
-            Top: Image 3
-            Bottom: Image 6
-           ======================================================= */}
-        <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-5">
-          {imgCol3Top && (
-            <div
-              onClick={() => setActiveLightbox(imgCol3Top)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
-              style={getBoxAspectStyle(imgCol3Top, "820 / 1600")}
-            >
-              <Image
-                src={imgCol3Top.src}
-                alt=""
-                fill
-                sizes="(max-width: 1024px) 50vw, 25vw"
-                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
-              />
-              <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
-            </div>
-          )}
-
-          {imgCol3Bottom && (
-            <div
-              onClick={() => setActiveLightbox(imgCol3Bottom)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
-              style={getBoxAspectStyle(imgCol3Bottom, "16 / 9")}
-            >
-              <Image
-                src={imgCol3Bottom.src}
-                alt=""
-                fill
-                sizes="(max-width: 1024px) 50vw, 25vw"
-                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
-              />
-              <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
-            </div>
-          )}
-        </div>
-      </div>
+      )}
 
       {/* Optional extra images row if project has additional screenshots */}
-      {extraImages.length > 0 && (
+      {(hasColumnAssignments ? unassignedColImages : extraImages).length > 0 && (
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 items-start">
-          {extraImages.map((item, idx) => (
-            <div
-              key={idx}
+          {(hasColumnAssignments ? unassignedColImages : extraImages).map((item, idx) => (
+            <GalleryItemCard
+              key={item.src || idx}
+              item={item}
               onClick={() => setActiveLightbox(item)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
-              style={getBoxAspectStyle(item, "16 / 9")}
-            >
-              <Image
-                src={item.src}
-                alt=""
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-102"
-              />
-              <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
-            </div>
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
           ))}
         </div>
       )}

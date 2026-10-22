@@ -36,6 +36,8 @@ export type GallerySlot =
   | "col3-top"
   | "col3-bottom";
 
+export type GalleryColumn = "left" | "middle" | "right";
+
 export type ProjectScreenshot = {
   title: string;
   src: string;
@@ -45,6 +47,7 @@ export type ProjectScreenshot = {
   width?: number;
   height?: number;
   slot?: GallerySlot;
+  column?: GalleryColumn;
 };
 
 export type Project = {
@@ -369,25 +372,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "1906/914",
         width: 1906,
         height: 914,
-        slot: "col1-top",
-      },
-      {
-        title: "User Authentication & OAuth",
-        src: "/images/projects/movie-booking/auth.webp",
-        type: "feature",
-        aspectRatio: "705/565",
-        width: 705,
-        height: 565,
-        slot: "col1-bottom-left",
-      },
-      {
-        title: "Two-Factor OTP Verification",
-        src: "/images/projects/movie-booking/otp_verification.webp",
-        type: "feature",
-        aspectRatio: "721/693",
-        width: 721,
-        height: 693,
-        slot: "col1-bottom-right",
+        column: "left",
       },
       {
         title: "Now Showing & Upcoming Cinema Schedule",
@@ -396,7 +381,25 @@ export const projects: readonly Project[] = [
         aspectRatio: "1256/833",
         width: 1256,
         height: 833,
-        slot: "col2-top",
+        column: "left",
+      },
+      {
+        title: "Two-Factor OTP Verification",
+        src: "/images/projects/movie-booking/otp_verification.webp",
+        type: "feature",
+        aspectRatio: "721/693",
+        width: 721,
+        height: 693,
+        column: "middle",
+      },
+      {
+        title: "User Authentication & OAuth",
+        src: "/images/projects/movie-booking/auth.webp",
+        type: "feature",
+        aspectRatio: "705/565",
+        width: 705,
+        height: 565,
+        column: "middle",
       },
       {
         title: "Interactive Hall Spatial Matrix & Seat Booking",
@@ -405,7 +408,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "989/785",
         width: 989,
         height: 785,
-        slot: "col3-top",
+        column: "right",
       },
     ],
     status: "live",
@@ -604,7 +607,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "1896/915",
         width: 1896,
         height: 915,
-        slot: "col1-top",
+        column: "left",
       },
       {
         title: "Spaced Repetition Mastery Dashboard",
@@ -613,25 +616,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "1847/836",
         width: 1847,
         height: 836,
-        slot: "col1-bottom",
-      },
-      {
-        title: "Leitner 5-Box Daily Review Flashcard",
-        src: "/images/projects/vocab-app/review.webp",
-        type: "feature",
-        aspectRatio: "852/757",
-        width: 852,
-        height: 757,
-        slot: "col2-top",
-      },
-      {
-        title: "Sentence Tester & Active Recall Quiz",
-        src: "/images/projects/vocab-app/quiz.webp",
-        type: "feature",
-        aspectRatio: "897/698",
-        width: 897,
-        height: 698,
-        slot: "col2-bottom",
+        column: "left",
       },
       {
         title: "Mobile Native Active Study View",
@@ -640,7 +625,7 @@ export const projects: readonly Project[] = [
         aspectRatio: "761/1600",
         width: 761,
         height: 1600,
-        slot: "col3-top",
+        column: "middle",
       },
       {
         title: "User Authentication & Sync Access",
@@ -649,7 +634,25 @@ export const projects: readonly Project[] = [
         aspectRatio: "388/588",
         width: 388,
         height: 588,
-        slot: "col3-bottom",
+        column: "right",
+      },
+      {
+        title: "Leitner 5-Box Daily Review Flashcard",
+        src: "/images/projects/vocab-app/review.webp",
+        type: "feature",
+        aspectRatio: "852/757",
+        width: 852,
+        height: 757,
+        column: "right",
+      },
+      {
+        title: "Sentence Tester & Active Recall Quiz",
+        src: "/images/projects/vocab-app/quiz.webp",
+        type: "feature",
+        aspectRatio: "897/698",
+        width: 897,
+        height: 698,
+        column: "right",
       },
     ],
     status: "live",
