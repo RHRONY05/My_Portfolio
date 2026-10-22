@@ -36,49 +36,61 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
   const gallery = project.gallery || [];
   if (gallery.length === 0) return null;
 
-  // Separate mobile screenshot from desktop/feature screenshots
-  const mobileScreenshot = gallery.find((g) => g.type === "mobile");
-  const otherScreenshots = gallery.filter((g) => g !== mobileScreenshot);
+  // Track assigned images with a Set to ensure 100% deduplication across slots
+  const assigned = new Set<string>();
 
-  // Map 7 primary slots cleanly
+  // Slot 1: Primary wide desktop hero image
   const img1 =
-    otherScreenshots.find((g) => g.src.includes("desktop") || g.src.includes("landing")) ||
-    otherScreenshots[0];
-  const remainingAfterImg1 = otherScreenshots.filter((g) => g !== img1);
+    gallery.find((g) => g.src.includes("desktop") || g.src.includes("landing")) || gallery[0];
+  if (img1) assigned.add(img1.src);
 
-  const img2 = remainingAfterImg1[0];
+  // Slot 3: Dedicated mobile screenshot if available
+  const img3Mobile = gallery.find((g) => g.type === "mobile" && !assigned.has(g.src));
+  if (img3Mobile) assigned.add(img3Mobile.src);
 
-  const img3 = mobileScreenshot || remainingAfterImg1[1];
-
-  const img4 =
-    remainingAfterImg1.find(
-      (g) =>
-        g !== img2 &&
-        (g.src.includes("feedback") ||
-          g.src.includes("form") ||
-          (g.height && g.width && g.height > g.width))
-    ) || remainingAfterImg1[1];
-
-  const remainingAfterImg4 = remainingAfterImg1.filter(
-    (g) => g !== img2 && g !== img4 && g !== img3
+  // Slot 5: Square or modal/auth screenshot if available
+  const img5Modal = gallery.find(
+    (g) =>
+      !assigned.has(g.src) &&
+      (g.src.includes("modal") ||
+        g.src.includes("auth") ||
+        (g.width && g.height && Math.abs(g.width / g.height - 1) < 0.25))
   );
+  if (img5Modal) assigned.add(img5Modal.src);
 
-  const img5 =
-    remainingAfterImg4.find(
-      (g) => g.src.includes("modal") || g.src.includes("action")
-    ) || remainingAfterImg4[0];
+  // Slot 4: Tall portrait / form screenshot if available
+  const img4Tall = gallery.find(
+    (g) =>
+      !assigned.has(g.src) &&
+      (g.src.includes("form") ||
+        g.src.includes("feedback") ||
+        (g.height && g.width && g.height > g.width))
+  );
+  if (img4Tall) assigned.add(img4Tall.src);
 
-  const remainingAfterImg5 = remainingAfterImg4.filter((g) => g !== img5);
+  // Pool of remaining unassigned screenshots
+  const pool = gallery.filter((g) => !assigned.has(g.src));
 
-  const img6 =
-    remainingAfterImg5.find(
-      (g) => g.src.includes("pagespeed") || g.src.includes("audit")
-    ) || remainingAfterImg5[0];
+  // Slot 2: (Column 2 top)
+  const img2 = pool.shift();
 
-  const remainingAfterImg6 = remainingAfterImg5.filter((g) => g !== img6);
+  // Slot 3: Mobile screenshot or next available from pool
+  const img3 = img3Mobile || pool.shift();
 
-  const img7 = remainingAfterImg6[0];
-  const extraImages = remainingAfterImg6.slice(1);
+  // Slot 4: Tall screenshot or next available from pool
+  const img4 = img4Tall || pool.shift();
+
+  // Slot 5: Modal/square screenshot or next available from pool
+  const img5 = img5Modal || pool.shift();
+
+  // Slot 6: (Column 3 bottom)
+  const img6 = pool.shift();
+
+  // Slot 7: (Column 1 bottom-right)
+  const img7 = pool.shift();
+
+  // Extra images beyond slot 7
+  const extraImages = pool;
 
   // Keyboard navigation for lightbox modal
   const closeLightbox = useCallback(() => setActiveLightbox(null), []);
