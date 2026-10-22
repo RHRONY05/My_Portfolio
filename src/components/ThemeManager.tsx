@@ -30,8 +30,8 @@ export function ThemeManager() {
         }
       }
 
-      // Only mutate document styles if custom theme is chosen (default is already styled in CSS)
-      if (activeTheme && activeTheme.id !== APPROVED_THEMES[0].id) {
+      // Apply active theme to document (syncs CSS vars and color-scheme)
+      if (activeTheme) {
         applyThemeToDocument(activeTheme);
       }
 
@@ -39,8 +39,8 @@ export function ThemeManager() {
       const savedFontId = localStorage.getItem("rony_font_id");
       const activeFont = APPROVED_FONTS.find((f) => f.id === savedFontId);
 
-      // Only mutate document styles if custom font is chosen (default is already styled in CSS)
-      if (activeFont && activeFont.id !== APPROVED_FONTS[0].id) {
+      // Apply active font to document
+      if (activeFont) {
         applyFontToDocument(activeFont);
       }
 

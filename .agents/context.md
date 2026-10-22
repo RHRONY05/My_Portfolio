@@ -53,12 +53,12 @@
 * **Circuits**: Symmetrical 3-way circuit forks feeding 6 skill realms (Frontend, Backend, AI & Agents, Database, DevOps, Tools).
 * **WebGL Deduplication**: Viewport check (`isDesktop`) ensures exactly one WebGL context mounts between desktop and mobile layouts.
 
-### Section 04: Projects — "Interactive Project Deck & Browser Viewports"
-* **Main Container**: `src/components/projects/ProjectDeck.tsx`
-* **Display Format**: Circular card deck carousel with keyboard navigation (`←` / `→`) and touch swipe gestures.
-* **Card Shelf**: Resting bottom shelf housing metadata, category badges, stack pills, and direct action buttons (`[ 👁 VIEW DETAILS ]` and `[ ↗ LIVE DEMO ]`).
-* **Case Study Viewport**: `ProjectModal.tsx` — Scrollable browser mockup viewport with macOS-style window chrome, sticky exploration badge, and full feature breakdowns.
-* **Data Source**: `src/data/projects.ts` (8 production projects).
+### Section 04: Projects — "Architectural Grid & Multi-Chapter Case Study Dossiers"
+* **Main Container**: `src/components/projects/ProjectsSection.tsx` & `src/components/projects/ProjectCard.tsx`
+* **Display Format**: Asymmetrical 12-column editorial grid (alternating 7/5 and 5/7 spans) showcasing 4 featured flagship systems on the homepage.
+* **Dedicated Catalog Page**: `/projects` (`src/app/projects/page.tsx` and `ProjectsDirectoryClient.tsx`) with category filter chips (All, AI & Agents, Full Stack, Frontend) and live count badges.
+* **Dedicated Case Study Dossiers**: `/projects/[id]` (`src/app/projects/[id]/page.tsx` and `CaseStudyDossierView.tsx`) with multi-chapter navigation (01 Challenge, 02 Architecture & Build, 03 Engineering Highlights, 04 Results & Metrics) and next/previous project navigation.
+* **Data Source**: `src/data/projects.ts` (10 verified production projects and architectures including ShopMate AI and Vocab).
 
 ### Section 05: Contact & Terminal
 * **Components**: `src/components/Contact.tsx` & `Footer.tsx`
@@ -68,11 +68,18 @@
 
 ## 4. Design System Tokens & Dynamic Switchers
 
-### 4 Curated Dynamic Themes (`src/data/themeConfig.ts` & `src/app/globals.css`):
-1. **Monolithic Onyx & Graphite (DEFAULT)**: `#000000` canvas | `#111111` card | `#E5E5E5` accent
-2. **Celadon & Hunter Forest**: `#111D13` canvas | `#192B1C` card | `#A1CCA5` accent
-3. **Midnight Amethyst & Deep Violet**: `#11001C` canvas | `#1E0030` card | `#C084FC` accent
-4. **Prussian Blue & Space Indigo**: `#0B132B` canvas | `#131C38` card | `#5BC0BE` accent
+### 8 Curated Dynamic Themes (`src/data/themeConfig.ts` & `src/app/globals.css`):
+#### Dark Profiles:
+1. **01. Monolithic Onyx & Graphite (DEFAULT)**: `#000000` canvas | `#111111` card | `#E5E5E5` accent
+2. **02. Celadon & Hunter Forest**: `#111D13` canvas | `#192B1C` card | `#A1CCA5` accent
+3. **03. Midnight Amethyst & Deep Violet**: `#11001C` canvas | `#1E0030` card | `#C084FC` accent
+4. **04. Prussian Blue & Space Indigo**: `#0B132B` canvas | `#131C38` card | `#5BC0BE` accent
+
+#### Light Profiles:
+5. **05. Nordic Frost & Oceanic Teal (User Custom)**: `#F5F7FA` canvas | `#FFFFFF` card | `#0B132B` fg | `#1F8A87` accent | `#5BC0BE` secondary
+6. **06. Ivory Parchment & Sumi Ink (Editorial Warm)**: `#F9F6F0` canvas | `#FFFFFF` card | `#1C1917` fg | `#C2410C` accent | `#EA580C` secondary
+7. **07. Studio Silver & Electric Cobalt (Tech Modern)**: `#F8FAFC` canvas | `#FFFFFF` card | `#0F172A` fg | `#2563EB` accent | `#38BDF8` secondary
+8. **08. Matcha Botanical & Deep Forest (Organic Sage)**: `#F4F7F4` canvas | `#FFFFFF` card | `#132516` fg | `#2E7D47` accent | `#48A868` secondary
 
 ### 4 Curated Dynamic Fonts (`src/data/themeConfig.ts`):
 1. **Original Surfer (DEFAULT)**: `'Original Surfer', cursive, sans-serif` (Retro Rebel display)
@@ -126,7 +133,7 @@ Portfolio/
 │   │   ├── hero/                # HeroCinemaCanvas & StreetCurbRunner
 │   │   ├── about/               # Book3DCanvas, BookMesh, & Editorial Narrative
 │   │   ├── skills/              # SkillsLoadBalancer & MahoragaWheelCanvas
-│   │   ├── projects/            # ProjectDeck & ProjectModal
+│   │   ├── projects/            # ProjectsSection & ProjectCard
 │   │   └── common/              # LazyViewportMount.tsx (CWV performance wrapper)
 │   └── data/
 │       ├── profile.ts           # Bio, legal names, social links, and contact

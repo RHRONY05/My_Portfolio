@@ -17,6 +17,7 @@ export interface ThemeItem {
   name: string;
   tagline: string;
   num: string;
+  mode?: "dark" | "light";
   colors: ThemeColors;
 }
 
@@ -29,13 +30,15 @@ export interface FontItem {
   description: string;
 }
 
-// 1. The 4 User-Approved Themes (Monolithic Onyx is default)
+// 1. Curated Themes (4 Dark + 4 Light)
 export const APPROVED_THEMES: ThemeItem[] = [
+  // --- Dark Themes (01 - 04) ---
   {
     id: "monolithic-onyx",
     name: "Monolithic Onyx & Graphite",
     tagline: "Total dark stealth. Absolute black canvas with precision carbon surfaces and titanium white accents.",
     num: "01",
+    mode: "dark",
     colors: {
       canvas: "#000000",
       card: "#111111",
@@ -53,6 +56,7 @@ export const APPROVED_THEMES: ThemeItem[] = [
     name: "Celadon & Hunter Forest",
     tagline: "Carbon black forest base with hunter-green frames, soothing muted teal, and celadon mint glow.",
     num: "02",
+    mode: "dark",
     colors: {
       canvas: "#111D13",
       card: "#192B1C",
@@ -70,6 +74,7 @@ export const APPROVED_THEMES: ThemeItem[] = [
     name: "Midnight Amethyst & Deep Violet",
     tagline: "Deep obsidian violet abyss with neon royal amethyst lines and glowing neon lavender telemetry.",
     num: "03",
+    mode: "dark",
     colors: {
       canvas: "#11001C",
       card: "#1E0030",
@@ -87,6 +92,7 @@ export const APPROVED_THEMES: ThemeItem[] = [
     name: "Prussian Blue & Space Indigo",
     tagline: "Deep cosmos navy with space indigo surfaces, dusk-blue lines, and luminous aqua-cyan glow.",
     num: "04",
+    mode: "dark",
     colors: {
       canvas: "#0B132B",
       card: "#131C38",
@@ -97,6 +103,80 @@ export const APPROVED_THEMES: ThemeItem[] = [
       onAccent: "#0B132B",
       secondary: "#6FFFE9",
       accentGlow: "rgba(91, 192, 190, 0.4)",
+    },
+  },
+
+  // --- Light Themes (05 - 08) ---
+  {
+    id: "nordic-frost",
+    name: "Nordic Frost & Oceanic Teal",
+    tagline: "Crisp porcelain mist canvas with deep obsidian navy typography, rich arctic teal actions, and aqua-cyan glow.",
+    num: "05",
+    mode: "light",
+    colors: {
+      canvas: "#F5F7FA",
+      card: "#FFFFFF",
+      line: "#D9E2EC",
+      fg: "#0B132B",
+      muted: "#486581",
+      accent: "#1F8A87",
+      onAccent: "#FFFFFF",
+      secondary: "#5BC0BE",
+      accentGlow: "rgba(31, 138, 135, 0.28)",
+    },
+  },
+  {
+    id: "ivory-sumi",
+    name: "Ivory Parchment & Sumi Ink",
+    tagline: "Warm archival parchment canvas with jet Sumi ink typography, raw linen dividers, and radiant Kyoto cinnabar accents.",
+    num: "06",
+    mode: "light",
+    colors: {
+      canvas: "#F9F6F0",
+      card: "#FFFFFF",
+      line: "#E7E0D6",
+      fg: "#1C1917",
+      muted: "#78716C",
+      accent: "#C2410C",
+      onAccent: "#FFFFFF",
+      secondary: "#EA580C",
+      accentGlow: "rgba(194, 65, 12, 0.28)",
+    },
+  },
+  {
+    id: "studio-cobalt",
+    name: "Studio Silver & Electric Cobalt",
+    tagline: "Ultra-crisp aerospace silver canvas with pitch carbon typography and laser-precise electric cobalt blue.",
+    num: "07",
+    mode: "light",
+    colors: {
+      canvas: "#F8FAFC",
+      card: "#FFFFFF",
+      line: "#E2E8F0",
+      fg: "#0F172A",
+      muted: "#64748B",
+      accent: "#2563EB",
+      onAccent: "#FFFFFF",
+      secondary: "#38BDF8",
+      accentGlow: "rgba(37, 99, 235, 0.28)",
+    },
+  },
+  {
+    id: "matcha-botanical",
+    name: "Matcha Botanical & Deep Forest",
+    tagline: "Serene morning sage mist canvas with deep evergreen typography, herbal stone frames, and matcha jade accents.",
+    num: "08",
+    mode: "light",
+    colors: {
+      canvas: "#F4F7F4",
+      card: "#FFFFFF",
+      line: "#DCE5DC",
+      fg: "#132516",
+      muted: "#546C56",
+      accent: "#2E7D47",
+      onAccent: "#FFFFFF",
+      secondary: "#48A868",
+      accentGlow: "rgba(46, 125, 71, 0.28)",
     },
   },
 ];
@@ -155,6 +235,25 @@ export function hexToRgb(hex: string): string {
   return "229, 229, 229";
 }
 
+// Helper: Check if a hex color is light based on perceived relative luminance
+export function isLightColor(hex: string): boolean {
+  const clean = hex.replace("#", "");
+  let r = 0, g = 0, b = 0;
+  if (clean.length === 3) {
+    r = parseInt(clean[0] + clean[0], 16);
+    g = parseInt(clean[1] + clean[1], 16);
+    b = parseInt(clean[2] + clean[2], 16);
+  } else if (clean.length === 6) {
+    r = parseInt(clean.substring(0, 2), 16);
+    g = parseInt(clean.substring(2, 4), 16);
+    b = parseInt(clean.substring(4, 6), 16);
+  } else {
+    return false;
+  }
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5;
+}
+
 // Helper: Apply theme colors dynamically to document root and body
 export function applyThemeToDocument(theme: ThemeItem) {
   if (typeof document === "undefined") return;
@@ -174,6 +273,10 @@ export function applyThemeToDocument(theme: ThemeItem) {
   root.style.setProperty("--color-secondary", c.secondary);
   root.style.setProperty("--color-secondary-rgb", hexToRgb(c.secondary));
   root.style.setProperty("--color-footer", c.canvas);
+
+  const isLight = theme.mode === "light" || isLightColor(c.canvas);
+  root.style.colorScheme = isLight ? "light" : "dark";
+  root.setAttribute("data-theme-mode", isLight ? "light" : "dark");
 
   // Sync to body
   document.body.style.backgroundColor = c.canvas;

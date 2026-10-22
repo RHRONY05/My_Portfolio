@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export function ThemeFontCustomizer() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"theme" | "font">("theme");
+  const [themeFilter, setThemeFilter] = useState<"all" | "dark" | "light">("all");
   const [currentThemeId, setCurrentThemeId] = useState<string>("monolithic-onyx");
   const [currentFontId, setCurrentFontId] = useState<string>("original-surfer");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -96,6 +97,11 @@ export function ThemeFontCustomizer() {
   const activeFont =
     APPROVED_FONTS.find((f) => f.id === currentFontId) ?? APPROVED_FONTS[0];
 
+  const filteredThemes = APPROVED_THEMES.filter((t) => {
+    if (themeFilter === "all") return true;
+    return t.mode === themeFilter;
+  });
+
   return (
     <div className="relative inline-block text-left" ref={containerRef}>
       {/* Trigger Button */}
@@ -170,7 +176,7 @@ export function ThemeFontCustomizer() {
                   }`}
                 >
                   <Palette className="size-3" />
-                  <span>Colors (4)</span>
+                  <span>Colors ({APPROVED_THEMES.length})</span>
                 </button>
 
                 <button
@@ -183,7 +189,7 @@ export function ThemeFontCustomizer() {
                   }`}
                 >
                   <Type className="size-3" />
-                  <span>Fonts (4)</span>
+                  <span>Fonts ({APPROVED_FONTS.length})</span>
                 </button>
               </div>
 
@@ -202,10 +208,42 @@ export function ThemeFontCustomizer() {
               </div>
             </div>
 
-            {/* TAB 1: 4 Approved Themes */}
+            {/* Mode filter row when on Theme tab */}
             {activeTab === "theme" && (
-              <div className="space-y-1.5 max-h-[300px] overflow-y-auto pr-0.5 custom-scrollbar">
-                {APPROVED_THEMES.map((theme) => {
+              <div className="flex items-center justify-between pb-2 mb-2 border-b border-line/30">
+                <span className="text-[10px] font-mono text-muted uppercase tracking-wider">
+                  Mode Filter
+                </span>
+                <div className="flex items-center gap-1 bg-canvas/60 p-0.5 rounded-md border border-line/40">
+                  {(["all", "dark", "light"] as const).map((filter) => {
+                    const isFilterActive = themeFilter === filter;
+                    const count =
+                      filter === "all"
+                        ? APPROVED_THEMES.length
+                        : APPROVED_THEMES.filter((t) => t.mode === filter).length;
+                    return (
+                      <button
+                        key={filter}
+                        type="button"
+                        onClick={() => setThemeFilter(filter)}
+                        className={`px-1.5 py-0.5 text-[9px] font-mono font-bold rounded uppercase transition-all ${
+                          isFilterActive
+                            ? "bg-accent text-on-accent shadow-xs"
+                            : "text-muted hover:text-fg"
+                        }`}
+                      >
+                        {filter} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 1: Approved Themes */}
+            {activeTab === "theme" && (
+              <div className="space-y-1.5 max-h-[320px] overflow-y-auto pr-0.5 custom-scrollbar">
+                {filteredThemes.map((theme) => {
                   const isSelected = theme.id === currentThemeId;
                   return (
                     <button
@@ -243,15 +281,23 @@ export function ThemeFontCustomizer() {
 
                         {/* Theme Info */}
                         <div className="min-w-0">
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 flex-wrap">
                             <span className="text-xs font-semibold text-fg tracking-tight truncate">
                               {theme.name}
                             </span>
                             {theme.id === "monolithic-onyx" && (
-                              <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-accent/20 text-accent border border-accent/30 uppercase">
+                              <span className="px-1 py-0.2 rounded text-[8px] font-mono bg-accent/20 text-accent border border-accent/30 uppercase">
                                 Def
                               </span>
                             )}
+                            {theme.id === "nordic-frost" && (
+                              <span className="px-1 py-0.2 rounded text-[8px] font-mono bg-accent/20 text-accent border border-accent/30 uppercase">
+                                You ⚡
+                              </span>
+                            )}
+                            <span className="px-1 py-0.2 rounded text-[8px] font-mono text-muted/80 border border-line/40 uppercase">
+                              {theme.mode === "light" ? "Light" : "Dark"}
+                            </span>
                           </div>
                           <p className="text-[10px] text-muted line-clamp-1 font-mono">
                             {theme.tagline}
