@@ -26,6 +26,13 @@ export type ProjectCaseStudy = {
   keyHighlights: readonly string[];
 };
 
+export type ProjectScreenshot = {
+  title: string;
+  src: string;
+  caption?: string;
+  type?: "desktop" | "mobile" | "diagram" | "feature";
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -37,6 +44,7 @@ export type Project = {
   github?: string;
   live?: string;
   image?: string;
+  gallery?: readonly ProjectScreenshot[];
   status: "live" | "coming-soon";
   caseStudy: ProjectCaseStudy;
 };
@@ -69,6 +77,32 @@ export const projects: readonly Project[] = [
     github: "https://github.com/RHRONY05/ShopMate_AI",
     live: "",
     image: "/images/projects/shopmate_ai.png",
+    gallery: [
+      {
+        title: "Catalog & Semantic Vector Discovery",
+        src: "/images/projects/shopmate-ai/catalog.png",
+        type: "desktop",
+        caption: "768-dim pgvector cosine similarity search results",
+      },
+      {
+        title: "Mobile Client Experience",
+        src: "/images/projects/shopmate-ai/mobile.png",
+        type: "mobile",
+        caption: "Responsive mobile shopping and cart drawer",
+      },
+      {
+        title: "Real-time Cart & Custom Printing Rules",
+        src: "/images/projects/shopmate-ai/cart.png",
+        type: "feature",
+        caption: "Dynamic pricing logic and player printing calculations",
+      },
+      {
+        title: "Variant Detail & Live Inventory Checks",
+        src: "/images/projects/shopmate-ai/detail.png",
+        type: "desktop",
+        caption: "Server-authoritative stock verification preventing overselling",
+      },
+    ],
     status: "live",
     caseStudy: {
       context: "Autonomous E-Commerce Assistant & High-Dimensional Semantic Search",
@@ -349,6 +383,32 @@ export const projects: readonly Project[] = [
     github: "https://github.com/RHRONY05/Vocab_App",
     live: "https://vocab-rony.vercel.app",
     image: "/images/projects/Vocab_App.png",
+    gallery: [
+      {
+        title: "Structured Word Breakdown & Bangla Guide",
+        src: "/images/projects/vocab-app/learn-card.png",
+        type: "desktop",
+        caption: "Gemini 3.5 structured schema parsing with bilingual translations",
+      },
+      {
+        title: "Mobile Active Recall Study Card",
+        src: "/images/projects/vocab-app/mobile-card.png",
+        type: "mobile",
+        caption: "Touch-optimized daily review card on mobile viewports",
+      },
+      {
+        title: "Leitner 5-Box Daily Review Session",
+        src: "/images/projects/vocab-app/daily-review.png",
+        type: "feature",
+        caption: "Cognitive decay algorithm with weak-word prioritization",
+      },
+      {
+        title: "Saved Words & Weakness Scoring Directory",
+        src: "/images/projects/vocab-app/words-directory.png",
+        type: "desktop",
+        caption: "Supabase PostgreSQL real-time synchronization",
+      },
+    ],
     status: "live",
     caseStudy: {
       context: "Personal Study & Cognitive Engineering Tool",
