@@ -12,7 +12,7 @@ import {
 import { Palette, Type, Check, ChevronDown, Sparkles, Sliders, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export function ThemeFontCustomizer() {
+export function ThemeFontCustomizer({ isPastHero = true }: { isPastHero?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"theme" | "font">("theme");
   const [themeFilter, setThemeFilter] = useState<"all" | "dark" | "light">("all");
@@ -108,7 +108,11 @@ export function ThemeFontCustomizer() {
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="group relative flex items-center gap-2 rounded-lg border border-line/60 bg-card/80 px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-mono font-medium text-fg shadow-sm backdrop-blur-md transition-all duration-200 hover:border-accent hover:bg-card hover:text-accent focus:outline-none focus:ring-1 focus:ring-accent"
+        className={`group relative flex items-center gap-2 rounded-lg border px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-mono font-medium shadow-sm backdrop-blur-md transition-all duration-200 focus:outline-none ${
+          isPastHero
+            ? "border-line/60 bg-card/80 text-fg hover:border-accent hover:bg-card hover:text-accent focus:ring-1 focus:ring-accent"
+            : "border-white/15 bg-black/60 text-[#f5f5f5] hover:border-white/40 hover:bg-black/80 hover:text-white focus:ring-1 focus:ring-white/30"
+        }`}
         aria-expanded={isOpen}
         aria-label="Customize Theme and Font"
         title="Customize Theme & Font"
@@ -117,23 +121,37 @@ export function ThemeFontCustomizer() {
         <span className="relative flex h-2.5 w-2.5 items-center justify-center">
           <span
             className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
-            style={{ backgroundColor: activeTheme.colors.accent }}
+            style={{ backgroundColor: isPastHero ? activeTheme.colors.accent : "#E5E5E5" }}
           />
           <span
             className="relative inline-flex h-2 w-2 rounded-full shadow-[0_0_8px_currentColor]"
-            style={{ backgroundColor: activeTheme.colors.accent }}
+            style={{ backgroundColor: isPastHero ? activeTheme.colors.accent : "#E5E5E5" }}
           />
         </span>
 
         {/* Icon & Label */}
-        <Sliders className="size-3.5 text-accent transition-transform group-hover:rotate-45 duration-300" />
-        <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg/90 group-hover:text-accent">
+        <Sliders
+          className={`size-3.5 transition-transform group-hover:rotate-45 duration-300 ${
+            isPastHero ? "text-accent" : "text-[#e5e5e5] group-hover:text-white"
+          }`}
+        />
+        <span
+          className={`font-mono text-[11px] font-bold uppercase tracking-wider ${
+            isPastHero
+              ? "text-fg/90 group-hover:text-accent"
+              : "text-[#f5f5f5]/90 group-hover:text-white"
+          }`}
+        >
           Theme
         </span>
 
         <ChevronDown
-          className={`size-3 text-muted transition-transform duration-200 group-hover:text-accent ${
+          className={`size-3 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
+          } ${
+            isPastHero
+              ? "text-muted group-hover:text-accent"
+              : "text-white/60 group-hover:text-white"
           }`}
         />
       </button>

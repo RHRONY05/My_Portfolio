@@ -133,7 +133,7 @@ export function SkillRealmCard({
             ? "border-accent bg-card shadow-[0_0_18px_rgba(var(--color-accent-rgb),0.25)] scale-[1.01]"
             : isActiveRouting
             ? "border-accent/90 bg-card/95 shadow-[0_0_16px_rgba(var(--color-accent-rgb),0.22)] ring-1 ring-accent/40"
-            : "border-line bg-card/80 backdrop-blur-md hover:border-accent hover:bg-card hover:shadow-[0_0_14px_rgba(var(--color-accent-rgb),0.18)]"
+            : "border-line bg-card/80 backdrop-blur-md hover:border-[var(--color-card-hover-border)] hover:bg-card hover:shadow-[0_0_16px_var(--color-card-hover-glow)]"
         }`}
       >
         {variant === "compact" ? (

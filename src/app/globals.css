@@ -21,6 +21,10 @@
   --color-on-accent: #151817;
   --color-secondary: #ff9175;
 
+  /* Card Hover Organic Glow (Matches Obsidian Green Canvas Undertone) */
+  --color-card-hover: #59c7a6;
+  --color-card-hover-border: #59c7a6;
+
   /* Supporting / Project Category Accents */
   --color-cat-fullstack: #ff7857;
   --color-cat-automation: #59c7a6;
@@ -77,6 +81,10 @@
   --color-secondary-rgb: 255, 145, 117;
   --font-primary: var(--font-sans);
   --font-heading: var(--font-serif);
+  --color-card-hover: #59c7a6;
+  --color-card-hover-border: #59c7a6;
+  --color-card-hover-rgb: 89, 199, 166;
+  --color-card-hover-glow: rgba(89, 199, 166, 0.18);
 }
 
 /* ========================================================
@@ -85,18 +93,22 @@
    lighting, and urban street runner mini-game.
    ======================================================== */
 #hero {
-  --color-canvas: #000000;
-  --color-canvas-rgb: 0, 0, 0;
-  --color-card: #111111;
-  --color-card-rgb: 17, 17, 17;
-  --color-line: #343434;
-  --color-fg: #f5f5f5;
-  --color-muted: #7a7a7a;
-  --color-accent: #e5e5e5;
-  --color-accent-rgb: 229, 229, 229;
-  --color-on-accent: #000000;
-  --color-secondary: #a3a3a3;
-  --color-secondary-rgb: 163, 163, 163;
+  --color-canvas: #000000 !important;
+  --color-canvas-rgb: 0, 0, 0 !important;
+  --color-card: #111111 !important;
+  --color-card-rgb: 17, 17, 17 !important;
+  --color-line: #343434 !important;
+  --color-fg: #f5f5f5 !important;
+  --color-muted: #7a7a7a !important;
+  --color-accent: #e5e5e5 !important;
+  --color-accent-rgb: 229, 229, 229 !important;
+  --color-on-accent: #000000 !important;
+  --color-secondary: #a3a3a3 !important;
+  --color-secondary-rgb: 163, 163, 163 !important;
+  --color-card-hover: #e5e5e5 !important;
+  --color-card-hover-border: #e5e5e5 !important;
+  --color-card-hover-rgb: 229, 229, 229 !important;
+  --color-card-hover-glow: rgba(229, 229, 229, 0.2) !important;
 }
 
 

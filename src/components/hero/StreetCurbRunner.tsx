@@ -44,37 +44,9 @@ const RUNNER_THEME = {
   obsNull: "#58A6FF",
 };
 
-// Dynamically queries CSS variables from root document so any live theme changes immediately reflect on canvas
+// The street runner mini-game is isolated within the Hero section's monochrome stealth theme
 function getDynamicTheme() {
-  if (typeof window === "undefined") return RUNNER_THEME;
-  const cs = getComputedStyle(document.documentElement);
-  const accent = cs.getPropertyValue("--color-accent").trim() || RUNNER_THEME.accent;
-  const secondary = cs.getPropertyValue("--color-secondary").trim() || RUNNER_THEME.secondary;
-  const card = cs.getPropertyValue("--color-card").trim() || RUNNER_THEME.card;
-  const line = cs.getPropertyValue("--color-line").trim() || RUNNER_THEME.line;
-  const fg = cs.getPropertyValue("--color-fg").trim() || RUNNER_THEME.fg;
-  const muted = cs.getPropertyValue("--color-muted").trim() || RUNNER_THEME.muted;
-
-  let accentRgb = RUNNER_THEME.accentRgb;
-  if (accent.startsWith("#") && accent.length === 7) {
-    const r = parseInt(accent.slice(1, 3), 16);
-    const g = parseInt(accent.slice(3, 5), 16);
-    const b = parseInt(accent.slice(5, 7), 16);
-    if (!isNaN(r) && !isNaN(g) && !isNaN(b)) {
-      accentRgb = `${r}, ${g}, ${b}`;
-    }
-  }
-
-  return {
-    ...RUNNER_THEME,
-    accent,
-    accentRgb,
-    secondary,
-    card,
-    line,
-    fg,
-    muted,
-  };
+  return RUNNER_THEME;
 }
 
 type DynamicTheme = ReturnType<typeof getDynamicTheme>;

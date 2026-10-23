@@ -220,7 +220,7 @@ export function CaseStudyDossierView({
                 {cs.solution.architecturePoints.map((arch, i) => (
                   <div
                     key={i}
-                    className="flex flex-col justify-between rounded-2xl border border-line bg-card/70 p-5 sm:p-6 backdrop-blur-sm transition-all hover:border-accent hover:shadow-[0_8px_24px_rgba(var(--color-accent-rgb),0.1)]"
+                    className="flex flex-col justify-between rounded-2xl border border-line bg-card/70 p-5 sm:p-6 backdrop-blur-sm transition-all hover:border-[var(--color-card-hover-border)] hover:shadow-[0_8px_24px_var(--color-card-hover-glow)]"
                   >
                     <div>
                       <div className="flex items-center gap-2 mb-2.5">

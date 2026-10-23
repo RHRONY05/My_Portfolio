@@ -10,6 +10,8 @@ export interface ThemeColors {
   onAccent: string;
   secondary: string;
   accentGlow: string;
+  cardHoverBorder?: string;
+  cardHoverGlow?: string;
 }
 
 export interface ThemeItem {
@@ -48,7 +50,9 @@ export const APPROVED_THEMES: ThemeItem[] = [
       accent: "#ff7857",
       onAccent: "#151817",
       secondary: "#ff9175",
-      accentGlow: "rgba(255, 120, 87, 0.35)",
+      accentGlow: "rgba(89, 199, 166, 0.22)",
+      cardHoverBorder: "#59c7a6",
+      cardHoverGlow: "rgba(89, 199, 166, 0.18)",
     },
   },
   {
@@ -299,6 +303,12 @@ export function applyThemeToDocument(theme: ThemeItem) {
   root.style.setProperty("--color-secondary", c.secondary);
   root.style.setProperty("--color-secondary-rgb", hexToRgb(c.secondary));
   root.style.setProperty("--color-footer", c.canvas);
+
+  const hoverBorder = c.cardHoverBorder || c.accent;
+  const hoverGlow = c.cardHoverGlow || c.accentGlow;
+  root.style.setProperty("--color-card-hover", hoverBorder);
+  root.style.setProperty("--color-card-hover-border", hoverBorder);
+  root.style.setProperty("--color-card-hover-glow", hoverGlow);
 
   const isLight = theme.mode === "light" || isLightColor(c.canvas);
   root.style.colorScheme = isLight ? "light" : "dark";

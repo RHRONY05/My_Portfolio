@@ -49,7 +49,7 @@ function GalleryItemCard({
   return (
     <div
       onClick={onClick}
-      className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)] w-full ${className}`}
+      className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-[var(--color-card-hover-border)] hover:shadow-[0_12px_32px_var(--color-card-hover-glow)] w-full ${className}`}
       style={getBoxAspectStyle(item, fallbackAspect)}
     >
       <Image
@@ -263,7 +263,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
             {imgCol1Top && (
               <div
                 onClick={() => setActiveLightbox(imgCol1Top)}
-                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)] w-full"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-[var(--color-card-hover-border)] hover:shadow-[0_12px_32px_var(--color-card-hover-glow)] w-full"
                 style={getBoxAspectStyle(imgCol1Top, "1894 / 917")}
               >
                 <Image
@@ -282,7 +282,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
             {imgCol1BottomWide && (
               <div
                 onClick={() => setActiveLightbox(imgCol1BottomWide)}
-                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-[0_12px_32px_rgba(var(--color-accent-rgb),0.15)] w-full"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-[var(--color-card-hover-border)] hover:shadow-[0_12px_32px_var(--color-card-hover-glow)] w-full"
                 style={getBoxAspectStyle(imgCol1BottomWide, "1837 / 796")}
               >
                 <Image
@@ -302,7 +302,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
                 {imgCol1BottomLeft && (
                   <div
                     onClick={() => setActiveLightbox(imgCol1BottomLeft)}
-                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full ${
+                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-[var(--color-card-hover-border)] hover:shadow-[0_8px_24px_var(--color-card-hover-glow)] w-full ${
                       !imgCol1BottomRight ? "sm:col-span-2" : ""
                     }`}
                     style={getBoxAspectStyle(imgCol1BottomLeft, "1 / 1")}
@@ -321,7 +321,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
                 {imgCol1BottomRight && (
                   <div
                     onClick={() => setActiveLightbox(imgCol1BottomRight)}
-                    className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                    className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-[var(--color-card-hover-border)] hover:shadow-[0_8px_24px_var(--color-card-hover-glow)] w-full"
                     style={getBoxAspectStyle(imgCol1BottomRight, "16 / 9")}
                   >
                     <Image
@@ -343,7 +343,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
             {imgCol2Top && (
               <div
                 onClick={() => setActiveLightbox(imgCol2Top)}
-                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-[var(--color-card-hover-border)] hover:shadow-[0_8px_24px_var(--color-card-hover-glow)] w-full"
                 style={getBoxAspectStyle(imgCol2Top, "16 / 9")}
               >
                 <Image
@@ -360,7 +360,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
             {imgCol2Bottom && (
               <div
                 onClick={() => setActiveLightbox(imgCol2Bottom)}
-                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-[var(--color-card-hover-border)] hover:shadow-[0_8px_24px_var(--color-card-hover-glow)] w-full"
                 style={getBoxAspectStyle(imgCol2Bottom, "495 / 709")}
               >
                 <Image
@@ -380,7 +380,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
             {imgCol3Top && (
               <div
                 onClick={() => setActiveLightbox(imgCol3Top)}
-                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-[var(--color-card-hover-border)] hover:shadow-[0_8px_24px_var(--color-card-hover-glow)] w-full"
                 style={getBoxAspectStyle(imgCol3Top, "820 / 1600")}
               >
                 <Image
@@ -397,7 +397,7 @@ export function ProjectMasonryGallery({ project }: ProjectMasonryGalleryProps) {
             {imgCol3Bottom && (
               <div
                 onClick={() => setActiveLightbox(imgCol3Bottom)}
-                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-accent hover:shadow-md w-full"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-card shadow-sm transition-all duration-300 hover:border-[var(--color-card-hover-border)] hover:shadow-[0_8px_24px_var(--color-card-hover-glow)] w-full"
                 style={getBoxAspectStyle(imgCol3Bottom, "16 / 9")}
               >
                 <Image

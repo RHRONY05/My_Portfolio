@@ -82,7 +82,9 @@ export function Navbar() {
         {isHome ? (
           <a
             href="#hero"
-            className="flex items-center gap-2.5 text-xl font-black tracking-tight text-accent transition-transform active:scale-95 drop-shadow-sm cursor-pointer group"
+            className={`flex items-center gap-2.5 text-xl font-black tracking-tight transition-transform active:scale-95 drop-shadow-sm cursor-pointer group ${
+              isPastHero ? "text-accent" : "text-[#f5f5f5]"
+            }`}
             aria-label={`${profile.brand} home`}
             onClick={(e) => {
               e.preventDefault();
@@ -90,22 +92,48 @@ export function Navbar() {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
-            <div className="relative w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_10px_rgba(var(--color-accent-rgb,229,229,229),0.45)]">
-              <BrandLogo className="w-full h-full" />
+            <div
+              className={`relative w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110 ${
+                isPastHero
+                  ? "drop-shadow-[0_0_10px_rgba(var(--color-accent-rgb,229,229,229),0.45)]"
+                  : "drop-shadow-[0_0_10px_rgba(229,229,229,0.35)]"
+              }`}
+            >
+              <BrandLogo className="w-full h-full" monochrome={!isPastHero} />
             </div>
-            <span className="transition-colors group-hover:text-secondary">{profile.brand}</span>
+            <span
+              className={`transition-colors ${
+                isPastHero ? "group-hover:text-secondary" : "group-hover:text-white"
+              }`}
+            >
+              {profile.brand}
+            </span>
           </a>
         ) : (
           <Link
             href="/"
-            className="flex items-center gap-2.5 text-xl font-black tracking-tight text-accent transition-transform active:scale-95 drop-shadow-sm cursor-pointer group"
+            className={`flex items-center gap-2.5 text-xl font-black tracking-tight transition-transform active:scale-95 drop-shadow-sm cursor-pointer group ${
+              isPastHero ? "text-accent" : "text-[#f5f5f5]"
+            }`}
             aria-label={`${profile.brand} home`}
             onClick={() => setMobileMenuOpen(false)}
           >
-            <div className="relative w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_10px_rgba(var(--color-accent-rgb,229,229,229),0.45)]">
-              <BrandLogo className="w-full h-full" />
+            <div
+              className={`relative w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110 ${
+                isPastHero
+                  ? "drop-shadow-[0_0_10px_rgba(var(--color-accent-rgb,229,229,229),0.45)]"
+                  : "drop-shadow-[0_0_10px_rgba(229,229,229,0.35)]"
+              }`}
+            >
+              <BrandLogo className="w-full h-full" monochrome={!isPastHero} />
             </div>
-            <span className="transition-colors group-hover:text-secondary">{profile.brand}</span>
+            <span
+              className={`transition-colors ${
+                isPastHero ? "group-hover:text-secondary" : "group-hover:text-white"
+              }`}
+            >
+              {profile.brand}
+            </span>
           </Link>
         )}
 
@@ -115,7 +143,11 @@ export function Navbar() {
             <a
               key={link.id}
               href={getNavLinkHref(link.id)}
-              className="text-[15px] lg:text-base font-semibold text-fg/90 transition-colors hover:text-accent drop-shadow-sm"
+              className={`text-[15px] lg:text-base font-semibold drop-shadow-sm transition-colors ${
+                isPastHero
+                  ? "text-fg/90 hover:text-accent"
+                  : "text-[#f5f5f5]/85 hover:text-white"
+              }`}
             >
               {link.label}
             </a>
@@ -124,11 +156,15 @@ export function Navbar() {
 
         {/* Right Section: Theme/Font Customizer + Hire Me Button + Mobile Toggle */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <ThemeFontCustomizer />
+          <ThemeFontCustomizer isPastHero={isPastHero} />
 
           <a
             href={getNavLinkHref("contact")}
-            className="hidden md:inline-flex items-center gap-1.5 rounded-lg bg-accent px-5 py-2 text-xs font-mono font-bold text-on-accent transition-all duration-150 hover:bg-secondary hover:shadow-[0_0_15px_rgba(var(--color-accent-rgb,229,229,229),0.45)] active:scale-95 cursor-pointer shadow-md"
+            className={`hidden md:inline-flex items-center gap-1.5 rounded-lg px-5 py-2 text-xs font-mono font-bold transition-all duration-150 active:scale-95 cursor-pointer shadow-md ${
+              isPastHero
+                ? "bg-accent text-on-accent hover:bg-secondary hover:shadow-[0_0_15px_rgba(var(--color-accent-rgb,229,229,229),0.45)]"
+                : "bg-[#e5e5e5] text-black hover:bg-white hover:shadow-[0_0_15px_rgba(229,229,229,0.45)]"
+            }`}
           >
             <span>Hire Me</span>
             <ArrowUpRight className="size-3.5" />
@@ -138,7 +174,11 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-fg hover:text-accent transition-colors focus:outline-none"
+            className={`md:hidden inline-flex items-center justify-center p-2 rounded-lg transition-colors focus:outline-none ${
+              isPastHero
+                ? "text-fg hover:text-accent"
+                : "text-[#f5f5f5] hover:text-white"
+            }`}
             aria-expanded={mobileMenuOpen}
             aria-label="Toggle navigation menu"
           >
@@ -159,7 +199,11 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden border-b border-line/60 bg-canvas/95 backdrop-blur-xl px-6 py-6 shadow-2xl mt-3"
+            className={`md:hidden border-b px-6 py-6 shadow-2xl mt-3 backdrop-blur-xl ${
+              isPastHero
+                ? "border-line/60 bg-canvas/95"
+                : "border-white/10 bg-black/95 text-[#f5f5f5]"
+            }`}
           >
             <nav className="flex flex-col space-y-4">
               {rawNavLinks.map((link) => (
@@ -167,7 +211,11 @@ export function Navbar() {
                   key={link.id}
                   href={getNavLinkHref(link.id)}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="font-mono text-base font-medium text-fg/80 transition-colors hover:text-accent py-1"
+                  className={`font-mono text-base font-medium py-1 transition-colors ${
+                    isPastHero
+                      ? "text-fg/80 hover:text-accent"
+                      : "text-[#f5f5f5]/80 hover:text-white"
+                  }`}
                 >
                   {link.label}
                 </a>
@@ -176,7 +224,11 @@ export function Navbar() {
                 <a
                   href={getNavLinkHref("contact")}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-3.5 text-center font-mono text-xs font-bold text-on-accent transition-all hover:bg-secondary active:scale-95 shadow-md"
+                  className={`flex w-full items-center justify-center gap-2 rounded-lg py-3.5 text-center font-mono text-xs font-bold transition-all active:scale-95 shadow-md ${
+                    isPastHero
+                      ? "bg-accent text-on-accent hover:bg-secondary"
+                      : "bg-[#e5e5e5] text-black hover:bg-white"
+                  }`}
                 >
                   <span>Hire Me</span>
                   <ArrowUpRight className="size-4" />

@@ -14,7 +14,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project, className = "", priority = false }: ProjectCardProps) {
   return (
     <div
-      className={`group/card relative flex h-[500px] sm:h-[540px] md:h-[580px] w-full flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-lg transition-all duration-300 hover:border-accent hover:shadow-[0_20px_50px_rgba(var(--color-accent-rgb),0.25)] ring-1 ring-accent/30 select-none ${className}`}
+      className={`group/card relative flex h-[500px] sm:h-[540px] md:h-[580px] w-full flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-lg transition-all duration-300 hover:border-[var(--color-card-hover-border)] hover:shadow-[0_20px_45px_var(--color-card-hover-glow)] select-none ${className}`}
     >
       {/* Top Minimal Browser Frame Bar */}
       <div className="flex h-10 shrink-0 items-center border-b border-line bg-canvas/90 px-4 backdrop-blur-sm z-20">
@@ -73,7 +73,7 @@ export function ProjectCard({ project, className = "", priority = false }: Proje
               <div className="mt-3 flex items-center gap-2 sm:gap-2.5 pointer-events-auto">
                 <Link
                   href={`/projects/${project.id}`}
-                  className="flex items-center gap-1.5 rounded-lg border border-[rgba(var(--color-accent-rgb),0.3)] bg-card/90 px-3.5 py-1.5 font-mono text-xs font-bold text-fg shadow-md backdrop-blur-sm hover:border-accent hover:text-accent hover:bg-card transition-all cursor-pointer active:scale-95"
+                  className="flex items-center gap-1.5 rounded-lg border border-line bg-card/90 px-3.5 py-1.5 font-mono text-xs font-bold text-fg shadow-md backdrop-blur-sm hover:border-[var(--color-card-hover-border)] hover:text-fg hover:bg-card transition-all cursor-pointer active:scale-95"
                 >
                   <Eye className="size-3.5 text-accent" />
                   VIEW DETAILS
@@ -123,7 +123,7 @@ export function ProjectCard({ project, className = "", priority = false }: Proje
             {/* Click to inspect planned specs */}
             <Link
               href={`/projects/${project.id}`}
-              className="relative z-10 mt-6 flex items-center gap-2 rounded-lg border border-line/60 bg-card/60 px-4 py-2 font-mono text-xs font-semibold text-muted transition-all hover:border-accent hover:text-accent hover:bg-card shadow-sm cursor-pointer"
+              className="relative z-10 mt-6 flex items-center gap-2 rounded-lg border border-line/60 bg-card/60 px-4 py-2 font-mono text-xs font-semibold text-muted transition-all hover:border-[var(--color-card-hover-border)] hover:text-fg hover:bg-card shadow-sm cursor-pointer"
             >
               <Eye className="size-3.5" />
               VIEW SPECS
