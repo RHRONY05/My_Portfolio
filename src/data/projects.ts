@@ -706,6 +706,119 @@ export const projects: readonly Project[] = [
     },
   },
   {
+    id: "zoom-automation",
+    title: "ZoomFlow: Automated Cloud Recording Pipeline",
+    tagline: "Event-driven recording pipeline offloading Zoom media to Google Drive with automated cloud purging",
+    category: "Automation",
+    description:
+      "A production n8n automation pipeline engineered on a self-hosted VPS to solve hard 10 GB Zoom cloud storage ceilings. Listens to Zoom webhooks with HMAC-SHA256 handshake verification, normalizes metadata, streams best-quality video/audio into organized Google Drive folders, and purges recordings via Zoom OAuth API to eliminate storage overage costs.",
+    features: [
+      "Cryptographic HMAC-SHA256 handshake validation for secure Zoom webhook endpoint verification",
+      "Idempotent event processing with x-zoom-retry-num header detection to prevent double-uploads",
+      "Automated meeting UUID double-encoding to prevent REST path corruption on special characters",
+      "Multi-stream quality parsing selecting highest-bitrate MP4 video, M4A audio, and VTT transcripts",
+      "Automated Google Drive folder structuring by meeting topic and formatted ISO timestamps",
+      "Zero-data-loss execution loop deleting Zoom cloud recordings only upon confirmed Drive transfer",
+    ],
+    stack: [
+      "n8n",
+      "Node.js",
+      "Zoom API",
+      "Google Drive API",
+      "Webhooks",
+      "HMAC-SHA256",
+      "Caddy",
+      "VPS / Linux",
+    ],
+    image: "/images/projects/zoom-automation/workflow_canvas.webp",
+    hasScroll: false,
+    gallery: [
+      {
+        title: "System Architecture & Dataflow Diagram",
+        src: "/images/projects/zoom-automation/architecture_diagram.webp",
+        type: "diagram",
+        aspectRatio: "1600/900",
+        width: 1600,
+        height: 900,
+        column: "left",
+      },
+      {
+        title: "Production n8n Execution Canvas & Live Logs",
+        src: "/images/projects/zoom-automation/workflow_canvas.webp",
+        type: "desktop",
+        aspectRatio: "1024/568",
+        width: 1024,
+        height: 568,
+        column: "middle",
+      },
+      {
+        title: "Active Pipeline Nodes & Webhook Gateways",
+        src: "/images/projects/zoom-automation/canvas_nodes.webp",
+        type: "feature",
+        aspectRatio: "788/548",
+        width: 788,
+        height: 548,
+        column: "right",
+      },
+    ],
+    status: "live",
+    caseStudy: {
+      context: "Client Automation & Cloud Cost Optimization",
+      role: "Automation & Backend Engineer",
+      timeline: "1 Week (April 2026)",
+      outcome: "100% elimination of Zoom storage overage fees with infinite recording retention",
+      challenge: {
+        summary:
+          "A fast-growing healthcare consulting client recorded every partner and patient session on Zoom, rapidly exhausting their base 10 GB cloud storage allocation. Hitting the cap risked dropped recordings during critical appointments, while upgrading Zoom cloud storage tiers would incur steep, recurring monthly fees.",
+        points: [
+          "Zoom base storage quota (10 GB) was exhausted within weeks of daily client consultations.",
+          "Upgrading Zoom cloud storage tiers would incur costly, recurring monthly subscription add-ons.",
+          "Manual downloading and re-uploading recordings to Google Drive was error-prone and consumed hours of staff time.",
+          "Zoom webhook security enforces strict HMAC-SHA256 cryptographic response challenges for event delivery.",
+        ],
+      },
+      solution: {
+        summary:
+          "Architected an event-driven webhook pipeline on self-hosted n8n that captures Zoom recording events, validates requests with HMAC-SHA256, streams media directly to Google Drive, and safely deletes the source recording from Zoom.",
+        architecturePoints: [
+          {
+            title: "HMAC-SHA256 Webhook Verification",
+            desc: "Listens for Zoom URL validation and recording.completed events, computing HMAC-SHA256 hashes against the app secret to pass Zoom endpoint verification.",
+          },
+          {
+            title: "Idempotency & Retry Interception",
+            desc: "Inspects x-zoom-retry-num headers to discard redundant webhook delivery attempts, avoiding duplicate uploads.",
+          },
+          {
+            title: "Deep UUID Double-Encoding",
+            desc: "Applies double URL encoding to Zoom meeting UUIDs containing slashes or special characters, preventing 404 REST route breakage on the Zoom deletion API.",
+          },
+          {
+            title: "Dynamic Stream Filtering",
+            desc: "Custom JavaScript code node evaluates byte sizes to select the highest-quality MP4 video, primary audio, and VTT subtitles.",
+          },
+          {
+            title: "Confirmed Deletion Lifecycle",
+            desc: "Triggers Zoom REST API DELETE call only after Google Drive confirms 200 OK file persistence, guaranteeing zero data loss.",
+          },
+        ],
+      },
+      stats: [
+        { value: "100%", label: "Overages Avoided", detail: "Zero extra Zoom cloud storage fees" },
+        { value: "10 GB", label: "Quota Reclaimed", detail: "Continuously purged after sync" },
+        { value: "<2m", label: "Sync Turnaround", detail: "Live execution time per recording" },
+        { value: "0", label: "Data Loss Incidents", detail: "Confirmed upload before deletion" },
+      ],
+      keyHighlights: [
+        "Cryptographic HMAC-SHA256 webhook validation handshake",
+        "Zero-data-loss guaranteed deletion loop with Drive confirmation gate",
+        "Double-encoded UUID Zoom API compatibility workaround for slash-prefixed IDs",
+        "Automated Google Drive folder structuring with ISO timestamp formatting",
+        "Self-hosted on production Linux VPS behind Caddy reverse proxy with SSL",
+      ],
+    },
+  },
+  {
     id: "portfolio",
     title: "Developer Portfolio (rhrony05.me)",
     tagline: "High-performance 3D portfolio with dynamic themes, comic book dossier & 99 CWV",

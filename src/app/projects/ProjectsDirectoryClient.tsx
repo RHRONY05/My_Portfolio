@@ -13,6 +13,7 @@ const filterTabs: { id: FilterTab; label: string; shortLabel: string }[] = [
   { id: "AI/RAG", label: "AI & Agents", shortLabel: "AI" },
   { id: "Full Stack", label: "Full Stack", shortLabel: "Full Stack" },
   { id: "Frontend", label: "Frontend", shortLabel: "Frontend" },
+  { id: "Automation", label: "Automation", shortLabel: "Automation" },
 ];
 
 const spans = [
@@ -35,6 +36,7 @@ export function ProjectsDirectoryClient({ projects }: ProjectsDirectoryClientPro
       "AI/RAG": projects.filter((p) => p.category === "AI/RAG").length,
       "Full Stack": projects.filter((p) => p.category === "Full Stack").length,
       Frontend: projects.filter((p) => p.category === "Frontend").length,
+      Automation: projects.filter((p) => p.category === "Automation").length,
     };
     return map;
   }, [projects]);
