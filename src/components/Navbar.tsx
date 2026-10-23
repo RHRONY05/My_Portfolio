@@ -18,10 +18,30 @@ const rawNavLinks = [
 ] as const;
 
 export function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCleanMode, setIsCleanMode] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const [isPastHero, setIsPastHero] = useState(!isHome);
+
+  useEffect(() => {
+    if (!isHome) {
+      setIsPastHero(true);
+      return;
+    }
+    const handleScroll = () => {
+      const hero = document.getElementById("hero");
+      if (hero) {
+        const rect = hero.getBoundingClientRect();
+        setIsPastHero(rect.bottom <= 75);
+      } else {
+        setIsPastHero(window.scrollY > 400);
+      }
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isHome]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -51,10 +71,11 @@ export function Navbar() {
 
   return (
     <header
-      className="fixed top-0 inset-x-0 z-[100] backdrop-blur-md border-b border-line/30 py-3 md:py-3.5 transition-all duration-300 shadow-sm shadow-black/20"
-      style={{
-        backgroundColor: "rgba(var(--color-canvas-rgb, 13, 17, 23), 0.55)",
-      }}
+      className={`fixed top-0 inset-x-0 z-[100] backdrop-blur-md border-b py-3 md:py-3.5 transition-all duration-300 shadow-sm shadow-black/20 ${
+        isPastHero
+          ? "border-line/40 bg-[rgba(var(--color-canvas-rgb),0.85)] text-fg"
+          : "border-white/10 bg-black/60 text-[#f5f5f5]"
+      }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12">
         {/* Brand Logo */}

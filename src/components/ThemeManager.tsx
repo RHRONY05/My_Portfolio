@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import {
   APPROVED_THEMES,
   APPROVED_FONTS,
+  ThemeItem,
   applyThemeToDocument,
   applyFontToDocument,
 } from "@/data/themeConfig";
@@ -11,9 +12,18 @@ import {
 export function ThemeManager() {
   useEffect(() => {
     try {
+            // Migration flag for v2 editorial theme
+      const hasThemeV2 = localStorage.getItem("rony_theme_v2");
+      if (!hasThemeV2) {
+        localStorage.setItem("rony_theme_v2", "true");
+        localStorage.setItem("rony_theme_id", "obsidian-burnt-orange");
+        localStorage.setItem("rony_font_id", "plex-editorial");
+      }
+
       // 1. Resolve Theme
-      const savedThemeId = localStorage.getItem("rony_theme_id");
-      let activeTheme = APPROVED_THEMES.find((t) => t.id === savedThemeId);
+      const savedThemeId = localStorage.getItem("rony_theme_id") || "obsidian-burnt-orange";
+      let activeTheme: ThemeItem | undefined =
+        APPROVED_THEMES.find((t) => t.id === savedThemeId) || APPROVED_THEMES[0];
 
       // Legacy fallback check
       if (!activeTheme) {
@@ -36,8 +46,8 @@ export function ThemeManager() {
       }
 
       // 2. Resolve Font
-      const savedFontId = localStorage.getItem("rony_font_id");
-      const activeFont = APPROVED_FONTS.find((f) => f.id === savedFontId);
+      const savedFontId = localStorage.getItem("rony_font_id") || "plex-editorial";
+      const activeFont = APPROVED_FONTS.find((f) => f.id === savedFontId) || APPROVED_FONTS[0];
 
       // Apply active font to document
       if (activeFont) {

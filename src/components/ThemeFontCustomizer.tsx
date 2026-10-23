@@ -16,18 +16,18 @@ export function ThemeFontCustomizer() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"theme" | "font">("theme");
   const [themeFilter, setThemeFilter] = useState<"all" | "dark" | "light">("all");
-  const [currentThemeId, setCurrentThemeId] = useState<string>("monolithic-onyx");
-  const [currentFontId, setCurrentFontId] = useState<string>("original-surfer");
+  const [currentThemeId, setCurrentThemeId] = useState<string>("obsidian-burnt-orange");
+  const [currentFontId, setCurrentFontId] = useState<string>("plex-editorial");
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Sync state with localStorage on mount
   useEffect(() => {
     try {
-      const savedTheme = localStorage.getItem("rony_theme_id");
+      const savedTheme = localStorage.getItem("rony_theme_id") || "obsidian-burnt-orange";
       if (savedTheme && APPROVED_THEMES.some((t) => t.id === savedTheme)) {
         setCurrentThemeId(savedTheme);
       }
-      const savedFont = localStorage.getItem("rony_font_id");
+      const savedFont = localStorage.getItem("rony_font_id") || "plex-editorial";
       if (savedFont && APPROVED_FONTS.some((f) => f.id === savedFont)) {
         setCurrentFontId(savedFont);
       }

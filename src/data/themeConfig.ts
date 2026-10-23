@@ -32,12 +32,30 @@ export interface FontItem {
 
 // 1. Curated Themes (4 Dark + 4 Light)
 export const APPROVED_THEMES: ThemeItem[] = [
-  // --- Dark Themes (01 - 04) ---
+  // --- Dark Themes (01 - 05) ---
+  {
+    id: "obsidian-burnt-orange",
+    name: "Obsidian Slate & Burnt Orange",
+    tagline: "Warm technical editorial. Deep obsidian slate base with warm ivory typography and electric burnt orange accents.",
+    num: "01",
+    mode: "dark",
+    colors: {
+      canvas: "#151817",
+      card: "#1e2220",
+      line: "#424843",
+      fg: "#f2f1eb",
+      muted: "#b4bbb6",
+      accent: "#ff7857",
+      onAccent: "#151817",
+      secondary: "#ff9175",
+      accentGlow: "rgba(255, 120, 87, 0.35)",
+    },
+  },
   {
     id: "monolithic-onyx",
     name: "Monolithic Onyx & Graphite",
     tagline: "Total dark stealth. Absolute black canvas with precision carbon surfaces and titanium white accents.",
-    num: "01",
+    num: "02",
     mode: "dark",
     colors: {
       canvas: "#000000",
@@ -55,7 +73,7 @@ export const APPROVED_THEMES: ThemeItem[] = [
     id: "celadon-forest",
     name: "Celadon & Hunter Forest",
     tagline: "Carbon black forest base with hunter-green frames, soothing muted teal, and celadon mint glow.",
-    num: "02",
+    num: "03",
     mode: "dark",
     colors: {
       canvas: "#111D13",
@@ -73,7 +91,7 @@ export const APPROVED_THEMES: ThemeItem[] = [
     id: "midnight-amethyst",
     name: "Midnight Amethyst & Deep Violet",
     tagline: "Deep obsidian violet abyss with neon royal amethyst lines and glowing neon lavender telemetry.",
-    num: "03",
+    num: "04",
     mode: "dark",
     colors: {
       canvas: "#11001C",
@@ -91,7 +109,7 @@ export const APPROVED_THEMES: ThemeItem[] = [
     id: "prussian-blue",
     name: "Prussian Blue & Space Indigo",
     tagline: "Deep cosmos navy with space indigo surfaces, dusk-blue lines, and luminous aqua-cyan glow.",
-    num: "04",
+    num: "05",
     mode: "dark",
     colors: {
       canvas: "#0B132B",
@@ -106,12 +124,12 @@ export const APPROVED_THEMES: ThemeItem[] = [
     },
   },
 
-  // --- Light Themes (05 - 08) ---
+  // --- Light Themes (06 - 09) ---
   {
     id: "nordic-frost",
     name: "Nordic Frost & Oceanic Teal",
     tagline: "Crisp porcelain mist canvas with deep obsidian navy typography, rich arctic teal actions, and aqua-cyan glow.",
-    num: "05",
+    num: "06",
     mode: "light",
     colors: {
       canvas: "#F5F7FA",
@@ -129,7 +147,7 @@ export const APPROVED_THEMES: ThemeItem[] = [
     id: "ivory-sumi",
     name: "Ivory Parchment & Sumi Ink",
     tagline: "Warm archival parchment canvas with jet Sumi ink typography, raw linen dividers, and radiant Kyoto cinnabar accents.",
-    num: "06",
+    num: "07",
     mode: "light",
     colors: {
       canvas: "#F9F6F0",
@@ -147,7 +165,7 @@ export const APPROVED_THEMES: ThemeItem[] = [
     id: "studio-cobalt",
     name: "Studio Silver & Electric Cobalt",
     tagline: "Ultra-crisp aerospace silver canvas with pitch carbon typography and laser-precise electric cobalt blue.",
-    num: "07",
+    num: "08",
     mode: "light",
     colors: {
       canvas: "#F8FAFC",
@@ -165,7 +183,7 @@ export const APPROVED_THEMES: ThemeItem[] = [
     id: "matcha-botanical",
     name: "Matcha Botanical & Deep Forest",
     tagline: "Serene morning sage mist canvas with deep evergreen typography, herbal stone frames, and matcha jade accents.",
-    num: "08",
+    num: "09",
     mode: "light",
     colors: {
       canvas: "#F4F7F4",
@@ -183,6 +201,14 @@ export const APPROVED_THEMES: ThemeItem[] = [
 
 // 2. The 4 User-Approved Fonts (Original Surfer is default)
 export const APPROVED_FONTS: FontItem[] = [
+  {
+    id: "plex-editorial",
+    name: "IBM Plex & Source Serif",
+    label: "Editorial Engineering",
+    category: "High-Contrast Editorial Typography",
+    family: "var(--font-sans)",
+    description: "Source Serif 4 headlines paired with IBM Plex Sans body and IBM Plex Mono code.",
+  },
   {
     id: "original-surfer",
     name: "Original Surfer",
@@ -287,8 +313,15 @@ export function applyThemeToDocument(theme: ThemeItem) {
 export function applyFontToDocument(font: FontItem) {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
-  root.style.setProperty("--font-primary", font.family);
-  root.style.setProperty("--font-heading", font.family);
-  root.style.setProperty("--font-sans", font.family);
-  document.body.style.fontFamily = font.family;
+  if (font.id === "plex-editorial") {
+    root.style.setProperty("--font-primary", "var(--font-sans)");
+    root.style.setProperty("--font-heading", "var(--font-serif)");
+    root.style.setProperty("--font-sans", "var(--font-sans)");
+    document.body.style.fontFamily = "var(--font-sans)";
+  } else {
+    root.style.setProperty("--font-primary", font.family);
+    root.style.setProperty("--font-heading", font.family);
+    root.style.setProperty("--font-sans", font.family);
+    document.body.style.fontFamily = font.family;
+  }
 }
