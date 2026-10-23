@@ -730,16 +730,16 @@ export const projects: readonly Project[] = [
       "Caddy",
       "VPS / Linux",
     ],
-    image: "/images/projects/zoom-automation/workflow_canvas.webp",
+    image: "/images/projects/zoom-automation/architecture_diagram.webp",
     hasScroll: false,
     gallery: [
       {
         title: "System Architecture & Dataflow Diagram",
         src: "/images/projects/zoom-automation/architecture_diagram.webp",
         type: "diagram",
-        aspectRatio: "1600/900",
-        width: 1600,
-        height: 900,
+        aspectRatio: "1720/960",
+        width: 1720,
+        height: 960,
         column: "left",
       },
       {
@@ -895,10 +895,19 @@ export const projects: readonly Project[] = [
     stack: ["AI APIs", "n8n", "WhatsApp API", "Telegram API", "LINE API", "PostgreSQL"],
     github: "",
     live: "",
-    image: "/images/projects/sabai_health_assistant/main_workflow_whatsapp.jpeg",
+    image: "/images/projects/sabai_health_assistant/architecture_diagram.webp",
     hasScroll: false,
     status: "live",
     gallery: [
+      {
+        title: "Autonomous AI Health Assistant System Architecture",
+        src: "/images/projects/sabai_health_assistant/architecture_diagram.webp",
+        type: "diagram",
+        aspectRatio: "1720/960",
+        width: 1720,
+        height: 960,
+        column: "left",
+      },
       {
         title: "Primary WhatsApp Ingestion & Agent Workflow",
         src: "/images/projects/sabai_health_assistant/main_workflow_whatsapp.jpeg",
