@@ -1,0 +1,910 @@
+const puppeteer = require('puppeteer-core');
+const fs = require('fs');
+const path = require('path');
+
+const CHROME_PATH = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+
+/* ==========================================================================
+   1. SABAI ASSISTANT: 3-TIER DATA FLOW DIAGRAM (DFD S-CURVE)
+   Aesthetic: Neo-Brutalist Technical Editorial / Pastel Mint & Pink
+   ========================================================================== */
+function buildSabaiHtml() {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1600px;
+    height: 1000px;
+    background-color: #F8FAFC;
+    background-image: radial-gradient(#CBD5E1 1.4px, transparent 1.4px);
+    background-size: 24px 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #0F172A;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 44px 56px 40px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #E2E8F0;
+    color: #334155;
+    padding: 5px 14px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .title {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #0F172A;
+    line-height: 1.15;
+  }
+  .subtitle {
+    font-size: 15px;
+    color: #64748B;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .n8n-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    border: 1.5px solid #E2E8F0;
+    padding: 8px 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+  }
+  .n8n-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: #10B981;
+    box-shadow: 0 0 8px #10B981;
+  }
+  .n8n-label {
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  /* SVG Canvas */
+  .canvas-wrap {
+    position: relative;
+    width: 1488px;
+    height: 700px;
+    margin: 8px 0;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .node-entity {
+    fill: #FCE7F3;
+    stroke: #0F172A;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+  .node-process {
+    fill: #A7F3D0;
+    stroke: #0F172A;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+  .node-datastore {
+    fill: #FBCFE8;
+    stroke: #0F172A;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+
+  .text-title {
+    font-size: 16px;
+    font-weight: 800;
+    fill: #0F172A;
+    text-anchor: middle;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .text-sub {
+    font-size: 12px;
+    font-weight: 600;
+    fill: #475569;
+    text-anchor: middle;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .text-num {
+    font-size: 16px;
+    font-weight: 900;
+    fill: #0F172A;
+    text-anchor: middle;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    letter-spacing: 0.05em;
+  }
+  .text-label {
+    font-size: 11.5px;
+    font-weight: 800;
+    fill: #0F172A;
+    text-anchor: middle;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .flow-line {
+    fill: none;
+    stroke: #0F172A;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .label-bg {
+    fill: #F8FAFC;
+    stroke: #CBD5E1;
+    stroke-width: 1;
+    rx: 6;
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FFFFFF;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 14px 24px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  }
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .badge-outcome {
+    background: #0F172A;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    padding: 4px 12px;
+    border-radius: 6px;
+    letter-spacing: 0.08em;
+  }
+  .outcome-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1E293B;
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid #0F172A;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <span class="tag">AI Healthcare Architecture</span>
+      <h1 class="title">Sabai: Autonomous AI Health Assistant</h1>
+      <p class="subtitle">3-tier data flow diagram (DFD): patient channels, clinical RAG grounding, tool loop, and instant delivery</p>
+    </div>
+    <div class="n8n-badge">
+      <div class="n8n-dot"></div>
+      <span class="n8n-label">n8n Execution Mesh</span>
+    </div>
+  </div>
+
+  <!-- SVG Multi-Row Canvas -->
+  <div class="canvas-wrap">
+    <svg viewBox="0 0 1488 700">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 10 5 L 0 9 z" fill="#0F172A" />
+        </marker>
+      </defs>
+
+      <!-- Connectors -->
+      <line x1="394" y1="130" x2="604" y2="130" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(500, 130)">
+        <rect x="-65" y="-14" width="130" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Data Flow</text>
+      </g>
+
+      <line x1="884" y1="130" x2="1094" y2="130" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(990, 130)">
+        <rect x="-65" y="-14" width="130" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Context Query</text>
+      </g>
+
+      <path d="M 1234 195 L 1234 334 Q 1234 350 1218 350 L 894 350" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(1040, 350)">
+        <rect x="-70" y="-14" width="140" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Grounded SOPs</text>
+      </g>
+
+      <path d="M 594 350 L 270 350 Q 254 350 254 366 L 254 505" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(424, 350)">
+        <rect x="-70" y="-14" width="140" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Triage & Actions</text>
+      </g>
+
+      <line x1="394" y1="570" x2="604" y2="570" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(500, 570)">
+        <rect x="-65" y="-14" width="130" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Verified Answer</text>
+      </g>
+
+      <line x1="884" y1="570" x2="1094" y2="570" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(990, 570)">
+        <rect x="-65" y="-14" width="130" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Instant Reply</text>
+      </g>
+
+      <!-- Row 1 Left: Patient -->
+      <g transform="translate(114, 65)">
+        <rect width="280" height="130" class="node-entity" />
+        <text x="140" y="55" class="text-title">Patient / User</text>
+        <text x="140" y="80" class="text-sub">WhatsApp & Telegram</text>
+        <text x="140" y="102" class="text-sub" style="font-size: 11px; fill: #64748B;">Sends symptom query or question</text>
+      </g>
+
+      <!-- Row 1 Center: 01 n8n Ingestion -->
+      <g transform="translate(604, 65)">
+        <rect width="280" height="130" class="node-process" />
+        <line x1="0" y1="50" x2="280" y2="50" stroke="#0F172A" stroke-width="2" />
+        <text x="140" y="34" class="text-num">01</text>
+        <text x="140" y="80" class="text-title">n8n Ingestion Engine</text>
+        <text x="140" y="104" class="text-sub">Webhook & Intent Parser</text>
+      </g>
+
+      <!-- Row 1 Right: Vector DB -->
+      <g transform="translate(1094, 65)">
+        <rect width="280" height="130" class="node-datastore" />
+        <line x1="45" y1="0" x2="45" y2="130" stroke="#0F172A" stroke-width="2.2" />
+        <text x="162" y="55" class="text-title">Clinical Vector DB</text>
+        <text x="162" y="80" class="text-sub">Medical Knowledge Base</text>
+        <text x="162" y="102" class="text-sub" style="font-size: 11px; fill: #64748B;">Verified clinic protocols & SOPs</text>
+      </g>
+
+      <!-- Row 2 Center: 02 Tool Loop -->
+      <g transform="translate(604, 285)">
+        <rect width="280" height="130" class="node-process" />
+        <line x1="0" y1="50" x2="280" y2="50" stroke="#0F172A" stroke-width="2" />
+        <text x="140" y="34" class="text-num">02</text>
+        <text x="140" y="80" class="text-title">Autonomous Tool Loop</text>
+        <text x="140" y="104" class="text-sub">Agent Reasoning & Triage</text>
+      </g>
+
+      <!-- Row 3 Left: Session DB -->
+      <g transform="translate(114, 505)">
+        <rect width="280" height="130" class="node-datastore" />
+        <line x1="45" y1="0" x2="45" y2="130" stroke="#0F172A" stroke-width="2.2" />
+        <text x="162" y="55" class="text-title">Session & History DB</text>
+        <text x="162" y="80" class="text-sub">PostgreSQL / Redis State</text>
+        <text x="162" y="102" class="text-sub" style="font-size: 11px; fill: #64748B;">Audits conversation & booking log</text>
+      </g>
+
+      <!-- Row 3 Center: 03 Dispatcher -->
+      <g transform="translate(604, 505)">
+        <rect width="280" height="130" class="node-process" />
+        <line x1="0" y1="50" x2="280" y2="50" stroke="#0F172A" stroke-width="2" />
+        <text x="140" y="34" class="text-num">03</text>
+        <text x="140" y="80" class="text-title">Response Dispatcher</text>
+        <text x="140" y="104" class="text-sub">Empathetic Guidance Formatter</text>
+      </g>
+
+      <!-- Row 3 Right: Patient Delivery -->
+      <g transform="translate(1094, 505)">
+        <rect width="280" height="130" class="node-entity" />
+        <text x="140" y="55" class="text-title">Patient / User</text>
+        <text x="140" y="80" class="text-sub">WhatsApp & Telegram</text>
+        <text x="140" y="102" class="text-sub" style="font-size: 11px; fill: #64748B;">Instant < 2.5s triage delivery</text>
+      </g>
+
+    </svg>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-left">
+      <span class="badge-outcome">OUTCOME</span>
+      <span class="outcome-text">24/7 automated first-line healthcare triage & scheduling with 100% verified clinical grounding.</span>
+    </div>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #FCE7F3;"></div>
+        <span>Channel / Entity</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #A7F3D0;"></div>
+        <span>n8n Process Node</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #FBCFE8;"></div>
+        <span>Knowledge / DB</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>`;
+}
+
+/* ==========================================================================
+   2. ZOOMFLOW PIPELINE: 2-TIER CLOUD PIPELINE WITH VERIFICATION GATE
+   Aesthetic: Cloud DevOps Modern Architecture / Zoom Blue, Violet, Drive Green
+   Layout: 2-Tier Horizontal Pipeline with an Amber Decision Gate in the center
+   ========================================================================== */
+/* ==========================================================================
+   2. ZOOMFLOW PIPELINE: TREE / LOAD-BALANCER PIPELINE TOPOLOGY
+   Aesthetic: Cloud Infrastructure / DevOps Architecture (Indigo, Emerald, Amber, Rose, Teal)
+   Design Rules:
+     - Enlarged cards and bold, prominent typography (21-22px titles, 15px subtitles)
+     - Zero nuisance micro-text: clean 2-tier content hierarchy (Header Badge + Title + Subtitle)
+     - Enlarged connector label pills (13px bold monospaced)
+     - Symmetrical Tree / Load-Balancer topology with central n8n Hub, dual parallel wings,
+       amber dashed verification bridge, and convergence into 0% Quota Reset.
+   ========================================================================== */
+function buildZoomflowHtml() {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1600px;
+    height: 1000px;
+    background-color: #F8FAFC;
+    background-image: radial-gradient(#CBD5E1 1.4px, transparent 1.4px);
+    background-size: 24px 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #0F172A;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 38px 56px 34px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #E0E7FF;
+    color: #3730A3;
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .title {
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #0F172A;
+    line-height: 1.15;
+  }
+  .subtitle {
+    font-size: 16px;
+    color: #64748B;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .vps-badge {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: #FFFFFF;
+    border: 1.5px solid #CBD5E1;
+    padding: 9px 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+  }
+  .vps-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 9999px;
+    background: #6366F1;
+    box-shadow: 0 0 8px #6366F1;
+  }
+  .vps-label {
+    font-size: 13px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    font-weight: 700;
+    color: #334155;
+  }
+
+  /* SVG Canvas */
+  .canvas-wrap {
+    position: relative;
+    width: 1488px;
+    height: 720px;
+    margin: 4px 0;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* Distinct Cloud DevOps Node Cards */
+  .node-trigger {
+    fill: #F0F9FF;
+    stroke: #0284C7;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+  .node-hub {
+    fill: #EEF2FF;
+    stroke: #6366F1;
+    stroke-width: 2.4;
+    rx: 16;
+  }
+  .node-drive {
+    fill: #ECFDF5;
+    stroke: #059669;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+  .node-gate {
+    fill: #FFFBEB;
+    stroke: #D97706;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+  .node-db {
+    fill: #F0FDFA;
+    stroke: #0D9488;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+  .node-purge {
+    fill: #FFF1F2;
+    stroke: #E11D48;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+  .node-reclaimed {
+    fill: #F0FDF4;
+    stroke: #16A34A;
+    stroke-width: 2.4;
+    rx: 16;
+  }
+
+  /* Typography inside Cards */
+  .text-header-badge {
+    font-size: 12.5px;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .text-title {
+    font-size: 21px;
+    font-weight: 800;
+    fill: #0F172A;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .text-desc {
+    font-size: 15px;
+    font-weight: 600;
+    fill: #334155;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .text-label {
+    font-size: 13px;
+    font-weight: 800;
+    fill: #0F172A;
+    text-anchor: middle;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    letter-spacing: 0.03em;
+  }
+
+  /* Connectors */
+  .flow-line {
+    fill: none;
+    stroke: #0F172A;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .bridge-line {
+    fill: none;
+    stroke: #D97706;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 6 4;
+  }
+  .label-bg {
+    fill: #FFFFFF;
+    stroke: #94A3B8;
+    stroke-width: 1.2;
+    rx: 7;
+  }
+  .label-bridge-bg {
+    fill: #FFFBEB;
+    stroke: #D97706;
+    stroke-width: 1.2;
+    rx: 7;
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FFFFFF;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 13px 26px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  }
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .badge-outcome {
+    background: #0F172A;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    padding: 5px 13px;
+    border-radius: 6px;
+    letter-spacing: 0.08em;
+  }
+  .outcome-text {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #1E293B;
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #475569;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid #0F172A;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <span class="tag">Cloud Automation Workflow Architecture</span>
+      <h1 class="title">ZoomFlow: Automated Cloud Recording Pipeline</h1>
+      <p class="subtitle">Tree-topology pipeline: webhook verification, multi-stream cloud backup, integrity check, and zero-cost purge</p>
+    </div>
+    <div class="vps-badge">
+      <div class="vps-dot"></div>
+      <span class="vps-label">Self-Hosted Linux VPS</span>
+    </div>
+  </div>
+
+  <!-- SVG Tree / Load Balancer Topology Canvas -->
+  <div class="canvas-wrap">
+    <svg viewBox="0 0 1488 720">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 10 5 L 0 9 z" fill="#0F172A" />
+        </marker>
+        <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 10 5 L 0 9 z" fill="#D97706" />
+        </marker>
+      </defs>
+
+      <!-- ======================================================= -->
+      <!-- CONNECTOR LINES & LABELS (LOAD-BALANCER TREE)           -->
+      <!-- ======================================================= -->
+
+      <!-- 1. Trigger -> Central Load Balancer Hub -->
+      <line x1="744" y1="90" x2="744" y2="130" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(744, 110)">
+        <rect x="-70" y="-14" width="140" height="28" class="label-bg" />
+        <text x="0" y="5" class="text-label">Webhook Event</text>
+      </g>
+
+      <!-- 2. The Load Balancer Tree Split (n8n Hub bottom -> Dual Parallel Wings) -->
+      <!-- Left Branch: (744, 232) down to y=258, left to (310, 258), down to (310, 290) -->
+      <path d="M 744 232 L 744 250 Q 744 258 734 258 L 320 258 Q 310 258 310 268 L 310 290" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(527, 258)">
+        <rect x="-70" y="-14" width="140" height="28" class="label-bg" />
+        <text x="0" y="5" class="text-label">Stream Media</text>
+      </g>
+
+      <!-- Right Branch: (744, 232) down to y=258, right to (1178, 258), down to (1178, 290) -->
+      <path d="M 744 232 L 744 250 Q 744 258 754 258 L 1168 258 Q 1178 258 1178 268 L 1178 290" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(961, 258)">
+        <rect x="-78" y="-14" width="156" height="28" class="label-bg" />
+        <text x="0" y="5" class="text-label">Safety Handshake</text>
+      </g>
+
+      <!-- 3. Cross-System Verification Bridge (Google Drive -> Integrity Gate) -->
+      <line x1="510" y1="341" x2="978" y2="341" class="bridge-line" marker-end="url(#arrow-amber)" />
+      <g transform="translate(744, 341)">
+        <rect x="-92" y="-15" width="184" height="30" class="label-bridge-bg" />
+        <text x="0" y="5" class="text-label" fill="#B45309">Upload Status 200 OK</text>
+      </g>
+
+      <!-- 4. Left Arm: Drive Storage (310, 392) -> VPS State DB (310, 444) -->
+      <line x1="310" y1="392" x2="310" y2="444" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(310, 418)">
+        <rect x="-62" y="-14" width="124" height="28" class="label-bg" />
+        <text x="0" y="5" class="text-label">State Lock</text>
+      </g>
+
+      <!-- 5. Right Arm: Integrity Gate (1178, 392) -> Zoom REST Purge (1178, 444) -->
+      <line x1="1178" y1="392" x2="1178" y2="444" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(1178, 418)">
+        <rect x="-72" y="-14" width="144" height="28" class="label-bg" />
+        <text x="0" y="5" class="text-label">Verified Signal</text>
+      </g>
+
+      <!-- 6. Convergence: Left & Right Wings -> Final Outcome Node (0% Cloud Quota) -->
+      <path d="M 310 546 L 310 568 Q 310 576 320 576 L 734 576 Q 744 576 744 584 L 744 604" class="flow-line" marker-end="url(#arrow)" />
+      <path d="M 1178 546 L 1178 568 Q 1178 576 1168 576 L 754 576 Q 744 576 744 584" class="flow-line" />
+      <g transform="translate(527, 576)">
+        <rect x="-76" y="-14" width="152" height="28" class="label-bg" />
+        <text x="0" y="5" class="text-label">Storage Cleaned</text>
+      </g>
+      <g transform="translate(961, 576)">
+        <rect x="-76" y="-14" width="152" height="28" class="label-bg" />
+        <text x="0" y="5" class="text-label">Quota Reclaimed</text>
+      </g>
+
+
+      <!-- ======================================================= -->
+      <!-- TIER 1: INGESTION TRIGGER (Center Top)                  -->
+      <!-- ======================================================= -->
+      <!-- Zoom Cloud: (544, 8, 400, 82) Center X = 744 -->
+      <g transform="translate(544, 8)">
+        <rect width="400" height="82" class="node-trigger" />
+        <rect x="0" y="0" width="400" height="28" rx="16" fill="#E0F2FE" />
+        <rect x="0" y="16" width="400" height="12" fill="#E0F2FE" />
+        <line x1="0" y1="28" x2="400" y2="28" stroke="#0284C7" stroke-width="1.8" />
+        <text x="18" y="19" class="text-header-badge" fill="#0369A1">CLOUD INGESTION TRIGGER</text>
+        <text x="20" y="52" class="text-title">Zoom Cloud</text>
+        <text x="20" y="72" class="text-desc">Meeting Completed Webhook</text>
+      </g>
+
+
+      <!-- ======================================================= -->
+      <!-- TIER 2: CENTRAL LOAD BALANCER HUB                       -->
+      <!-- ======================================================= -->
+      <!-- 01 n8n Ingestion Engine: (484, 130, 520, 102) Center X = 744 -->
+      <g transform="translate(484, 130)">
+        <rect width="520" height="102" class="node-hub" />
+        <rect x="0" y="0" width="520" height="32" rx="16" fill="#E0E7FF" />
+        <rect x="0" y="20" width="520" height="12" fill="#E0E7FF" />
+        <line x1="0" y1="32" x2="520" y2="32" stroke="#6366F1" stroke-width="2" />
+        <text x="20" y="21" class="text-header-badge" fill="#4338CA">01 · LOAD BALANCER & DISPATCHER HUB</text>
+        <text x="22" y="60" class="text-title" style="font-size: 22px;">n8n Ingestion Engine</text>
+        <text x="22" y="85" class="text-desc">HMAC Security & Stream Dispatcher</text>
+      </g>
+
+
+      <!-- ======================================================= -->
+      <!-- TIER 3: PARALLEL UPPER WINGS (Archival vs Gate)         -->
+      <!-- ======================================================= -->
+      <!-- Left: Google Drive Storage (110, 290, 400, 102) -->
+      <g transform="translate(110, 290)">
+        <rect width="400" height="102" class="node-drive" />
+        <rect x="0" y="0" width="400" height="30" rx="16" fill="#D1FAE5" />
+        <rect x="0" y="18" width="400" height="12" fill="#D1FAE5" />
+        <line x1="0" y1="30" x2="400" y2="30" stroke="#059669" stroke-width="1.8" />
+        <text x="18" y="20" class="text-header-badge" fill="#047857">02 · CLOUD ARCHIVAL VAULT</text>
+        <text x="20" y="58" class="text-title">Google Drive Storage</text>
+        <text x="20" y="83" class="text-desc">Topic & ISO Folders (MP4 / M4A / VTT)</text>
+      </g>
+
+      <!-- Right: 03 Integrity & Hash Check (978, 290, 400, 102) -->
+      <g transform="translate(978, 290)">
+        <rect width="400" height="102" class="node-gate" />
+        <rect x="0" y="0" width="400" height="30" rx="16" fill="#FEF3C7" />
+        <rect x="0" y="18" width="400" height="12" fill="#FEF3C7" />
+        <line x1="0" y1="30" x2="400" y2="30" stroke="#D97706" stroke-width="1.8" />
+        <text x="18" y="20" class="text-header-badge" fill="#B45309">03 · INTEGRITY SAFETY GATE</text>
+        <text x="20" y="58" class="text-title">Integrity & Hash Check</text>
+        <text x="20" y="83" class="text-desc">Zero-Data-Loss Upload Verification</text>
+      </g>
+
+
+      <!-- ======================================================= -->
+      <!-- TIER 4: PARALLEL LOWER WINGS (Audit State vs REST Purge)-->
+      <!-- ======================================================= -->
+      <!-- Left: VPS State & Audit Log (110, 444, 400, 102) -->
+      <g transform="translate(110, 444)">
+        <rect width="400" height="102" class="node-db" />
+        <rect x="0" y="0" width="400" height="30" rx="16" fill="#CCFBF1" />
+        <rect x="0" y="18" width="400" height="12" fill="#CCFBF1" />
+        <line x1="0" y1="30" x2="400" y2="30" stroke="#0D9488" stroke-width="1.8" />
+        <text x="18" y="20" class="text-header-badge" fill="#0F766E">04 · AUDIT & STATE STORE</text>
+        <text x="20" y="58" class="text-title">VPS State & Audit DB</text>
+        <text x="20" y="83" class="text-desc">Idempotent Execution History</text>
+      </g>
+
+      <!-- Right: 05 Zoom REST Purge (978, 444, 400, 102) -->
+      <g transform="translate(978, 444)">
+        <rect width="400" height="102" class="node-purge" />
+        <rect x="0" y="0" width="400" height="30" rx="16" fill="#FECDD3" />
+        <rect x="0" y="18" width="400" height="12" fill="#FECDD3" />
+        <line x1="0" y1="30" x2="400" y2="30" stroke="#E11D48" stroke-width="1.8" />
+        <text x="18" y="20" class="text-header-badge" fill="#BE123C">05 · AUTOMATED PURGE</text>
+        <text x="20" y="58" class="text-title">Zoom REST Purge</text>
+        <text x="20" y="83" class="text-desc">Double-Encoded UUID Deleter API</text>
+      </g>
+
+
+      <!-- ======================================================= -->
+      <!-- TIER 5: CONVERGENCE OUTCOME (Center Bottom)            -->
+      <!-- ======================================================= -->
+      <!-- 06 0% Cloud Quota Reclaimed: (484, 604, 520, 102) Center X = 744 -->
+      <g transform="translate(484, 604)">
+        <rect width="520" height="102" class="node-reclaimed" />
+        <rect x="0" y="0" width="520" height="32" rx="16" fill="#DCFCE7" />
+        <rect x="0" y="20" width="520" height="12" fill="#DCFCE7" />
+        <line x1="0" y1="32" x2="520" y2="32" stroke="#16A34A" stroke-width="2" />
+        <text x="20" y="21" class="text-header-badge" fill="#15803D">06 · CLOUD QUOTA RESET</text>
+        <text x="22" y="60" class="text-title" style="font-size: 22px;">0% Cloud Quota Reclaimed</text>
+        <text x="22" y="85" class="text-desc">$0 Overage Fees · 100% Automated</text>
+      </g>
+
+    </svg>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-left">
+      <span class="badge-outcome">OUTCOME</span>
+      <span class="outcome-text">100% elimination of Zoom cloud storage overage fees with infinite retention on self-hosted VPS.</span>
+    </div>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #F0F9FF; border-color: #0284C7;"></div>
+        <span>Ingestion</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #EEF2FF; border-color: #6366F1;"></div>
+        <span>Load Balancer</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #ECFDF5; border-color: #059669;"></div>
+        <span>Drive Vault</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #FFFBEB; border-color: #D97706;"></div>
+        <span>Safety Gate</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #FFF1F2; border-color: #E11D48;"></div>
+        <span>REST Purge</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #F0FDF4; border-color: #16A34A;"></div>
+        <span>Quota Reset</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>`;
+}
+
+async function main() {
+  console.log('Launching Puppeteer for flowchart generation...');
+  const browser = await puppeteer.launch({
+    executablePath: CHROME_PATH,
+    headless: 'new',
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu']
+  });
+
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1600, height: 1000, deviceScaleFactor: 2 });
+
+  const previewDir = path.resolve('public/previews');
+  if (!fs.existsSync(previewDir)) fs.mkdirSync(previewDir, { recursive: true });
+
+  // 1. Sabai Flowchart (3-Tier DFD S-Curve in Pastel Mint & Pink)
+  console.log('Generating Sabai 3-Tier DFD Flowchart...');
+  const sabaiHtml = buildSabaiHtml();
+  fs.writeFileSync(path.join(previewDir, 'sabai_flowchart.html'), sabaiHtml, 'utf8');
+  await page.setContent(sabaiHtml, { waitUntil: 'domcontentloaded' });
+  await page.screenshot({ path: path.join(previewDir, 'sabai_flowchart.png'), type: 'png' });
+  await page.screenshot({ path: path.join(previewDir, 'sabai_flowchart.webp'), type: 'webp', quality: 95 });
+  console.log('Saved Sabai flowchart to public/previews/sabai_flowchart.png');
+
+  // Also deploy directly to project image directory
+  const sabaiProjectImg = path.resolve('public/images/projects/sabai_health_assistant/system_architecture_flowchart.webp');
+  fs.copyFileSync(path.join(previewDir, 'sabai_flowchart.webp'), sabaiProjectImg);
+  console.log('Deployed Sabai flowchart to', sabaiProjectImg);
+
+  // 2. ZoomFlow Pipeline (2-Tier Pipeline with Verification Gate in Cloud DevOps Blue/Violet/Amber)
+  console.log('Generating ZoomFlow 2-Tier Pipeline Flowchart...');
+  const zoomHtml = buildZoomflowHtml();
+  fs.writeFileSync(path.join(previewDir, 'zoomflow_flowchart.html'), zoomHtml, 'utf8');
+  await page.setContent(zoomHtml, { waitUntil: 'domcontentloaded' });
+  await page.screenshot({ path: path.join(previewDir, 'zoomflow_flowchart.png'), type: 'png' });
+  await page.screenshot({ path: path.join(previewDir, 'zoomflow_flowchart.webp'), type: 'webp', quality: 95 });
+  console.log('Saved ZoomFlow flowchart to public/previews/zoomflow_flowchart.png');
+
+  // Also deploy directly to project image directory
+  const zoomProjectImg = path.resolve('public/images/projects/zoom-automation/system_architecture_flowchart.webp');
+  fs.copyFileSync(path.join(previewDir, 'zoomflow_flowchart.webp'), zoomProjectImg);
+  console.log('Deployed ZoomFlow flowchart to', zoomProjectImg);
+
+  await browser.close();
+  console.log('Both distinct flowcharts rendered successfully into public/previews/!');
+}
+
+main().catch(err => {
+  console.error('Error generating flowcharts:', err);
+  process.exit(1);
+});

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1600px;
+    height: 1000px;
+    background-color: #F8FAFC;
+    background-image: radial-gradient(#CBD5E1 1.4px, transparent 1.4px);
+    background-size: 24px 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #0F172A;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 44px 56px 40px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #E2E8F0;
+    color: #334155;
+    padding: 5px 14px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .title {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #0F172A;
+    line-height: 1.15;
+  }
+  .subtitle {
+    font-size: 15px;
+    color: #64748B;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .n8n-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    border: 1.5px solid #E2E8F0;
+    padding: 8px 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+  }
+  .n8n-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: #10B981;
+    box-shadow: 0 0 8px #10B981;
+  }
+  .n8n-label {
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  /* SVG Canvas */
+  .canvas-wrap {
+    position: relative;
+    width: 1488px;
+    height: 700px;
+    margin: 8px 0;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .node-entity {
+    fill: #FCE7F3;
+    stroke: #0F172A;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+  .node-process {
+    fill: #A7F3D0;
+    stroke: #0F172A;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+  .node-datastore {
+    fill: #FBCFE8;
+    stroke: #0F172A;
+    stroke-width: 2.2;
+    rx: 16;
+  }
+
+  .text-title {
+    font-size: 16px;
+    font-weight: 800;
+    fill: #0F172A;
+    text-anchor: middle;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .text-sub {
+    font-size: 12px;
+    font-weight: 600;
+    fill: #475569;
+    text-anchor: middle;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .text-num {
+    font-size: 16px;
+    font-weight: 900;
+    fill: #0F172A;
+    text-anchor: middle;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    letter-spacing: 0.05em;
+  }
+  .text-label {
+    font-size: 11.5px;
+    font-weight: 800;
+    fill: #0F172A;
+    text-anchor: middle;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .flow-line {
+    fill: none;
+    stroke: #0F172A;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .label-bg {
+    fill: #F8FAFC;
+    stroke: #CBD5E1;
+    stroke-width: 1;
+    rx: 6;
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FFFFFF;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 14px 24px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  }
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .badge-outcome {
+    background: #0F172A;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    padding: 4px 12px;
+    border-radius: 6px;
+    letter-spacing: 0.08em;
+  }
+  .outcome-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1E293B;
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid #0F172A;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <span class="tag">AI Healthcare Architecture</span>
+      <h1 class="title">Sabai: Autonomous AI Health Assistant</h1>
+      <p class="subtitle">3-tier data flow diagram (DFD): patient channels, clinical RAG grounding, tool loop, and instant delivery</p>
+    </div>
+    <div class="n8n-badge">
+      <div class="n8n-dot"></div>
+      <span class="n8n-label">n8n Execution Mesh</span>
+    </div>
+  </div>
+
+  <!-- SVG Multi-Row Canvas -->
+  <div class="canvas-wrap">
+    <svg viewBox="0 0 1488 700">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 10 5 L 0 9 z" fill="#0F172A" />
+        </marker>
+      </defs>
+
+      <!-- Connectors -->
+      <line x1="394" y1="130" x2="604" y2="130" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(500, 130)">
+        <rect x="-65" y="-14" width="130" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Data Flow</text>
+      </g>
+
+      <line x1="884" y1="130" x2="1094" y2="130" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(990, 130)">
+        <rect x="-65" y="-14" width="130" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Context Query</text>
+      </g>
+
+      <path d="M 1234 195 L 1234 334 Q 1234 350 1218 350 L 894 350" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(1040, 350)">
+        <rect x="-70" y="-14" width="140" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Grounded SOPs</text>
+      </g>
+
+      <path d="M 594 350 L 270 350 Q 254 350 254 366 L 254 505" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(424, 350)">
+        <rect x="-70" y="-14" width="140" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Triage & Actions</text>
+      </g>
+
+      <line x1="394" y1="570" x2="604" y2="570" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(500, 570)">
+        <rect x="-65" y="-14" width="130" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Verified Answer</text>
+      </g>
+
+      <line x1="884" y1="570" x2="1094" y2="570" class="flow-line" marker-end="url(#arrow)" />
+      <g transform="translate(990, 570)">
+        <rect x="-65" y="-14" width="130" height="26" class="label-bg" />
+        <text x="0" y="4" class="text-label">Instant Reply</text>
+      </g>
+
+      <!-- Row 1 Left: Patient -->
+      <g transform="translate(114, 65)">
+        <rect width="280" height="130" class="node-entity" />
+        <text x="140" y="55" class="text-title">Patient / User</text>
+        <text x="140" y="80" class="text-sub">WhatsApp & Telegram</text>
+        <text x="140" y="102" class="text-sub" style="font-size: 11px; fill: #64748B;">Sends symptom query or question</text>
+      </g>
+
+      <!-- Row 1 Center: 01 n8n Ingestion -->
+      <g transform="translate(604, 65)">
+        <rect width="280" height="130" class="node-process" />
+        <line x1="0" y1="50" x2="280" y2="50" stroke="#0F172A" stroke-width="2" />
+        <text x="140" y="34" class="text-num">01</text>
+        <text x="140" y="80" class="text-title">n8n Ingestion Engine</text>
+        <text x="140" y="104" class="text-sub">Webhook & Intent Parser</text>
+      </g>
+
+      <!-- Row 1 Right: Vector DB -->
+      <g transform="translate(1094, 65)">
+        <rect width="280" height="130" class="node-datastore" />
+        <line x1="45" y1="0" x2="45" y2="130" stroke="#0F172A" stroke-width="2.2" />
+        <text x="162" y="55" class="text-title">Clinical Vector DB</text>
+        <text x="162" y="80" class="text-sub">Medical Knowledge Base</text>
+        <text x="162" y="102" class="text-sub" style="font-size: 11px; fill: #64748B;">Verified clinic protocols & SOPs</text>
+      </g>
+
+      <!-- Row 2 Center: 02 Tool Loop -->
+      <g transform="translate(604, 285)">
+        <rect width="280" height="130" class="node-process" />
+        <line x1="0" y1="50" x2="280" y2="50" stroke="#0F172A" stroke-width="2" />
+        <text x="140" y="34" class="text-num">02</text>
+        <text x="140" y="80" class="text-title">Autonomous Tool Loop</text>
+        <text x="140" y="104" class="text-sub">Agent Reasoning & Triage</text>
+      </g>
+
+      <!-- Row 3 Left: Session DB -->
+      <g transform="translate(114, 505)">
+        <rect width="280" height="130" class="node-datastore" />
+        <line x1="45" y1="0" x2="45" y2="130" stroke="#0F172A" stroke-width="2.2" />
+        <text x="162" y="55" class="text-title">Session & History DB</text>
+        <text x="162" y="80" class="text-sub">PostgreSQL / Redis State</text>
+        <text x="162" y="102" class="text-sub" style="font-size: 11px; fill: #64748B;">Audits conversation & booking log</text>
+      </g>
+
+      <!-- Row 3 Center: 03 Dispatcher -->
+      <g transform="translate(604, 505)">
+        <rect width="280" height="130" class="node-process" />
+        <line x1="0" y1="50" x2="280" y2="50" stroke="#0F172A" stroke-width="2" />
+        <text x="140" y="34" class="text-num">03</text>
+        <text x="140" y="80" class="text-title">Response Dispatcher</text>
+        <text x="140" y="104" class="text-sub">Empathetic Guidance Formatter</text>
+      </g>
+
+      <!-- Row 3 Right: Patient Delivery -->
+      <g transform="translate(1094, 505)">
+        <rect width="280" height="130" class="node-entity" />
+        <text x="140" y="55" class="text-title">Patient / User</text>
+        <text x="140" y="80" class="text-sub">WhatsApp & Telegram</text>
+        <text x="140" y="102" class="text-sub" style="font-size: 11px; fill: #64748B;">Instant < 2.5s triage delivery</text>
+      </g>
+
+    </svg>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-left">
+      <span class="badge-outcome">OUTCOME</span>
+      <span class="outcome-text">24/7 automated first-line healthcare triage & scheduling with 100% verified clinical grounding.</span>
+    </div>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #FCE7F3;"></div>
+        <span>Channel / Entity</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #A7F3D0;"></div>
+        <span>n8n Process Node</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #FBCFE8;"></div>
+        <span>Knowledge / DB</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

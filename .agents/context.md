@@ -138,7 +138,7 @@ Portfolio/
 │   └── data/
 │       ├── profile.ts           # Bio, legal names, social links, and contact
 │       ├── themeConfig.ts       # 4 themes & 4 fonts configuration
-│       ├── projects.ts          # 8 featured production projects
+│       ├── projects.ts          # 11 production projects with architecture diagrams & case studies
 │       └── skillsData.ts        # 6 skill realms & technology matrix
 └── next.config.ts               # Compression, image deviceSizes, and Turbopack config
 ```

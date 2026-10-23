@@ -274,3 +274,15 @@
   - **Mobile Score**: **`86 / 100`** (Up from 42! FCP: 1.7s, LCP: 3.6s, TBT: 100ms, CLS: 0, Speed Index: 4.6s)
   - **Total Blocking Time (TBT)**: Dropped by **95%** (from 1,960ms down to 100ms on 4x CPU throttle).
   - **Cumulative Layout Shift (CLS)**: **`0.000`** (Zero visual shift on all devices).
+
+
+### Phase 10: Project Architecture Flowcharts & Section Polish [COMPLETE & LOCKED]
+- [x] **Distinct Visual System Architecture Flowcharts (`scripts/generate-flowcharts.js`)**:
+  - **Sabai Assistant**: 3-Tier Serpentine / S-Curve DFD in pastel mint & pink (`system_architecture_flowchart.webp`), mapping patient WhatsApp/Telegram ingestion, clinical RAG vector store, autonomous tool calling, session/history DB, and empathetic response dispatcher.
+  - **ZoomFlow Pipeline**: Symmetrical Tree / Load-Balancer Pipeline Topology in Cloud DevOps Blue/Indigo/Emerald/Amber/Rose (`system_architecture_flowchart.webp`), mapping Zoom webhook trigger, central n8n Load Balancer & Dispatcher Hub, dual parallel archival (Google Drive) & purge arms, dashed amber upload status verification bridge (`200 OK`), and 0% quota reclaimed convergence.
+  - **Automated Generation**: Scripted with Puppeteer-core rendering at 3200x2000 retina resolution onto clean n8n light dot-grid canvas.
+- [x] **Cache-Busting & Next.js Image Optimization Synchronization**:
+  - Solved Next.js image optimization immutable caching by deploying fresh asset paths (`system_architecture_flowchart.webp`), synchronizing both card covers and portaled lightbox modals.
+- [x] **Grid Card Ordering & Alignment**:
+  - Reordered project entries so `ZoomFlow` appears on the left and `Vocab App` on the right in the 2-column desktop grid.
+- [x] **Next Up**: Skill section overhaul and visual optimization.
