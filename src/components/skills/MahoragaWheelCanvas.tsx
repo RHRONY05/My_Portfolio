@@ -6,8 +6,8 @@ import { Html } from "@react-three/drei";
 import * as THREE from "three";
 
 const CIRCLE_COUNT = 6;
-const GOLD_COLOR = "#E5B869";
-const CARD_BG = "#161B22";
+const WHITE_GLOW = "#FFFFFF";
+const CARD_BG = "#141820";
 
 // The 6 Strategic Planning Tools orchestrated in the horizontal halo
 export const PLANNING_TOOLS = [
@@ -19,11 +19,11 @@ export const PLANNING_TOOLS = [
     color: "#D97757",
   },
   {
-    name: "Antigravity",
-    fullName: "Google Antigravity",
-    role: "Autonomous Agent Systems",
-    iconUrl: "/images/skills/tools/antigravity.svg",
-    color: "#3186FF",
+    name: "ChatGPT",
+    fullName: "ChatGPT (OpenAI)",
+    role: "System Specs & Ideation",
+    iconUrl: "/images/skills/tools/chatgpt.svg",
+    color: "#10A37F",
   },
   {
     name: "Stitch",
@@ -33,25 +33,25 @@ export const PLANNING_TOOLS = [
     color: "#FF80BF",
   },
   {
+    name: "Notion",
+    fullName: "Notion",
+    role: "Technical Documentation & Specs",
+    iconUrl: "/images/skills/icons/notion.webp",
+    color: "#FFFFFF",
+  },
+  {
+    name: "Antigravity",
+    fullName: "Google Antigravity",
+    role: "Autonomous Agent Systems",
+    iconUrl: "/images/skills/tools/antigravity.svg",
+    color: "#3186FF",
+  },
+  {
     name: "Muse Agent",
     fullName: "Muse Research Agent",
     role: "Deep Docs & Codebase Research",
     iconUrl: "/images/skills/tools/muse.webp",
     color: "#2563EB",
-  },
-  {
-    name: "Excalidraw",
-    fullName: "Excalidraw",
-    role: "System & Schema Modeling",
-    iconUrl: "/images/skills/tools/excalidraw.webp",
-    color: "#6965DB",
-  },
-  {
-    name: "Postman",
-    fullName: "Postman",
-    role: "API Contract Design",
-    iconUrl: "/images/skills/tools/postman.svg",
-    color: "#FF6C37",
   },
 ];
 
@@ -177,11 +177,11 @@ function HorizontalHaloRing({
             <mesh rotation={[Math.PI / 2, 0, 0]}>
               <torusGeometry args={[0.20, 0.016, 16, 32]} />
               <meshStandardMaterial
-                color={accentColor}
+                color="#FFFFFF"
                 metalness={0.9}
-                roughness={0.2}
-                emissive={accentColor}
-                emissiveIntensity={0.3}
+                roughness={0.15}
+                emissive="#FFFFFF"
+                emissiveIntensity={0.4}
               />
             </mesh>
 
@@ -217,7 +217,7 @@ function HorizontalHaloRing({
                       (e.currentTarget.parentElement?.parentElement as HTMLElement | null);
                     if (wrapper) wrapper.style.zIndex = "";
                   }}
-                  className="tool-emblem-card group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card/95 border border-line hover:border-accent hover:scale-115 hover:shadow-[0_0_14px_rgba(var(--color-accent-rgb),0.45)] transition-transform duration-150 cursor-pointer p-1 backdrop-blur-sm"
+                  className="tool-emblem-card group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card/95 border border-line hover:border-white hover:scale-115 hover:shadow-[0_0_14px_rgba(255,255,255,0.65)] transition-transform duration-150 cursor-pointer p-1 backdrop-blur-sm"
                 >
                   <img
                     src={tool.iconUrl}
@@ -226,7 +226,7 @@ function HorizontalHaloRing({
                   />
                   {/* Sleek Tooltip on hover (Elevated above all other 3D tokens) */}
                   <div className="absolute -top-11 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-card/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-line text-center whitespace-nowrap pointer-events-none shadow-2xl z-[999999]">
-                    <div className="text-[10px] font-mono font-bold text-accent drop-shadow-sm">{tool.name}</div>
+                    <div className="text-[10px] font-mono font-bold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">{tool.name}</div>
                     <div className="text-[9px] font-sans text-muted">{tool.role}</div>
                   </div>
                 </div>
@@ -426,22 +426,22 @@ export function MahoragaWheelCanvas({
         {/* Dynamic Studio Lighting matching active theme */}
         <ambientLight intensity={1.3} />
         <directionalLight position={[3, 6, 4]} intensity={2.2} color="#FFFFFF" />
-        <pointLight position={[-3, 3, 2]} intensity={1.6} color={themeColors.accent} distance={8} />
-        <pointLight position={[0, -1, 2]} intensity={0.9} color={themeColors.secondary} distance={5} />
+        <pointLight position={[-3, 3, 2]} intensity={1.6} color="#FFFFFF" distance={8} />
+        <pointLight position={[0, -1, 2]} intensity={0.9} color="#FFFFFF" distance={5} />
 
         <HorizontalHaloRing
           isSpinningFast={isSpinningFast}
           dragPhysicsRef={dragPhysicsRef}
-          accentColor={themeColors.accent}
+          accentColor="#FFFFFF"
           cardBg={themeColors.card}
           isModalOpen={isModalOpen}
         />
       </Canvas>
 
-      {/* Subtle Ambient Radial Glow Backing */}
+      {/* Subtle Ambient Radial Glow Backing (Pure White Halo Glow) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(var(--color-accent-rgb,229,184,105),0.2)_0%,transparent_70%)] blur-md"
+        className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.22)_0%,transparent_70%)] blur-md"
       />
     </div>
   );

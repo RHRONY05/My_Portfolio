@@ -295,7 +295,7 @@ function ContactForm() {
             <button
               type="submit"
               disabled={status === "submitting"}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-4 text-mono text-on-accent transition-all hover:opacity-90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-white text-black font-semibold py-4 text-mono transition-all hover:bg-white/90 hover:shadow-[0_0_24px_rgba(255,255,255,0.4)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
             >
               {status === "submitting" ? (
                 <>

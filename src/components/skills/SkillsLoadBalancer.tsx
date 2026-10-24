@@ -169,7 +169,7 @@ export function SkillsLoadBalancer() {
     <section
       id="skills"
       aria-label="Engineering Lifecycle and Skill Architecture"
-      className="relative w-full pt-8 sm:pt-10 pb-8 sm:pb-12 bg-canvas overflow-hidden"
+      className="relative w-full pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 bg-canvas overflow-hidden"
     >
       {/* Background Subtle Dot-Grid Pattern */}
       <div
@@ -250,7 +250,7 @@ export function SkillsLoadBalancer() {
                 width={500}
                 height={400}
                 priority
-                className="w-full h-auto object-contain drop-shadow-[0_16px_32px_rgba(var(--color-accent-rgb),0.25)]"
+                className="w-full h-auto object-contain drop-shadow-[0_16px_36px_rgba(255,255,255,0.35)]"
               />
             </div>
           </div>
@@ -465,7 +465,7 @@ export function SkillsLoadBalancer() {
                 width={500}
                 height={400}
                 loading="lazy"
-                className="w-full h-auto object-contain drop-shadow-[0_12px_24px_rgba(var(--color-accent-rgb),0.2)]"
+                className="w-full h-auto object-contain drop-shadow-[0_12px_28px_rgba(255,255,255,0.3)]"
               />
             </div>
           </div>

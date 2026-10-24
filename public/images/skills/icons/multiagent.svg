@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Dashed Orbital Rings -->
+  <path d="M 36 20 A 40 40 0 0 1 64 20" stroke-width="2.5" stroke-dasharray="3 3.5"/>
+  <path d="M 80 36 A 40 40 0 0 1 80 64" stroke-width="2.5" stroke-dasharray="3 3.5"/>
+  <path d="M 64 80 A 40 40 0 0 1 36 80" stroke-width="2.5" stroke-dasharray="3 3.5"/>
+  <path d="M 20 64 A 40 40 0 0 1 20 36" stroke-width="2.5" stroke-dasharray="3 3.5"/>
+
+  <!-- 4 Outer Subagent Badges (Nodes) -->
+  <!-- Top-Left Agent -->
+  <circle cx="23" cy="23" r="14" stroke-width="3" fill="#141820"/>
+  <circle cx="23" cy="14" r="1.5" fill="#FFFFFF"/>
+  <line x1="23" y1="14" x2="23" y2="17" stroke-width="1.8"/>
+  <rect x="15.5" y="17" width="15" height="11" rx="4" stroke-width="2.2"/>
+  <line x1="18.5" y1="22.5" x2="20.5" y2="22.5" stroke-width="2"/>
+  <line x1="25.5" y1="22.5" x2="27.5" y2="22.5" stroke-width="2"/>
+
+  <!-- Top-Right Agent -->
+  <circle cx="77" cy="23" r="14" stroke-width="3" fill="#141820"/>
+  <circle cx="77" cy="14" r="1.5" fill="#FFFFFF"/>
+  <line x1="77" y1="14" x2="77" y2="17" stroke-width="1.8"/>
+  <rect x="69.5" y="17" width="15" height="11" rx="4" stroke-width="2.2"/>
+  <line x1="72.5" y1="22.5" x2="74.5" y2="22.5" stroke-width="2"/>
+  <line x1="79.5" y1="22.5" x2="81.5" y2="22.5" stroke-width="2"/>
+
+  <!-- Bottom-Left Agent -->
+  <circle cx="23" cy="77" r="14" stroke-width="3" fill="#141820"/>
+  <circle cx="23" cy="68" r="1.5" fill="#FFFFFF"/>
+  <line x1="23" y1="68" x2="23" y2="71" stroke-width="1.8"/>
+  <rect x="15.5" y="71" width="15" height="11" rx="4" stroke-width="2.2"/>
+  <line x1="18.5" y1="76.5" x2="20.5" y2="76.5" stroke-width="2"/>
+  <line x1="25.5" y1="76.5" x2="27.5" y2="76.5" stroke-width="2"/>
+
+  <!-- Bottom-Right Agent -->
+  <circle cx="77" cy="77" r="14" stroke-width="3" fill="#141820"/>
+  <circle cx="77" cy="68" r="1.5" fill="#FFFFFF"/>
+  <line x1="77" y1="68" x2="77" y2="71" stroke-width="1.8"/>
+  <rect x="69.5" y="71" width="15" height="11" rx="4" stroke-width="2.2"/>
+  <line x1="72.5" y1="76.5" x2="74.5" y2="76.5" stroke-width="2"/>
+  <line x1="79.5" y1="76.5" x2="81.5" y2="76.5" stroke-width="2"/>
+
+  <!-- Center Master Orchestrator Agent -->
+  <!-- Top Dome & Antenna Cap -->
+  <rect x="46" y="34.5" width="8" height="4" rx="1.5" fill="#FFFFFF"/>
+  <!-- Side Antennas -->
+  <circle cx="35" cy="35" r="2" fill="#FFFFFF"/>
+  <line x1="35" y1="36" x2="35" y2="44" stroke-width="2.5"/>
+  <rect x="33.5" y="44" width="3" height="8" rx="1" fill="#FFFFFF"/>
+
+  <circle cx="65" cy="35" r="2" fill="#FFFFFF"/>
+  <line x1="65" y1="36" x2="65" y2="44" stroke-width="2.5"/>
+  <rect x="63.5" y="44" width="3" height="8" rx="1" fill="#FFFFFF"/>
+
+  <!-- Main Robot Helmet/Head -->
+  <path d="M 37 47 C 37 38 63 38 63 47 C 63 56 63 60 59 62 C 55 64 45 64 41 62 C 37 60 37 56 37 47 Z" stroke-width="3.2" fill="#141820"/>
+
+  <!-- Face Screen visor -->
+  <rect x="40" y="46" width="20" height="10" rx="4" stroke-width="2.5"/>
+  <!-- Eyes -->
+  <line x1="43.5" y1="51" x2="47" y2="51" stroke-width="2.5"/>
+  <line x1="53" y1="51" x2="56.5" y2="51" stroke-width="2.5"/>
+</svg>
