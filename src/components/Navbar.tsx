@@ -65,6 +65,7 @@ export function Navbar() {
   if (isCleanMode) return null;
 
   const getNavLinkHref = (id: string) => {
+    if (id === "projects") return "/projects";
     if (isHome) return `#${id}`;
     return `/#${id}`;
   };
@@ -115,20 +116,30 @@ export function Navbar() {
 
         {/* Desktop Navigation Links - Clean, unboxed text links */}
         <nav className="hidden items-center gap-8 md:flex">
-          {rawNavLinks.map((link) => (
-            <a
-              key={link.id}
-              href={getNavLinkHref(link.id)}
-              className="text-[15px] lg:text-base font-semibold drop-shadow-sm text-[#f5f5f5]/85 transition-colors hover:text-white"
-            >
-              {link.label}
-            </a>
-          ))}
+          {rawNavLinks.map((link) =>
+            link.id === "projects" ? (
+              <Link
+                key={link.id}
+                href="/projects"
+                className="text-[15px] lg:text-base font-semibold drop-shadow-sm text-[#f5f5f5]/85 transition-colors hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.id}
+                href={getNavLinkHref(link.id)}
+                className="text-[15px] lg:text-base font-semibold drop-shadow-sm text-[#f5f5f5]/85 transition-colors hover:text-white"
+              >
+                {link.label}
+              </a>
+            )
+          )}
         </nav>
 
-        {/* Right Section: Theme/Font Customizer + Hire Me Button + Mobile Toggle */}
+        {/* Right Section: Hire Me Button + Mobile Toggle (Theme customizer code preserved in codebase) */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <ThemeFontCustomizer isPastHero={false} />
+          {/* <ThemeFontCustomizer isPastHero={false} /> */}
 
           <a
             href={getNavLinkHref("contact")}
@@ -170,16 +181,27 @@ export function Navbar() {
             }`}
           >
             <nav className="flex flex-col space-y-4">
-              {rawNavLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={getNavLinkHref(link.id)}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="font-mono text-base font-medium py-1 text-[#f5f5f5]/85 transition-colors hover:text-white"
-                >
-                  {link.label}
-                </a>
-              ))}
+              {rawNavLinks.map((link) =>
+                link.id === "projects" ? (
+                  <Link
+                    key={link.id}
+                    href="/projects"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="font-mono text-base font-medium py-1 text-[#f5f5f5]/85 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.id}
+                    href={getNavLinkHref(link.id)}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="font-mono text-base font-medium py-1 text-[#f5f5f5]/85 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </a>
+                )
+              )}
               <div className="pt-2">
                 <a
                   href={getNavLinkHref("contact")}

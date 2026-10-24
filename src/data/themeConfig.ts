@@ -319,6 +319,19 @@ export function applyThemeToDocument(theme: ThemeItem) {
   document.body.style.color = c.fg;
 }
 
+// Helper: Dynamically inject external Google Fonts only when non-default font is requested
+export function ensureGoogleFontLoaded() {
+  if (typeof document === "undefined") return;
+  const id = "google-fonts-custom";
+  if (document.getElementById(id)) return;
+  const link = document.createElement("link");
+  link.id = id;
+  link.rel = "stylesheet";
+  link.href =
+    "https://fonts.googleapis.com/css2?family=Lusitana:wght@400;700&family=Original+Surfer&family=Ruwudu:wght@400;500;600;700&display=swap";
+  document.head.appendChild(link);
+}
+
 // Helper: Apply font to document root (Option 1: entire website inherits)
 export function applyFontToDocument(font: FontItem) {
   if (typeof document === "undefined") return;
@@ -329,6 +342,7 @@ export function applyFontToDocument(font: FontItem) {
     root.style.setProperty("--font-sans", "var(--font-sans)");
     document.body.style.fontFamily = "var(--font-sans)";
   } else {
+    ensureGoogleFontLoaded();
     root.style.setProperty("--font-primary", font.family);
     root.style.setProperty("--font-heading", font.family);
     root.style.setProperty("--font-sans", font.family);

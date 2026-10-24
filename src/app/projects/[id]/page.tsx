@@ -67,31 +67,24 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               TOP HEADER SECTION
               [<- Back]                           [Role • Timeline]
              ========================================================= */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-6 border-b border-line/40">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4">
             <Link
               href="/projects"
-              className="inline-flex items-center gap-2 font-mono text-xs font-bold text-muted hover:text-accent transition-colors group w-fit"
+              className="inline-flex items-center gap-2 font-mono text-xs font-bold text-accent hover:opacity-80 transition-opacity group w-fit"
             >
               <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
               <span>Back to Projects</span>
             </Link>
 
-            <div className="flex items-center gap-2 font-mono text-xs text-muted">
-              <span className="text-fg font-medium">{cs.role}</span>
-              <span className="text-line">•</span>
+            <div className="flex items-center gap-2 font-mono text-xs text-accent">
+              <span className="font-medium">{cs.role}</span>
+              <span className="opacity-60">•</span>
               <span>{cs.timeline}</span>
             </div>
           </div>
 
           {/* PROJECT TITLE & INSTANT 2-SENTENCE OVERVIEW */}
-          <div className="py-8 sm:py-10">
-            <div className="inline-flex items-center gap-2 mb-3">
-              <span className="size-2 rounded-full bg-accent animate-pulse" />
-              <span className="font-mono text-xs font-bold tracking-widest text-accent uppercase">
-                {project.category}
-              </span>
-            </div>
-
+          <div className="pt-4 pb-8 sm:pb-10">
             <h1 className="font-sans text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-fg leading-tight">
               {project.title}
             </h1>
@@ -146,91 +139,151 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           <ProjectMasonryGallery project={project} />
 
           {/* =========================================================
-              01. THE PROBLEM SOLVED  |  02. THE ENGINEERED SOLUTION
+              THE CHALLENGE vs THE APPROACH SECTION
+              Button-like pill headers with arrowhead bullet list
              ========================================================= */}
-          <section className="my-12 sm:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 pt-8 border-t border-line/50">
-            {/* Left Column: 01. THE PROBLEM SOLVED */}
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold tracking-widest text-accent uppercase mb-3">
-                <span>01.</span>
-                <span>THE PROBLEM SOLVED</span>
+          <section className="my-12 sm:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 pt-8 border-t border-line/50">
+            {/* Left Column: The Challenge */}
+            <div className="flex flex-col space-y-6">
+              <div className="w-full max-w-[280px] mx-auto py-3 px-6 rounded-full text-center font-heading text-xl sm:text-2xl font-bold bg-card border border-line-strong text-fg shadow-sm flex items-center justify-center transition-colors hover:border-accent/60">
+                The Challenge
               </div>
-              <h2 className="font-sans text-2xl sm:text-3xl font-black text-fg mb-3">
-                Why this needed to exist
-              </h2>
-              <p className="text-sm sm:text-base text-muted leading-relaxed font-sans mb-6">
-                {cs.challenge.summary}
-              </p>
 
-              {/* 3 Bullet Points */}
-              <div className="space-y-3 mt-auto">
-                {cs.challenge.points.slice(0, 3).map((pt, i) => (
-                  <div
-                    key={i}
-                    className="flex items-start gap-3 rounded-xl border border-line bg-card/50 p-4"
-                  >
-                    <span className="mt-1 size-1.5 rounded-full bg-accent shrink-0" />
-                    <span className="text-xs sm:text-sm text-fg/90 leading-relaxed">
+              {cs.challenge.summary && (
+                <p className="text-base sm:text-lg text-muted leading-relaxed font-sans">
+                  {cs.challenge.summary}
+                </p>
+              )}
+
+              <ul className="space-y-4 pt-2">
+                {cs.challenge.points.map((pt, i) => (
+                  <li key={i} className="flex items-start gap-3.5 group">
+                    <svg
+                      className="size-4.5 text-accent shrink-0 mt-1 transition-transform group-hover:translate-x-0.5"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 3l16 9-16 9 3-9-3-9z" />
+                    </svg>
+                    <span className="text-base sm:text-lg text-fg/90 leading-relaxed font-sans">
                       {pt}
                     </span>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            {/* Right Column: 02. THE ENGINEERED SOLUTION */}
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold tracking-widest text-accent uppercase mb-3">
-                <span>02.</span>
-                <span>THE ENGINEERED SOLUTION</span>
+            {/* Right Column: The Approach */}
+            <div className="flex flex-col space-y-6">
+              <div className="w-full max-w-[280px] mx-auto py-3 px-6 rounded-full text-center font-heading text-xl sm:text-2xl font-bold bg-accent text-on-accent shadow-md flex items-center justify-center transition-colors hover:bg-accent-hover">
+                The Approach
               </div>
-              <h2 className="font-sans text-2xl sm:text-3xl font-black text-fg mb-3">
-                How it was architected
-              </h2>
-              <p className="text-sm sm:text-base text-muted leading-relaxed font-sans mb-6">
-                {cs.solution.summary}
-              </p>
 
-              {/* 3 Key Architecture Cards */}
-              <div className="space-y-3 mt-auto">
-                {cs.solution.architecturePoints.slice(0, 3).map((arch, i) => (
-                  <div
-                    key={i}
-                    className="rounded-xl border border-line bg-card/60 p-4 transition-all hover:border-accent/60"
-                  >
-                    <div className="flex items-center gap-2 font-mono text-xs font-bold text-accent">
-                      <span>0{i + 1} //</span>
-                      <span>{arch.title}</span>
+              {cs.solution.summary && (
+                <p className="text-base sm:text-lg text-muted leading-relaxed font-sans">
+                  {cs.solution.summary}
+                </p>
+              )}
+
+              <ul className="space-y-4 pt-2">
+                {cs.solution.architecturePoints.map((arch, i) => (
+                  <li key={i} className="flex items-start gap-3.5 group">
+                    <svg
+                      className="size-4.5 text-accent shrink-0 mt-1 transition-transform group-hover:translate-x-0.5"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 3l16 9-16 9 3-9-3-9z" />
+                    </svg>
+                    <div className="text-base sm:text-lg leading-relaxed font-sans">
+                      <span className="font-semibold text-fg">{arch.title}</span>
+                      {arch.desc && (
+                        <span className="text-muted block mt-0.5 sm:inline sm:mt-0 sm:ml-1.5">
+                          — {arch.desc}
+                        </span>
+                      )}
                     </div>
-                    <p className="mt-1.5 text-xs sm:text-sm text-muted leading-relaxed">
-                      {arch.desc}
-                    </p>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           </section>
 
           {/* =========================================================
-              BOTTOM NAVIGATION
-              [<- Prev Project]                      [Next Project ->]
+              BOTTOM NAVIGATION: NEXT & PREVIOUS CASE STUDIES
              ========================================================= */}
-          <div className="flex items-center justify-between gap-4 pt-8 mt-12 sm:mt-16 border-t border-line/60">
-            <Link
-              href={`/projects/${prev.id}`}
-              className="group inline-flex items-center gap-2 font-mono text-xs font-bold text-muted hover:text-accent transition-colors max-w-[45%]"
-            >
-              <ArrowLeft className="size-4 shrink-0 transition-transform group-hover:-translate-x-1" />
-              <span className="truncate">PREV: {prev.title}</span>
-            </Link>
+          <div className="pt-10 mt-14 sm:mt-20 border-t border-line/60">
+            <div className="flex items-center justify-between mb-5">
+              <span className="font-mono text-xs font-bold tracking-widest text-muted uppercase">
+                Continue Exploring
+              </span>
+              <Link
+                href="/projects"
+                className="font-mono text-xs font-semibold text-accent hover:underline transition-all"
+              >
+                All Projects →
+              </Link>
+            </div>
 
-            <Link
-              href={`/projects/${next.id}`}
-              className="group inline-flex items-center gap-2 font-mono text-xs font-bold text-muted hover:text-accent transition-colors max-w-[45%] text-right ml-auto"
-            >
-              <span className="truncate">NEXT: {next.title}</span>
-              <ArrowRight className="size-4 shrink-0 transition-transform group-hover:translate-x-1" />
-            </Link>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              {/* Previous Project Card */}
+              <Link
+                href={`/projects/${prev.id}`}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-line bg-card/50 p-5 sm:p-6 transition-all duration-300 hover:border-accent hover:bg-card hover:shadow-[0_10px_30px_rgba(var(--color-accent-rgb),0.12)] hover:-translate-y-1"
+              >
+                <div>
+                  <div className="flex items-center gap-1.5 font-mono text-xs font-bold tracking-widest text-accent uppercase mb-2">
+                    <ArrowLeft className="size-3.5 transition-transform duration-300 group-hover:-translate-x-1.5" />
+                    <span>Previous Project</span>
+                  </div>
+                  <h3 className="font-sans text-base sm:text-lg lg:text-xl font-bold text-fg group-hover:text-accent transition-colors line-clamp-1">
+                    {prev.title}
+                  </h3>
+                  <p className="mt-1 text-xs sm:text-sm text-muted line-clamp-1 font-sans">
+                    {prev.tagline}
+                  </p>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-line/40 flex items-center justify-between">
+                  <span className="rounded-md border border-line bg-canvas/60 px-2 py-0.5 font-mono text-[10px] text-muted uppercase tracking-wider">
+                    {prev.category}
+                  </span>
+                  <span className="font-mono text-xs text-muted group-hover:text-accent transition-colors">
+                    View Project →
+                  </span>
+                </div>
+              </Link>
+
+              {/* Next Project Card */}
+              <Link
+                href={`/projects/${next.id}`}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-line bg-card/50 p-5 sm:p-6 transition-all duration-300 hover:border-accent hover:bg-card hover:shadow-[0_10px_30px_rgba(var(--color-accent-rgb),0.12)] hover:-translate-y-1 sm:text-right"
+              >
+                <div>
+                  <div className="flex items-center sm:justify-end gap-1.5 font-mono text-xs font-bold tracking-widest text-accent uppercase mb-2">
+                    <span>Next Project</span>
+                    <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1.5" />
+                  </div>
+                  <h3 className="font-sans text-base sm:text-lg lg:text-xl font-bold text-fg group-hover:text-accent transition-colors line-clamp-1">
+                    {next.title}
+                  </h3>
+                  <p className="mt-1 text-xs sm:text-sm text-muted line-clamp-1 font-sans">
+                    {next.tagline}
+                  </p>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-line/40 flex items-center justify-between sm:flex-row-reverse">
+                  <span className="rounded-md border border-line bg-canvas/60 px-2 py-0.5 font-mono text-[10px] text-muted uppercase tracking-wider">
+                    {next.category}
+                  </span>
+                  <span className="font-mono text-xs text-muted group-hover:text-accent transition-colors">
+                    ← View Project
+                  </span>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </main>

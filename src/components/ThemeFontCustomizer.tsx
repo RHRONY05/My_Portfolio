@@ -8,6 +8,7 @@ import {
   FontItem,
   applyThemeToDocument,
   applyFontToDocument,
+  ensureGoogleFontLoaded,
 } from "@/data/themeConfig";
 import { Palette, Type, Check, ChevronDown, Sparkles, Sliders, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -199,7 +200,10 @@ export function ThemeFontCustomizer({ isPastHero = true }: { isPastHero?: boolea
 
                 <button
                   type="button"
-                  onClick={() => setActiveTab("font")}
+                  onClick={() => {
+                    ensureGoogleFontLoaded();
+                    setActiveTab("font");
+                  }}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold transition-all ${
                     activeTab === "font"
                       ? "bg-accent text-on-accent shadow-sm"

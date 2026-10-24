@@ -5,16 +5,25 @@ import React, { useState, useEffect, useRef } from "react";
 interface UseInViewOptions {
   rootMargin?: string;
   requireScroll?: boolean;
+  sessionKey?: string;
 }
 
+// Module-level cache keeping track of components mounted during current session
+const sessionMountedCache = new Set<string>();
+
 export function useInView(options?: UseInViewOptions) {
-  const [isInView, setIsInView] = useState(false);
+  const sessionKey = options?.sessionKey;
+  const alreadyMounted = sessionKey ? sessionMountedCache.has(sessionKey) : false;
+  const [isInView, setIsInView] = useState(alreadyMounted);
   const ref = useRef<HTMLDivElement>(null);
   const rootMargin = options?.rootMargin || "300px 0px";
   const requireScroll = options?.requireScroll ?? true;
 
   useEffect(() => {
-    if (isInView) return;
+    if (isInView) {
+      if (sessionKey) sessionMountedCache.add(sessionKey);
+      return;
+    }
 
     // If navigated directly via hash anchor (#about, #skills, etc.), mount immediately
     const hasHash =
@@ -29,12 +38,14 @@ export function useInView(options?: UseInViewOptions) {
 
     if (typeof IntersectionObserver === "undefined") {
       setIsInView(true);
+      if (sessionKey) sessionMountedCache.add(sessionKey);
       return;
     }
 
     const checkMount = (isIntersecting: boolean) => {
       if (isIntersecting && scrolled) {
         setIsInView(true);
+        if (sessionKey) sessionMountedCache.add(sessionKey);
         observer.disconnect();
       }
     };
@@ -78,6 +89,7 @@ interface LazyViewportMountProps {
   rootMargin?: string;
   requireScroll?: boolean;
   className?: string;
+  sessionKey?: string;
 }
 
 /**
@@ -91,8 +103,9 @@ export function LazyViewportMount({
   rootMargin = "300px 0px",
   requireScroll = true,
   className = "",
+  sessionKey,
 }: LazyViewportMountProps) {
-  const { ref, isInView } = useInView({ rootMargin, requireScroll });
+  const { ref, isInView } = useInView({ rootMargin, requireScroll, sessionKey });
 
   return (
     <div ref={ref} className={className}>

@@ -10,19 +10,47 @@ const StreetCurbRunner = dynamic(
   { ssr: false }
 );
 
+function HeroGameSlot({ isCleanMode }: { isCleanMode: boolean }) {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    if (isCleanMode) return;
+    if (typeof window === "undefined" || window.innerWidth < 640) return;
+
+    const schedule =
+      typeof window.requestIdleCallback === "function"
+        ? window.requestIdleCallback
+        : (cb: () => void) => setTimeout(cb, 1500);
+
+    const handle = schedule(() => setIsDesktop(true));
+    return () => {
+      if (typeof window.cancelIdleCallback === "function" && typeof handle === "number") {
+        window.cancelIdleCallback(handle);
+      } else {
+        clearTimeout(handle as unknown as number);
+      }
+    };
+  }, [isCleanMode]);
+
+  if (isCleanMode || !isDesktop) return null;
+
+  return (
+    <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 z-30 px-3 sm:px-8 md:px-10 lg:px-12 pointer-events-none hidden sm:block">
+      <div className="w-full max-w-7xl mx-auto pointer-events-auto">
+        <StreetCurbRunner />
+      </div>
+    </div>
+  );
+}
+
 export function HeroCinemaCanvas() {
   const [isCleanMode, setIsCleanMode] = useState(false);
-  const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("clean") === "true" || window.location.hash === "#clean") {
       setIsCleanMode(true);
     }
-    const check = () => setIsMobile(window.innerWidth < 640);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
   }, []);
 
   return (
@@ -143,13 +171,7 @@ export function HeroCinemaCanvas() {
       </div>
 
       {/* 3. Bottom Street Curb Runner (Interactive Mini-Game Easter Egg - Desktop & Tablet Only, Hidden in Clean Mode) */}
-      {!isCleanMode && !isMobile && (
-        <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 z-30 px-3 sm:px-8 md:px-10 lg:px-12 pointer-events-none hidden sm:block">
-          <div className="w-full max-w-7xl mx-auto pointer-events-auto">
-            <StreetCurbRunner />
-          </div>
-        </div>
-      )}
+      <HeroGameSlot isCleanMode={isCleanMode} />
     </section>
   );
 }

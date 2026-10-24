@@ -133,7 +133,7 @@ body {
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(var(--color-accent-rgb, 229, 229, 229), 0.35) transparent;
+  scrollbar-color: var(--color-line) transparent;
 }
 
 /* Chrome, Edge, Safari (WebKit) */
@@ -147,17 +147,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(var(--color-accent-rgb, 229, 229, 229), 0.30);
+  background: var(--color-line);
+  border: 1px solid var(--color-canvas);
   border-radius: 9999px;
   transition: background-color 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(var(--color-accent-rgb, 229, 229, 229), 0.65);
+  background: var(--color-line-strong);
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background: rgba(var(--color-accent-rgb, 229, 229, 229), 0.90);
+  background: var(--color-tertiary);
 }
 
 .dot-grid {
