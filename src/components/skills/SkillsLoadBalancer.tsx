@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SKILL_STEPS, type SkillLifecycleStep } from "./skillsData";
 import { SkillFlowStepCard } from "./SkillFlowStepCard";
 import { SkillFlowModal } from "./SkillFlowModal";
@@ -87,6 +88,34 @@ export function SkillsLoadBalancer() {
   const [isDesktop, setIsDesktop] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const [flowPoints, setFlowPoints] = useState<FlowConnectorPoints | null>(null);
+  const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const handleCarouselScroll = () => {
+    if (!carouselRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll <= 0) return;
+    const stepRatio = scrollLeft / maxScroll;
+    const idx = Math.min(
+      SKILL_STEPS.length - 1,
+      Math.max(0, Math.round(stepRatio * (SKILL_STEPS.length - 1)))
+    );
+    setActiveCarouselIndex(idx);
+  };
+
+  const scrollToStep = (index: number) => {
+    if (!carouselRef.current) return;
+    const { scrollWidth, clientWidth } = carouselRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    const targetScroll = (index / (SKILL_STEPS.length - 1)) * maxScroll;
+    carouselRef.current.scrollTo({
+      left: targetScroll,
+      behavior: "smooth",
+    });
+    setActiveCarouselIndex(index);
+    playRatchetClick();
+  };
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024);
@@ -432,13 +461,13 @@ export function SkillsLoadBalancer() {
         </div>
 
         {/* =========================================================================
-            MOBILE / TABLET STEPPED TIMELINE (< 1024px)
-            Single WebGL context, vertical sequential steps with glowing connector stems
+            MOBILE / TABLET HORIZONTAL SNAP CAROUSEL (< 1024px)
+            Single WebGL context, touch-pan-x kinetic swiping with step dots
             ========================================================================= */}
-        <div className="lg:hidden flex flex-col items-center w-full max-w-xl mx-auto">
+        <div className="lg:hidden flex flex-col items-center w-full">
           {/* Top Character + 3D Wheel */}
-          <div className="flex flex-col items-center mb-8 pointer-events-none">
-            <div className="relative z-30 mb-2 pointer-events-auto">
+          <div className="flex flex-col items-center mb-6 pointer-events-none">
+            <div className="relative z-30 mb-1 pointer-events-auto">
               <LazyViewportMount
                 fallback={
                   <div className="flex w-[260px] h-[95px] items-center justify-center">
@@ -458,7 +487,7 @@ export function SkillsLoadBalancer() {
               </LazyViewportMount>
             </div>
 
-            <div className="relative z-10 w-[140px] sm:w-[160px] pointer-events-auto">
+            <div className="relative z-10 w-[140px] sm:w-[155px] pointer-events-auto">
               <Image
                 src="/images/skills/mediating_rony_final.webp"
                 alt="Rony seated in meditation planning architecture"
@@ -470,26 +499,80 @@ export function SkillsLoadBalancer() {
             </div>
           </div>
 
-          {/* Vertical Sequential Stepped Flow */}
-          <div className="flex flex-col items-center w-full gap-4">
-            {SKILL_STEPS.map((step, idx) => (
-              <React.Fragment key={step.id}>
-                <SkillFlowStepCard
-                  step={step}
-                  isActive={activeStepId === step.id}
-                  onSelect={() => handleSelectStep(step)}
-                  className="w-full"
-                />
+          {/* Swipeable Horizontal Stage */}
+          <div className="relative w-full">
+            {/* Horizontal Scroll Track */}
+            <div
+              ref={carouselRef}
+              onScroll={handleCarouselScroll}
+              className="flex w-full items-center overflow-x-auto snap-x snap-mandatory gap-5 px-6 sm:px-10 scroll-smooth touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-3"
+            >
+              {SKILL_STEPS.map((step, idx) => (
+                <div
+                  key={step.id}
+                  className="shrink-0 snap-center flex justify-center py-1"
+                >
+                  <SkillFlowStepCard
+                    step={step}
+                    isActive={activeStepId === step.id || activeCarouselIndex === idx}
+                    onSelect={() => handleSelectStep(step)}
+                  />
+                </div>
+              ))}
+            </div>
 
-                {/* Glowing White Connector Stem between steps */}
-                {idx < SKILL_STEPS.length - 1 && (
-                  <div className="w-4 h-8 flex flex-col items-center justify-between my-0.5">
-                    <div className="w-0.5 h-full bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.7)]" />
-                    <div className="size-2 rounded-full bg-white shadow-[0_0_8px_#ffffff] -mt-1" />
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
+            {/* Stage Counter & Swipe Indicator Bar */}
+            <div className="flex items-center justify-between px-6 sm:px-12 mt-4">
+              {/* Left Chevron */}
+              <button
+                type="button"
+                onClick={() => scrollToStep(Math.max(0, activeCarouselIndex - 1))}
+                disabled={activeCarouselIndex === 0}
+                aria-label="Previous lifecycle phase"
+                className="rounded-full p-2 border border-line bg-card/80 text-muted hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+
+              {/* Progress Dots */}
+              <div className="flex items-center gap-2">
+                {SKILL_STEPS.map((step, idx) => (
+                  <button
+                    key={step.id}
+                    type="button"
+                    onClick={() => scrollToStep(idx)}
+                    aria-label={`Go to phase ${idx + 1}: ${step.title}`}
+                    className={`transition-all duration-300 rounded-full cursor-pointer ${
+                      activeCarouselIndex === idx
+                        ? "w-6 h-2 bg-white shadow-[0_0_10px_rgba(255,255,255,0.9)]"
+                        : "size-2 bg-white/20 hover:bg-white/40"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Right Chevron */}
+              <button
+                type="button"
+                onClick={() => scrollToStep(Math.min(SKILL_STEPS.length - 1, activeCarouselIndex + 1))}
+                disabled={activeCarouselIndex === SKILL_STEPS.length - 1}
+                aria-label="Next lifecycle phase"
+                className="rounded-full p-2 border border-line bg-card/80 text-muted hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
+
+            {/* Phase Title Badge */}
+            <div className="flex items-center justify-center gap-2 mt-2.5">
+              <span className="font-mono text-[11px] font-bold tracking-wider uppercase text-muted">
+                Phase {activeCarouselIndex + 1} of 6
+              </span>
+              <span className="text-white/40">•</span>
+              <span className="font-sans text-[12px] font-medium text-white/90">
+                {SKILL_STEPS[activeCarouselIndex]?.title}
+              </span>
+            </div>
           </div>
         </div>
       </div>
