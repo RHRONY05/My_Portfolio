@@ -23,7 +23,7 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
     title: "AI Planning & Architecture",
     shape: "oval",
     position: "top-left",
-    actionTagline: "Autonomous AI agents, specification drafting, Stitch mockups & system architecture.",
+    actionTagline: "Specification drafting, system architecture, and Stitch design mockups.",
     tools: [
       { name: "Claude API", icon: "/images/skills/tools/claude.svg" },
       { name: "ChatGPT", icon: "/images/skills/tools/chatgpt.svg" },
@@ -32,16 +32,16 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
       { name: "Stitch", icon: "/images/skills/tools/stitch.webp" },
     ],
     detailedDescription:
-      "Every project begins with deep planning. Rather than jumping blindly into code, I pair program with autonomous AI agents (Claude, Antigravity, ChatGPT) to formulate comprehensive architecture plans, organize specs in Notion, define AGENTS.md rules, and create visual UI mockups with Stitch.",
+      "Every project begins with deep planning. Rather than jumping blindly into code, I pair program with AI agents to define specs, design system rules, and UI mockups.",
     workflowBulletPoints: [
-      "Formulate detailed project specifications, workflows, and notes organized in Notion",
-      "Draft architectural contracts and autonomous instructions (AGENTS.md & context rules)",
-      "Generate and iterate high-fidelity UI design mockups using Stitch and AI prototypes",
-      "Break complex systems into decoupled, testable vertical milestones before implementation",
+      "Drafting project specifications, user flows, and architecture with AI agents",
+      "Structuring architectural contracts and autonomous instructions (AGENTS.md)",
+      "Prototyping high-fidelity UI mockups and design systems using Stitch and Notion",
+      "Dividing complex requirements into decoupled, testable vertical milestones",
     ],
     deliverables: [
       "Architecture Blueprints",
-      "Notion Specs & System Contracts",
+      "AGENTS.md System Contracts",
       "Stitch UI Mockups",
     ],
   },
@@ -51,7 +51,7 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
     title: "Dev Environment & Tooling",
     shape: "box",
     position: "mid-left",
-    actionTagline: "Multiagent orchestration, Markdown specs, Git hygiene, and containerized runtimes.",
+    actionTagline: "Multiagent workspaces, Markdown documentation, and containerized dev stacks.",
     tools: [
       { name: "Docker", icon: "/images/skills/icons/docker.svg" },
       { name: "Git", icon: "/images/skills/icons/git.svg" },
@@ -60,12 +60,12 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
       { name: "Markdown Specs", icon: "/images/skills/icons/markdown.svg" },
     ],
     detailedDescription:
-      "Once the spec is locked, I establish the development foundation. I configure multiagent orchestration workspaces, write structured Markdown documentation, initialize clean Git repositories with branch protections, and spin up isolated Docker dev stacks.",
+      "Establishing the development foundation with isolated workspaces, containerized local services, and strict version control hygiene.",
     workflowBulletPoints: [
-      "Orchestrate autonomous agent swarms and subagents with strict execution boundaries",
-      "Structure living documentation, design tokens, and technical specs via Markdown",
-      "Enforce professional Git hygiene with feature branches, descriptive commits, and PR reviews",
-      "Containerize local runtime dependencies, databases, and microservices via Docker",
+      "Configuring isolated multiagent workspaces and automated dev scripts",
+      "Structuring living technical documentation, guidelines, and schemas in Markdown",
+      "Enforcing professional Git hygiene with feature branches and pull request reviews",
+      "Containerizing local runtime dependencies and services using Docker",
     ],
     deliverables: [
       "Multiagent Workspaces",
@@ -89,12 +89,12 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
       { name: "Framer Motion", icon: "/images/skills/icons/framer.svg" },
     ],
     detailedDescription:
-      "Translating blueprints into high-performance web applications. I craft design-system driven user interfaces using Next.js App Router, strict TypeScript, Tailwind utility tokens, accessible shadcn/ui primitives, and GPU-accelerated Framer Motion animations.",
+      "Crafting performant, accessible web interfaces with Next.js App Router, strict TypeScript, and centralized design tokens.",
     workflowBulletPoints: [
-      "Develop performant, accessible React 19 and Next.js applications with Turbopack builds",
-      "Maintain strict zero-hardcoded color/font discipline using centralized semantic tokens",
-      "Engineer interactive 3D WebGL scenes with Three.js, React Three Fiber, and LazyViewportMount",
-      "Optimize Core Web Vitals to sustain 95+ Desktop / 85+ Mobile Lighthouse scores",
+      "Developing performant, responsive web apps using Next.js App Router and React",
+      "Maintaining strict zero-hardcoded styling discipline using semantic CSS tokens",
+      "Engineering interactive 3D WebGL canvas rigs with Three.js and React Three Fiber",
+      "Optimizing Core Web Vitals to sustain high Lighthouse scores across devices",
     ],
     deliverables: [
       "Design-System Components",
@@ -108,7 +108,7 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
     title: "Backend & Data Layer",
     shape: "box",
     position: "center-right",
-    actionTagline: "High-throughput API endpoints, relational schemas, caching, and data pipelines.",
+    actionTagline: "Scalable API endpoints, relational schemas, caching, and data pipelines.",
     tools: [
       { name: "Node.js", icon: "/images/skills/icons/nodedotjs.svg" },
       { name: "Express", icon: "/images/skills/icons/express.svg" },
@@ -119,12 +119,12 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
       { name: "Supabase", icon: "/images/skills/icons/supabase.svg" },
     ],
     detailedDescription:
-      "Powering the client with scalable, robust backend services. I design relational and document database schemas, write type-safe Prisma ORM queries, configure high-speed Redis caching, and implement resilient REST and WebSocket endpoints.",
+      "Powering the application with resilient backend APIs, normalized databases, caching, and secure authentication.",
     workflowBulletPoints: [
-      "Design normalized PostgreSQL schemas, Prisma migrations, and MongoDB collections",
-      "Build modular Express and Next.js Route Handlers with robust input validation and error handling",
-      "Implement sub-millisecond Redis key-value caching, rate-limiting, and session management",
-      "Integrate Supabase Auth, PostgreSQL Row-Level Security (RLS), and real-time database webhooks",
+      "Designing modular REST and WebSocket API endpoints in Node.js and Express",
+      "Architecting normalized PostgreSQL schemas and document collections in MongoDB",
+      "Implementing sub-millisecond Redis key-value caching, rate limiting, and sessions",
+      "Managing database migrations, row-level security (RLS), and webhooks with Supabase",
     ],
     deliverables: [
       "Type-Safe API Contracts",
@@ -138,7 +138,7 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
     title: "Testing & Verification",
     shape: "box",
     position: "mid-right",
-    actionTagline: "Automated unit suites, User Acceptance Testing (UAT), and agentic quality assurance.",
+    actionTagline: "Automated unit suites, User Acceptance Testing (UAT), and contract checks.",
     tools: [
       { name: "Vitest", icon: "/images/skills/icons/vitest.svg" },
       { name: "Playwright", icon: "/images/skills/icons/playwright.svg" },
@@ -147,12 +147,12 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
       { name: "Jest", icon: "/images/skills/icons/jest.svg" },
     ],
     detailedDescription:
-      "Confidence through continuous verification. Before shipping any feature, I run automated test suites with Vitest, execute headless browser user journeys with Playwright, perform User Acceptance Testing (UAT), and test API contracts using Postman to eliminate regressions.",
+      "Verifying quality and preventing regressions through automated test suites and hands-on acceptance testing before release.",
     workflowBulletPoints: [
-      "Write lightning-fast unit and integration test suites using Vitest and Mock Service Worker",
-      "Execute automated End-to-End (E2E) browser tests across mobile and desktop with Playwright",
-      "Conduct rigorous User Acceptance Testing (UAT) checklists and accessibility verification",
-      "Validate REST API response contracts, status codes, and edge-case errors via Postman",
+      "Writing fast unit and component integration test suites using Vitest and Jest",
+      "Executing automated End-to-End (E2E) browser journeys with Playwright",
+      "Conducting User Acceptance Testing (UAT) to verify real-world flows and accessibility",
+      "Validating API response contracts, status codes, and payloads via Postman",
     ],
     deliverables: [
       "Playwright E2E Suites",
@@ -166,7 +166,7 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
     title: "Deployment & Cloud",
     shape: "oval",
     position: "top-right",
-    actionTagline: "Edge serverless deploys, automated CI/CD pipelines, reverse proxying & cloud hosting.",
+    actionTagline: "Modern cloud hosting, CI/CD pipelines, reverse proxying, and production telemetry.",
     tools: [
       { name: "Vercel", icon: "/images/skills/icons/vercel.webp" },
       { name: "Netlify", icon: "/images/skills/icons/netlify.webp" },
@@ -176,17 +176,17 @@ export const SKILL_STEPS: SkillLifecycleStep[] = [
       { name: "GitHub Actions", icon: "/images/skills/icons/githubactions.svg" },
     ],
     detailedDescription:
-      "Delivering production-grade applications to real users. I automate build and test pipelines via GitHub Actions, package applications into multi-stage Docker images, configure Nginx reverse proxies with SSL on Linux VPS servers, and monitor production performance.",
+      "Releasing production-ready builds to modern cloud platforms and Linux VPS servers with automated CI/CD pipelines.",
     workflowBulletPoints: [
-      "Automate CI/CD pipelines with GitHub Actions for automated linting, testing, and Docker builds",
-      "Deploy and manage Linux VPS instances running Nginx reverse proxies with Let's Encrypt SSL",
-      "Containerize production workloads with optimized multi-stage Dockerfiles for minimal image size",
-      "Monitor real-time server health, error logs, and Core Web Vitals telemetry in production",
+      "Deploying web applications to cloud platforms including Vercel, Netlify, and Render",
+      "Configuring Linux VPS instances with Nginx reverse proxies and SSL certificates",
+      "Automating linting, testing, and deployment pipelines using GitHub Actions CI/CD",
+      "Monitoring live application uptime, error logs, and Core Web Vitals telemetry",
     ],
     deliverables: [
       "GitHub Actions CI/CD",
       "Nginx SSL Reverse Proxies",
-      "Production VPS Deployments",
+      "Production Cloud Deployments",
     ],
   },
 ];
