@@ -90,31 +90,88 @@ export function SkillsLoadBalancer() {
   const [flowPoints, setFlowPoints] = useState<FlowConnectorPoints | null>(null);
   const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const isInteractingRef = useRef(false);
+  const resumeTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Continuous auto-moving train loop on mobile (< 1024px)
+  useEffect(() => {
+    if (isDesktop) return;
+    const track = carouselRef.current;
+    if (!track) return;
+
+    let animId: number;
+    let lastTime = performance.now();
+
+    const trainLoop = (now: number) => {
+      const delta = (now - lastTime) / 1000;
+      lastTime = now;
+
+      // Glide continuously like a train when not actively being dragged/touched and modal is closed
+      if (!isInteractingRef.current && track && !modalStep) {
+        const halfWidth = track.scrollWidth / 2;
+        if (halfWidth > 0) {
+          track.scrollLeft += 36 * delta; // 36px/sec smooth train glide
+
+          if (track.scrollLeft >= halfWidth) {
+            track.scrollLeft -= halfWidth;
+          }
+        }
+      }
+      animId = requestAnimationFrame(trainLoop);
+    };
+
+    animId = requestAnimationFrame(trainLoop);
+    return () => cancelAnimationFrame(animId);
+  }, [isDesktop, modalStep]);
 
   const handleCarouselScroll = () => {
     if (!carouselRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-    const maxScroll = scrollWidth - clientWidth;
-    if (maxScroll <= 0) return;
-    const stepRatio = scrollLeft / maxScroll;
+    const track = carouselRef.current;
+    const halfWidth = track.scrollWidth / 2;
+    if (halfWidth <= 0) return;
+
+    // Seamless wrap-around boundary for infinite bidirectional dragging
+    if (track.scrollLeft >= halfWidth * 1.8) {
+      track.scrollLeft -= halfWidth;
+    } else if (track.scrollLeft <= 4) {
+      track.scrollLeft += halfWidth;
+    }
+
+    const singleStepWidth = halfWidth / SKILL_STEPS.length;
+    const normalizedScroll = track.scrollLeft % halfWidth;
     const idx = Math.min(
       SKILL_STEPS.length - 1,
-      Math.max(0, Math.round(stepRatio * (SKILL_STEPS.length - 1)))
+      Math.max(0, Math.floor((normalizedScroll + singleStepWidth / 2) / singleStepWidth))
     );
     setActiveCarouselIndex(idx);
   };
 
+  const handleUserInteractStart = () => {
+    isInteractingRef.current = true;
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+  };
+
+  const handleUserInteractEnd = () => {
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      isInteractingRef.current = false;
+    }, 1400);
+  };
+
   const scrollToStep = (index: number) => {
     if (!carouselRef.current) return;
-    const { scrollWidth, clientWidth } = carouselRef.current;
-    const maxScroll = scrollWidth - clientWidth;
-    const targetScroll = (index / (SKILL_STEPS.length - 1)) * maxScroll;
-    carouselRef.current.scrollTo({
+    const track = carouselRef.current;
+    const halfWidth = track.scrollWidth / 2;
+    const singleStepWidth = halfWidth / SKILL_STEPS.length;
+    const targetScroll = index * singleStepWidth;
+    track.scrollTo({
       left: targetScroll,
       behavior: "smooth",
     });
     setActiveCarouselIndex(index);
     playRatchetClick();
+    handleUserInteractStart();
+    handleUserInteractEnd();
   };
 
   useEffect(() => {
@@ -499,26 +556,37 @@ export function SkillsLoadBalancer() {
             </div>
           </div>
 
-          {/* Swipeable Horizontal Stage */}
+          {/* Swipeable Continuous Train Carousel Stage */}
           <div className="relative w-full">
-            {/* Horizontal Scroll Track */}
+            {/* Horizontal Continuous Scroll Track */}
             <div
               ref={carouselRef}
               onScroll={handleCarouselScroll}
-              className="flex w-full items-center overflow-x-auto snap-x snap-mandatory gap-5 px-6 sm:px-10 scroll-smooth touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-3"
+              onTouchStart={handleUserInteractStart}
+              onTouchEnd={handleUserInteractEnd}
+              onPointerDown={handleUserInteractStart}
+              onPointerUp={handleUserInteractEnd}
+              className="flex w-full items-center overflow-x-auto gap-4 px-6 sm:px-10 touch-pan-x select-none cursor-grab active:cursor-grabbing py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+              }}
             >
-              {SKILL_STEPS.map((step, idx) => (
-                <div
-                  key={step.id}
-                  className="shrink-0 snap-center flex justify-center py-1"
-                >
-                  <SkillFlowStepCard
-                    step={step}
-                    isActive={activeStepId === step.id || activeCarouselIndex === idx}
-                    onSelect={() => handleSelectStep(step)}
-                  />
-                </div>
-              ))}
+              {[...SKILL_STEPS, ...SKILL_STEPS].map((step, idx) => {
+                const isStepActive = (idx % SKILL_STEPS.length) === activeCarouselIndex;
+                return (
+                  <div
+                    key={`${step.id}-train-${idx}`}
+                    className="shrink-0 flex justify-center py-1"
+                  >
+                    <SkillFlowStepCard
+                      step={step}
+                      isActive={activeStepId === step.id || isStepActive}
+                      onSelect={() => handleSelectStep(step)}
+                    />
+                  </div>
+                );
+              })}
             </div>
 
             {/* Stage Counter & Swipe Indicator Bar */}

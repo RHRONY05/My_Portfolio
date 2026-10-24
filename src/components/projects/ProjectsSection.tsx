@@ -22,19 +22,19 @@ export function ProjectsSection() {
       className="relative z-10 isolate mx-auto flex w-full max-w-7xl flex-col px-4 pt-20 sm:pt-28 lg:pt-32 pb-16 md:pb-24 sm:px-6 lg:px-8 scroll-mt-20"
     >
       {/* Clean Minimal Header */}
-      <div className="flex items-center justify-between border-b border-line/60 pb-5 mb-8 sm:mb-12">
-        <div>
-          <span className="font-mono text-xs font-semibold tracking-widest text-muted uppercase">
+      <div className="flex items-end justify-between gap-3 sm:gap-4 border-b border-line/60 pb-4 sm:pb-5 mb-8 sm:mb-12">
+        <div className="min-w-0">
+          <span className="font-mono text-[10px] sm:text-xs font-semibold tracking-widest text-muted uppercase">
             PROJECTS // SELECTED
           </span>
-          <h2 className="mt-1 font-sans text-2xl sm:text-3xl font-black tracking-tight text-fg">
+          <h2 className="mt-1 font-sans text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-fg truncate">
             Featured Projects
           </h2>
         </div>
 
         <Link
           href="/projects"
-          className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-accent hover:text-secondary transition-colors"
+          className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] sm:text-xs font-bold text-accent hover:text-secondary transition-colors whitespace-nowrap pb-0.5"
         >
           <span>ALL PROJECTS ({allProjectsCount})</span>
           <ArrowRight className="size-3.5" />
