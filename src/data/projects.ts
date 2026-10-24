@@ -55,6 +55,7 @@ export type Project = {
   title: string;
   tagline: string;
   category: ProjectCategory;
+  categories?: readonly ProjectCategory[];
   description: string;
   features: readonly string[];
   stack: readonly string[];
@@ -73,6 +74,7 @@ export const projects: readonly Project[] = [
     title: "ShopMate AI: Voice & Conversational E-Commerce Agent",
     tagline: "Autonomous shopping agent with real-time voice, inventory tool calling, and automated cart actions",
     category: "AI/RAG",
+    categories: ["AI/RAG", "Full Stack"],
     description:
       "A self-directed AI project exploring how autonomous agents and real-time voice assistants streamline e-commerce. Instead of manually filtering catalogs and guessing search terms, shoppers can chat or speak directly with an agent that verifies inventory and manages their cart automatically.",
     features: [
@@ -959,6 +961,7 @@ export const projects: readonly Project[] = [
     title: "Sabai: Omnichannel AI Health Assistant",
     tagline: "Messaging-native AI care companion orchestrated via n8n workflows, PostgreSQL, and cron automation",
     category: "AI/RAG",
+    categories: ["AI/RAG", "Automation"],
     description:
       "A messaging-native AI health companion deployed across WhatsApp, LINE, and Telegram to provide accessible health guidance. Contributed as part of the backend development team, working with n8n workflow automation and PostgreSQL to integrate new features, monitor and debug workflows, manage database state, and maintain automated cron jobs.",
     features: [

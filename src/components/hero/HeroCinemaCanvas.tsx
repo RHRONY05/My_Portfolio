@@ -58,6 +58,24 @@ export function HeroCinemaCanvas() {
       id="hero"
       className="relative w-full min-h-screen lg:h-screen overflow-hidden flex flex-col justify-center"
       aria-label="Hero Section: Urban Graffiti Mural"
+      style={{
+        "--color-canvas": "#000000",
+        "--color-canvas-rgb": "0, 0, 0",
+        "--color-card": "#111111",
+        "--color-card-rgb": "17, 17, 17",
+        "--color-line": "#343434",
+        "--color-fg": "#f5f5f5",
+        "--color-muted": "#7a7a7a",
+        "--color-accent": "#e5e5e5",
+        "--color-accent-rgb": "229, 229, 229",
+        "--color-on-accent": "#000000",
+        "--color-secondary": "#a3a3a3",
+        "--color-secondary-rgb": "163, 163, 163",
+        "--color-card-hover": "#e5e5e5",
+        "--color-card-hover-border": "#e5e5e5",
+        "--color-card-hover-rgb": "229, 229, 229",
+        "--color-card-hover-glow": "rgba(229, 229, 229, 0.2)",
+      } as React.CSSProperties}
     >
       {/* 1. Full-Screen Graffiti Wall Background (Always Visible, z-0) */}
       <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">

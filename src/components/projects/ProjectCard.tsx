@@ -51,7 +51,7 @@ export function ProjectCard({ project, className = "", priority = false }: Proje
             {/* Bottom Gradient Shelf (Title, Stack, and Direct Action Buttons on All Devices) */}
             <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end bg-gradient-to-t from-canvas via-canvas/90 to-transparent p-4 sm:p-5 pt-16 z-20 pointer-events-none">
               <span className="font-mono text-[10px] font-bold tracking-widest text-accent uppercase drop-shadow-sm">
-                {project.category}
+                {(project.categories ?? [project.category]).join(" // ")}
               </span>
               <h3 className="line-clamp-1 font-sans text-lg font-bold text-fg md:text-xl drop-shadow-sm mt-0.5">
                 {project.title}
@@ -103,9 +103,16 @@ export function ProjectCard({ project, className = "", priority = false }: Proje
             />
 
             {/* Category tag */}
-            <span className="relative z-10 mb-4 rounded-full border border-line/80 bg-card/90 px-3 py-1 font-mono text-[11px] font-bold tracking-widest text-accent uppercase shadow-sm">
-              {project.category}
-            </span>
+            <div className="relative z-10 mb-4 flex flex-wrap items-center gap-1.5">
+              {(project.categories ?? [project.category]).map((cat) => (
+                <span
+                  key={cat}
+                  className="rounded-full border border-line/80 bg-card/90 px-3 py-1 font-mono text-[11px] font-bold tracking-widest text-accent uppercase shadow-sm"
+                >
+                  {cat}
+                </span>
+              ))}
+            </div>
 
             {/* Bold & Big Project Title */}
             <h3 className="relative z-10 font-sans text-2xl sm:text-3xl font-black tracking-tight text-fg max-w-[340px] leading-snug drop-shadow-sm">

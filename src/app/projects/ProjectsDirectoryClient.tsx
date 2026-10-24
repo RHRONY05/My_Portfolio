@@ -30,20 +30,25 @@ interface ProjectsDirectoryClientProps {
 export function ProjectsDirectoryClient({ projects }: ProjectsDirectoryClientProps) {
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
 
+  const isMatch = (p: Project, cat: FilterTab) => {
+    if (cat === "all") return true;
+    return p.categories ? p.categories.includes(cat) : p.category === cat;
+  };
+
   const counts = useMemo(() => {
     const map: Record<string, number> = {
       all: projects.length,
-      "AI/RAG": projects.filter((p) => p.category === "AI/RAG").length,
-      "Full Stack": projects.filter((p) => p.category === "Full Stack").length,
-      Frontend: projects.filter((p) => p.category === "Frontend").length,
-      Automation: projects.filter((p) => p.category === "Automation").length,
+      "AI/RAG": projects.filter((p) => isMatch(p, "AI/RAG")).length,
+      "Full Stack": projects.filter((p) => isMatch(p, "Full Stack")).length,
+      Frontend: projects.filter((p) => isMatch(p, "Frontend")).length,
+      Automation: projects.filter((p) => isMatch(p, "Automation")).length,
     };
     return map;
   }, [projects]);
 
   const filteredProjects = useMemo(() => {
     if (activeTab === "all") return projects;
-    return projects.filter((p) => p.category === activeTab);
+    return projects.filter((p) => isMatch(p, activeTab));
   }, [projects, activeTab]);
 
   return (

@@ -12,16 +12,17 @@ import {
 export function ThemeManager() {
   useEffect(() => {
     try {
-            // Migration flag for v2 editorial theme
-      const hasThemeV2 = localStorage.getItem("rony_theme_v2");
-      if (!hasThemeV2) {
-        localStorage.setItem("rony_theme_v2", "true");
-        localStorage.setItem("rony_theme_id", "obsidian-burnt-orange");
-        localStorage.setItem("rony_font_id", "plex-editorial");
+            // Ensure default theme is monolithic-onyx (titanium white stealth)
+      const themeVer = localStorage.getItem("rony_theme_ver");
+      if (themeVer !== "v3_onyx") {
+        localStorage.setItem("rony_theme_ver", "v3_onyx");
+        if (!localStorage.getItem("rony_theme_id") || localStorage.getItem("rony_theme_id") === "obsidian-burnt-orange") {
+          localStorage.setItem("rony_theme_id", "monolithic-onyx");
+        }
       }
 
       // 1. Resolve Theme
-      const savedThemeId = localStorage.getItem("rony_theme_id") || "obsidian-burnt-orange";
+      const savedThemeId = localStorage.getItem("rony_theme_id") || "monolithic-onyx";
       let activeTheme: ThemeItem | undefined =
         APPROVED_THEMES.find((t) => t.id === savedThemeId) || APPROVED_THEMES[0];
 
