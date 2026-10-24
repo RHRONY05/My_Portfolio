@@ -3,8 +3,9 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { SKILL_PILLARS, type SkillPillar } from "./skillsData";
-import { SkillRealmCard } from "./SkillRealmCard";
+import { SKILL_STEPS, type SkillLifecycleStep } from "./skillsData";
+import { SkillFlowStepCard } from "./SkillFlowStepCard";
+import { SkillFlowModal } from "./SkillFlowModal";
 import { LazyViewportMount } from "../common/LazyViewportMount";
 
 // Dynamic import with ssr: false for the 3D horizontal halo ring
@@ -55,23 +56,37 @@ function playRatchetClick() {
   }
 }
 
-interface CircuitPoints {
-  p1: { x: number; y: number };
-  p2: { x: number; y: number };
-  p3: { x: number; y: number };
-  p4: { x: number; y: number };
-  hubLeftX: number;
-  hubRightX: number;
-  centerY: number;
+interface FlowConnectorPoints {
+  // Step 01 -> Step 02 (Vertical down)
+  p1_bottom: { x: number; y: number };
+  p2_top: { x: number; y: number };
+
+  // Step 02 -> Step 03 (L-bend down and right into Step 03 left)
+  p2_bottom: { x: number; y: number };
+  p3_left: { x: number; y: number };
+
+  // Step 03 <-> Step 04 (Horizontal bidirectional double arrow)
+  p3_right: { x: number; y: number };
+  p4_left: { x: number; y: number };
+
+  // Step 04 -> Step 05 (L-bend right and up into Step 05 bottom)
+  p4_right: { x: number; y: number };
+  p5_bottom: { x: number; y: number };
+
+  // Step 05 -> Step 06 (Vertical up)
+  p5_top: { x: number; y: number };
+  p6_bottom: { x: number; y: number };
+
   width: number;
   height: number;
 }
 
 export function SkillsLoadBalancer() {
-  const [activePillarId, setActivePillarId] = useState<string | null>(null);
+  const [activeStepId, setActiveStepId] = useState<string | null>(null);
+  const [modalStep, setModalStep] = useState<SkillLifecycleStep | null>(null);
   const [isDesktop, setIsDesktop] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
-  const [points, setPoints] = useState<CircuitPoints | null>(null);
+  const [flowPoints, setFlowPoints] = useState<FlowConnectorPoints | null>(null);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024);
@@ -80,44 +95,42 @@ export function SkillsLoadBalancer() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Measure EXACT sub-pixel positions of card center pins and center fork hubs
-  const measurePoints = () => {
+  const measureFlowPoints = () => {
     if (!stageRef.current) return;
     const sRect = stageRef.current.getBoundingClientRect();
     if (sRect.width === 0 || sRect.height === 0) return;
 
-    const getCoord = (id: string) => {
+    const getEdges = (id: string) => {
       const el = document.getElementById(id);
       if (!el) return null;
       const r = el.getBoundingClientRect();
       return {
-        x: r.left + r.width / 2 - sRect.left,
-        y: r.top + r.height / 2 - sRect.top,
+        top: { x: r.left + r.width / 2 - sRect.left, y: r.top - sRect.top },
+        bottom: { x: r.left + r.width / 2 - sRect.left, y: r.bottom - sRect.top },
+        left: { x: r.left - sRect.left, y: r.top + r.height / 2 - sRect.top },
+        right: { x: r.right - sRect.left, y: r.top + r.height / 2 - sRect.top },
       };
     };
 
-    const p1 = getCoord("card-pin-strategy-architecture");
-    const p2 = getCoord("card-pin-backend-systems");
-    const p3 = getCoord("card-pin-autonomous-ai-agents");
-    const p4 = getCoord("card-pin-cloud-devops-dx");
+    const node1 = getEdges("flow-node-ai-planning");
+    const node2 = getEdges("flow-node-tools-environment");
+    const node3 = getEdges("flow-node-frontend-engineering");
+    const node4 = getEdges("flow-node-backend-data");
+    const node5 = getEdges("flow-node-testing-validation");
+    const node6 = getEdges("flow-node-deployment-monitoring");
 
-    const centerX = sRect.width / 2;
-    const centerY = sRect.height / 2;
-
-    // Longer straight horizontal line: hubOffset between 190px and 240px
-    const hubOffset = Math.min(240, Math.max(180, sRect.width * 0.17));
-    const hubLeftX = centerX - hubOffset;
-    const hubRightX = centerX + hubOffset;
-
-    if (p1 && p2 && p3 && p4) {
-      setPoints({
-        p1,
-        p2,
-        p3,
-        p4,
-        hubLeftX,
-        hubRightX,
-        centerY,
+    if (node1 && node2 && node3 && node4 && node5 && node6) {
+      setFlowPoints({
+        p1_bottom: node1.bottom,
+        p2_top: node2.top,
+        p2_bottom: node2.bottom,
+        p3_left: node3.left,
+        p3_right: node3.right,
+        p4_left: node4.left,
+        p4_right: node4.right,
+        p5_bottom: node5.bottom,
+        p5_top: node5.top,
+        p6_bottom: node6.bottom,
         width: sRect.width,
         height: sRect.height,
       });
@@ -125,51 +138,48 @@ export function SkillsLoadBalancer() {
   };
 
   useLayoutEffect(() => {
-    measurePoints();
-  }, [isDesktop]);
-
-  useEffect(() => {
-    const handleResize = () => measurePoints();
+    measureFlowPoints();
+    const handleResize = () => measureFlowPoints();
     window.addEventListener("resize", handleResize);
-    const t1 = setTimeout(measurePoints, 60);
-    const t2 = setTimeout(measurePoints, 250);
+
+    const timer1 = setTimeout(measureFlowPoints, 80);
+    const timer2 = setTimeout(measureFlowPoints, 350);
+
     return () => {
       window.removeEventListener("resize", handleResize);
-      clearTimeout(t1);
-      clearTimeout(t2);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
     };
   }, []);
 
-  const handlePillarHover = (pillarId: string | null) => {
-    if (pillarId && pillarId !== activePillarId) {
-      playRatchetClick();
-    }
-    setActivePillarId(pillarId);
+  const handleSelectStep = (step: SkillLifecycleStep) => {
+    setActiveStepId(step.id);
+    setModalStep(step);
+    playRatchetClick();
   };
 
-  const leftPillars = SKILL_PILLARS.filter((p) => p.side === "left");
-  const rightPillars = SKILL_PILLARS.filter((p) => p.side === "right");
+  const step1 = SKILL_STEPS[0];
+  const step2 = SKILL_STEPS[1];
+  const step3 = SKILL_STEPS[2];
+  const step4 = SKILL_STEPS[3];
+  const step5 = SKILL_STEPS[4];
+  const step6 = SKILL_STEPS[5];
 
   return (
     <section
       id="skills"
-      aria-label="Technical Skills and Planning Architecture"
-      className="relative w-full pt-20 sm:pt-28 lg:pt-36 pb-16 sm:pb-20 lg:pb-24 bg-canvas overflow-hidden"
+      aria-label="Engineering Lifecycle and Skill Architecture"
+      className="relative w-full pt-8 sm:pt-10 pb-8 sm:pb-12 bg-canvas overflow-hidden"
     >
-      {/* Background Subtle Blueprint Grid Pattern */}
+      {/* Background Subtle Dot-Grid Pattern */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none opacity-[0.035]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
-          backgroundSize: "32px 32px",
-        }}
+        className="dot-grid absolute inset-0 pointer-events-none opacity-40"
       />
 
-      {/* Flowing Dotted Red Pipeline Keyframes */}
+      {/* Luminescent White Cyber Circuit Keyframes */}
       <style jsx>{`
-        @keyframes dottedFlow {
+        @keyframes whiteFlow {
           0% {
             stroke-dashoffset: 32;
           }
@@ -181,292 +191,253 @@ export function SkillsLoadBalancer() {
 
       <div className="relative mx-auto max-w-[1380px] px-4 sm:px-6 lg:px-8">
         {/* =========================================================================
-            DESKTOP BALANCED LOAD BALANCER STAGE (Hidden on Mobile/Tablet)
-            Left (2 Cards + Gap) <-> Center Straight Line (Rony Seated On Top) <-> Right (2 Cards + Gap)
+            DESKTOP STAGGERED U-CURVE FLOWCHART STAGE (>= 1024px)
+            Level 1 (Top): Left Oval (Step 1) & Right Oval (Step 6)
+            Level 2 (Mid): Left Box (Step 2) & Right Box (Step 5)
+            Level 3 (Bottom): Center-Left Box (Step 3) <-> Center-Right Box (Step 4)
+            Upper-Center: Meditating Rony + 3D Mahoraga Wheel (seated directly ABOVE the two middle boxes!)
             ========================================================================= */}
         <div
           ref={stageRef}
-          className="hidden lg:flex items-center justify-between h-[480px] xl:h-[510px] w-full relative select-none"
+          className="hidden lg:block relative w-full h-[570px] xl:h-[610px] select-none"
         >
-          {/* 1. LEFT CLUSTER: 2 Sleek Cards with Clear Vertical Gap */}
-          <div className="w-[280px] xl:w-[320px] h-full flex flex-col justify-center gap-12 xl:gap-16 z-20 shrink-0">
-            {leftPillars.map((pillar) => (
-              <SkillRealmCard
-                key={pillar.id}
-                pillar={pillar}
-                isHovered={activePillarId === pillar.id}
-                onHoverChange={(hovered) =>
-                  handlePillarHover(hovered ? pillar.id : null)
-                }
-              />
-            ))}
+          {/* LEVEL 1: TOP-LEFT OVAL (Step 01) */}
+          <div className="absolute top-1 left-2 xl:left-6 z-20">
+            <SkillFlowStepCard
+              step={step1}
+              isActive={activeStepId === step1.id}
+              onSelect={() => handleSelectStep(step1)}
+            />
           </div>
 
-          {/* 2. CENTER COLUMN: RONY SEATED DIRECTLY ON CONTINUOUS BASELINE */}
-          <div className="flex-1 h-full relative flex flex-col items-center justify-center z-20 px-4">
-            {/* RONY & 3D HALO WHEEL & LORE TEXT (Seated Directly ON the Baseline at bottom-[50%]) */}
-            <div className="absolute bottom-[50%] left-1/2 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
-              {/* 3D Horizontal Halo Wheel */}
-              <div className="relative z-30 mb-2 pointer-events-auto">
-                <LazyViewportMount
-                  fallback={
-                    <div className="flex w-[280px] h-[110px] items-center justify-center">
-                      <div className="size-6 animate-spin rounded-full border-2 border-line border-t-accent" />
+          {/* LEVEL 2: MID-LEFT BOX (Step 02 - positioned midway down with ~55px distance from Step 1) */}
+          <div className="absolute top-[198px] xl:top-[212px] left-2 xl:left-6 z-20">
+            <SkillFlowStepCard
+              step={step2}
+              isActive={activeStepId === step2.id}
+              onSelect={() => handleSelectStep(step2)}
+            />
+          </div>
+
+          {/* UPPER-CENTER: MEDITATING RONY + 3D MAHORAGA WHEEL */}
+          <div className="absolute top-[32px] xl:top-[42px] left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20">
+            {/* 3D Horizontal Halo Wheel */}
+            <div className="relative z-30 mb-1 pointer-events-auto">
+              <LazyViewportMount
+                fallback={
+                  <div className="flex w-[280px] h-[110px] items-center justify-center">
+                    <div className="size-6 animate-spin rounded-full border-2 border-line border-t-accent" />
+                  </div>
+                }
+              >
+                {() =>
+                  isDesktop ? (
+                    <div onClick={playRatchetClick}>
+                      <MahoragaWheelCanvas
+                        isSpinningFast={activeStepId !== null}
+                      />
                     </div>
-                  }
-                >
-                  {() =>
-                    isDesktop ? (
-                      <div onClick={playRatchetClick}>
-                        <MahoragaWheelCanvas
-                          isSpinningFast={activePillarId !== null}
-                        />
-                      </div>
-                    ) : null
-                  }
-                </LazyViewportMount>
-              </div>
+                  ) : null
+                }
+              </LazyViewportMount>
+            </div>
 
-              {/* Character Row with Flanking Lore Badges */}
-              <div className="relative flex items-center justify-center">
-                {/* Left Lore Badge */}
-                <div className="absolute right-[100%] mr-4 xl:mr-6 top-1/2 -translate-y-1/2 whitespace-nowrap pointer-events-none">
-                  <span className="font-mono text-[11px] xl:text-xs font-semibold text-secondary italic tracking-wide bg-card/90 px-3 py-1.5 rounded-xl border border-line shadow-sm">
-                    &ldquo;Analyze &amp; formulate&rdquo;
-                  </span>
-                </div>
-
-                {/* Meditating Rony Cutout (Directly seated on top of the straight line) */}
-                <div className="relative z-10 w-[155px] xl:w-[185px] pointer-events-auto transition-transform duration-300 hover:scale-[1.02]">
-                  <Image
-                    src="/images/skills/mediating_rony_final.webp"
-                    alt="Rony seated in meditation planning architecture"
-                    width={500}
-                    height={400}
-                    loading="lazy"
-                    className="w-full h-auto object-contain drop-shadow-[0_12px_24px_rgba(var(--color-accent-rgb),0.18)]"
-                  />
-                </div>
-
-                {/* Right Lore Badge */}
-                <div className="absolute left-[100%] ml-4 xl:ml-6 top-1/2 -translate-y-1/2 whitespace-nowrap pointer-events-none">
-                  <span className="font-mono text-[11px] xl:text-xs font-semibold text-secondary italic tracking-wide bg-card/90 px-3 py-1.5 rounded-xl border border-line shadow-sm">
-                    &ldquo;...Execute with precision&rdquo;
-                  </span>
-                </div>
-              </div>
+            {/* Meditating Rony Cutout */}
+            <div className="relative z-10 w-[145px] xl:w-[165px] pointer-events-auto transition-transform duration-300 hover:scale-[1.02]">
+              <Image
+                src="/images/skills/mediating_rony_final.webp"
+                alt="Rony seated in meditation planning architecture"
+                width={500}
+                height={400}
+                priority
+                className="w-full h-auto object-contain drop-shadow-[0_16px_32px_rgba(var(--color-accent-rgb),0.25)]"
+              />
             </div>
           </div>
 
-          {/* 3. RIGHT CLUSTER: 2 Sleek Cards with Clear Vertical Gap */}
-          <div className="w-[280px] xl:w-[320px] h-full flex flex-col justify-center gap-12 xl:gap-16 z-20 shrink-0">
-            {rightPillars.map((pillar) => (
-              <SkillRealmCard
-                key={pillar.id}
-                pillar={pillar}
-                isHovered={activePillarId === pillar.id}
-                onHoverChange={(hovered) =>
-                  handlePillarHover(hovered ? pillar.id : null)
-                }
-              />
-            ))}
+          {/* LEVEL 3: TWO BOXES SIDE-BY-SIDE IN THE MIDDLE (Directly under Rony with identical ~55px distance from Step 2!) */}
+          <div className="absolute top-[402px] xl:top-[428px] left-1/2 -translate-x-1/2 flex items-center justify-center gap-16 xl:gap-20 z-20">
+            {/* Step 03: Frontend Box */}
+            <SkillFlowStepCard
+              step={step3}
+              isActive={activeStepId === step3.id}
+              onSelect={() => handleSelectStep(step3)}
+            />
+
+            {/* Step 04: Backend & Data Box */}
+            <SkillFlowStepCard
+              step={step4}
+              isActive={activeStepId === step4.id}
+              onSelect={() => handleSelectStep(step4)}
+            />
+          </div>
+
+          {/* LEVEL 2: MID-RIGHT BOX (Step 05 - positioned midway down with ~55px distance from Step 6) */}
+          <div className="absolute top-[198px] xl:top-[212px] right-2 xl:right-6 z-20">
+            <SkillFlowStepCard
+              step={step5}
+              isActive={activeStepId === step5.id}
+              onSelect={() => handleSelectStep(step5)}
+            />
+          </div>
+
+          {/* LEVEL 1: TOP-RIGHT OVAL (Step 06) */}
+          <div className="absolute top-1 right-2 xl:right-6 z-20">
+            <SkillFlowStepCard
+              step={step6}
+              isActive={activeStepId === step6.id}
+              onSelect={() => handleSelectStep(step6)}
+            />
           </div>
 
           {/* =========================================================================
-              4. UNIFIED DOTTED FLOWING BURNT ORANGE PIPELINE SVG
-              Underlying neutral baseline track + animated flowing dotted burnt orange pipeline
+              WHITE GLOWING CYBER PIPELINE SVG (True U-Curve Connectors)
+              Pure white circuits with luminescent white glow + animated current
               ========================================================================= */}
-          {points && (
+          {flowPoints && (
             <svg
               className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible"
-              viewBox={`0 0 ${points.width} ${points.height}`}
+              viewBox={`0 0 ${flowPoints.width} ${flowPoints.height}`}
             >
-              {/* Underlying Structural Baseline Track (Subtle passive line) */}
+              <defs>
+                {/* Crisp White Arrowhead marker (Pointing Forward) */}
+                <marker
+                  id="flow-arrow-white"
+                  viewBox="0 0 10 10"
+                  refX="6"
+                  refY="5"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto"
+                >
+                  <path
+                    d="M 0 1.5 L 8 5 L 0 8.5 z"
+                    fill="rgba(255, 255, 255, 0.95)"
+                  />
+                </marker>
+
+                {/* Crisp White Arrowhead marker (Pointing Backward for Bidirectional Bridge) */}
+                <marker
+                  id="flow-arrow-white-start"
+                  viewBox="0 0 10 10"
+                  refX="4"
+                  refY="5"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto"
+                >
+                  <path
+                    d="M 8 1.5 L 0 5 L 8 8.5 z"
+                    fill="rgba(255, 255, 255, 0.95)"
+                  />
+                </marker>
+              </defs>
+
+              {/* -------------------------------------------------------------
+                  PASSIVE BASELINE UNDERLAYER (Subtle White Glow Foundation)
+                 ------------------------------------------------------------- */}
               <g
-                stroke="var(--color-line)"
+                stroke="rgba(255, 255, 255, 0.2)"
                 strokeWidth="1.5"
-                strokeOpacity="0.35"
                 strokeLinecap="round"
+                fill="none"
               >
-                {/* Center Baseline under Rony */}
-                <line
-                  x1={points.hubLeftX}
-                  y1={points.centerY}
-                  x2={points.hubRightX}
-                  y2={points.centerY}
+                {/* 1. Step 01 -> Step 02: Vertical Down */}
+                <path
+                  d={`M ${flowPoints.p1_bottom.x} ${flowPoints.p1_bottom.y + 4} V ${flowPoints.p2_top.y - 8}`}
                 />
-                {/* Left Top Diagonal */}
-                <line
-                  x1={points.p1.x}
-                  y1={points.p1.y}
-                  x2={points.hubLeftX}
-                  y2={points.centerY}
+
+                {/* 2. Step 02 -> Step 03: L-bend Down and Right into Step 03 Left */}
+                <path
+                  d={`M ${flowPoints.p2_bottom.x} ${flowPoints.p2_bottom.y + 4} V ${flowPoints.p3_left.y} H ${flowPoints.p3_left.x - 8}`}
                 />
-                {/* Left Bottom Diagonal */}
-                <line
-                  x1={points.p2.x}
-                  y1={points.p2.y}
-                  x2={points.hubLeftX}
-                  y2={points.centerY}
+
+                {/* 3. Step 03 <-> Step 04: Horizontal Bidirectional Data Bridge */}
+                <path
+                  d={`M ${flowPoints.p3_right.x + 8} ${flowPoints.p3_right.y} H ${flowPoints.p4_left.x - 8}`}
                 />
-                {/* Right Top Diagonal */}
-                <line
-                  x1={points.hubRightX}
-                  y1={points.centerY}
-                  x2={points.p3.x}
-                  y2={points.p3.y}
+
+                {/* 4. Step 04 -> Step 05: L-bend Right and Up into Step 05 Bottom */}
+                <path
+                  d={`M ${flowPoints.p4_right.x + 4} ${flowPoints.p4_right.y} H ${flowPoints.p5_bottom.x} V ${flowPoints.p5_bottom.y + 8}`}
                 />
-                {/* Right Bottom Diagonal */}
-                <line
-                  x1={points.hubRightX}
-                  y1={points.centerY}
-                  x2={points.p4.x}
-                  y2={points.p4.y}
+
+                {/* 5. Step 05 -> Step 06: Vertical Up */}
+                <path
+                  d={`M ${flowPoints.p5_top.x} ${flowPoints.p5_top.y - 4} V ${flowPoints.p6_bottom.y + 8}`}
                 />
               </g>
 
-              {/* Active Flowing Dotted Burnt Orange Pipeline */}
+              {/* -------------------------------------------------------------
+                  ACTIVE FLOWING LUMINESCENT WHITE NEON PIPELINE
+                 ------------------------------------------------------------- */}
               <g
-                stroke="var(--color-accent)"
-                strokeWidth="2"
+                stroke="rgba(255, 255, 255, 0.95)"
+                strokeWidth="2.2"
                 strokeDasharray="6 10"
                 strokeLinecap="round"
+                fill="none"
+                className="filter drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]"
                 style={{
-                  animation: "dottedFlow 1.6s linear infinite",
+                  animation: "whiteFlow 1.6s linear infinite",
                 }}
               >
-                {/* Left Top Diagonal: Card 1 -> Left Hub */}
-                <line
-                  x1={points.p1.x}
-                  y1={points.p1.y}
-                  x2={points.hubLeftX}
-                  y2={points.centerY}
-                  strokeWidth={
-                    activePillarId === "strategy-architecture" ? "2.6" : "2"
-                  }
+                {/* 1. Step 01 -> Step 02 (Vertical down into Step 02) */}
+                <path
+                  d={`M ${flowPoints.p1_bottom.x} ${flowPoints.p1_bottom.y + 4} V ${flowPoints.p2_top.y - 8}`}
+                  markerEnd="url(#flow-arrow-white)"
                 />
 
-                {/* Left Bottom Diagonal: Card 2 -> Left Hub */}
-                <line
-                  x1={points.p2.x}
-                  y1={points.p2.y}
-                  x2={points.hubLeftX}
-                  y2={points.centerY}
-                  strokeWidth={
-                    activePillarId === "backend-systems" ? "2.6" : "2"
-                  }
+                {/* 2. Step 02 -> Step 03 (L-bend down and right into Step 03) */}
+                <path
+                  d={`M ${flowPoints.p2_bottom.x} ${flowPoints.p2_bottom.y + 4} V ${flowPoints.p3_left.y} H ${flowPoints.p3_left.x - 8}`}
+                  markerEnd="url(#flow-arrow-white)"
                 />
 
-                {/* Center Baseline under Rony: Left Hub -> Right Hub */}
-                <line
-                  x1={points.hubLeftX}
-                  y1={points.centerY}
-                  x2={points.hubRightX}
-                  y2={points.centerY}
-                  strokeWidth="2"
+                {/* 3. Step 03 <-> Step 04 (Horizontal bidirectional double arrowheads) */}
+                <path
+                  d={`M ${flowPoints.p3_right.x + 8} ${flowPoints.p3_right.y} H ${flowPoints.p4_left.x - 8}`}
+                  markerStart="url(#flow-arrow-white-start)"
+                  markerEnd="url(#flow-arrow-white)"
                 />
 
-                {/* Right Top Diagonal: Right Hub -> Card 3 */}
-                <line
-                  x1={points.hubRightX}
-                  y1={points.centerY}
-                  x2={points.p3.x}
-                  y2={points.p3.y}
-                  strokeWidth={
-                    activePillarId === "autonomous-ai-agents" ? "2.6" : "2"
-                  }
+                {/* 4. Step 04 -> Step 05 (L-bend right and up into Step 05) */}
+                <path
+                  d={`M ${flowPoints.p4_right.x + 4} ${flowPoints.p4_right.y} H ${flowPoints.p5_bottom.x} V ${flowPoints.p5_bottom.y + 8}`}
+                  markerEnd="url(#flow-arrow-white)"
                 />
 
-                {/* Right Bottom Diagonal: Right Hub -> Card 4 */}
-                <line
-                  x1={points.hubRightX}
-                  y1={points.centerY}
-                  x2={points.p4.x}
-                  y2={points.p4.y}
-                  strokeWidth={
-                    activePillarId === "cloud-devops-dx" ? "2.6" : "2"
-                  }
+                {/* 5. Step 05 -> Step 06 (Vertical up into Step 06) */}
+                <path
+                  d={`M ${flowPoints.p5_top.x} ${flowPoints.p5_top.y - 4} V ${flowPoints.p6_bottom.y + 8}`}
+                  markerEnd="url(#flow-arrow-white)"
                 />
               </g>
 
-              {/* Node Junctions & Contact Pins */}
-              <g fill="var(--color-accent)">
-                {/* Left Hub Convergence Node */}
-                <circle
-                  cx={points.hubLeftX}
-                  cy={points.centerY}
-                  r="3.5"
-                  className="drop-shadow-[0_0_6px_rgba(var(--color-accent-rgb),0.8)]"
-                />
-                {/* Right Hub Divergence Node */}
-                <circle
-                  cx={points.hubRightX}
-                  cy={points.centerY}
-                  r="3.5"
-                  className="drop-shadow-[0_0_6px_rgba(var(--color-accent-rgb),0.8)]"
-                />
-                {/* Center Power Hub Node under Rony */}
-                <circle
-                  cx={(points.hubLeftX + points.hubRightX) / 2}
-                  cy={points.centerY}
-                  r="4"
-                  className="drop-shadow-[0_0_8px_rgba(var(--color-accent-rgb),0.9)]"
-                />
-
-                {/* Contact Pin Dots at Card Edges */}
-                <circle
-                  cx={points.p1.x}
-                  cy={points.p1.y}
-                  r="3"
-                  fill={
-                    activePillarId === "strategy-architecture"
-                      ? "var(--color-card-hover-border)"
-                      : "var(--color-accent)"
-                  }
-                />
-                <circle
-                  cx={points.p2.x}
-                  cy={points.p2.y}
-                  r="3"
-                  fill={
-                    activePillarId === "backend-systems"
-                      ? "var(--color-card-hover-border)"
-                      : "var(--color-accent)"
-                  }
-                />
-                <circle
-                  cx={points.p3.x}
-                  cy={points.p3.y}
-                  r="3"
-                  fill={
-                    activePillarId === "autonomous-ai-agents"
-                      ? "var(--color-card-hover-border)"
-                      : "var(--color-accent)"
-                  }
-                />
-                <circle
-                  cx={points.p4.x}
-                  cy={points.p4.y}
-                  r="3"
-                  fill={
-                    activePillarId === "cloud-devops-dx"
-                      ? "var(--color-card-hover-border)"
-                      : "var(--color-accent)"
-                  }
-                />
+              {/* -------------------------------------------------------------
+                  GLOWING WHITE TERMINAL CONTACT PIN DOTS
+                 ------------------------------------------------------------- */}
+              <g fill="#ffffff" className="drop-shadow-[0_0_10px_rgba(255,255,255,0.95)]">
+                {/* Outflow dot at Step 1 */}
+                <circle cx={flowPoints.p1_bottom.x} cy={flowPoints.p1_bottom.y + 4} r="3" />
+                {/* Outflow dot at Step 2 */}
+                <circle cx={flowPoints.p2_bottom.x} cy={flowPoints.p2_bottom.y + 4} r="3" />
+                {/* Outflow dot at Step 4 */}
+                <circle cx={flowPoints.p4_right.x + 4} cy={flowPoints.p4_right.y} r="3" />
+                {/* Outflow dot at Step 5 */}
+                <circle cx={flowPoints.p5_top.x} cy={flowPoints.p5_top.y - 4} r="3" />
               </g>
             </svg>
           )}
         </div>
 
         {/* =========================================================================
-            MOBILE / TABLET STACK (< 1024px)
-            3D Wheel Available on ALL Devices (Zero WebGL context duplication)
+            MOBILE / TABLET STEPPED TIMELINE (< 1024px)
+            Single WebGL context, vertical sequential steps with glowing connector stems
             ========================================================================= */}
-        <div className="lg:hidden flex flex-col items-center">
-          {/* Top Character + 3D Mahoraga Wheel on Mobile */}
-          <div className="relative flex flex-col items-center mb-8">
-            {/* 3D Wheel on Mobile/Tablet */}
+        <div className="lg:hidden flex flex-col items-center w-full max-w-xl mx-auto">
+          {/* Top Character + 3D Wheel */}
+          <div className="flex flex-col items-center mb-8 pointer-events-none">
             <div className="relative z-30 mb-2 pointer-events-auto">
               <LazyViewportMount
                 fallback={
@@ -479,7 +450,7 @@ export function SkillsLoadBalancer() {
                   !isDesktop ? (
                     <div onClick={playRatchetClick}>
                       <MahoragaWheelCanvas
-                        isSpinningFast={activePillarId !== null}
+                        isSpinningFast={activeStepId !== null}
                       />
                     </div>
                   ) : null
@@ -487,60 +458,50 @@ export function SkillsLoadBalancer() {
               </LazyViewportMount>
             </div>
 
-            {/* Meditating Rony on Mobile */}
-            <div className="relative z-10 w-[140px] sm:w-[165px]">
+            <div className="relative z-10 w-[140px] sm:w-[160px] pointer-events-auto">
               <Image
                 src="/images/skills/mediating_rony_final.webp"
                 alt="Rony seated in meditation planning architecture"
                 width={500}
                 height={400}
                 loading="lazy"
-                className="w-full h-auto object-contain drop-shadow-[0_12px_24px_rgba(var(--color-accent-rgb),0.18)]"
+                className="w-full h-auto object-contain drop-shadow-[0_12px_24px_rgba(var(--color-accent-rgb),0.2)]"
               />
             </div>
           </div>
 
-          {/* Flowing Dotted Burnt Orange Connector Stem on Mobile */}
-          <div className="w-4 h-10 mb-6 flex justify-center">
-            <svg className="w-4 h-full overflow-visible" viewBox="0 0 16 40">
-              <line
-                x1="8"
-                y1="0"
-                x2="8"
-                y2="40"
-                stroke="var(--color-line)"
-                strokeWidth="1.5"
-                strokeOpacity="0.35"
-              />
-              <line
-                x1="8"
-                y1="0"
-                x2="8"
-                y2="40"
-                stroke="var(--color-accent)"
-                strokeWidth="2"
-                strokeDasharray="6 8"
-                style={{ animation: "dottedFlow 1.6s linear infinite" }}
-              />
-              <circle cx="8" cy="40" r="3" fill="var(--color-accent)" />
-            </svg>
-          </div>
+          {/* Vertical Sequential Stepped Flow */}
+          <div className="flex flex-col items-center w-full gap-4">
+            {SKILL_STEPS.map((step, idx) => (
+              <React.Fragment key={step.id}>
+                <SkillFlowStepCard
+                  step={step}
+                  isActive={activeStepId === step.id}
+                  onSelect={() => handleSelectStep(step)}
+                  className="w-full"
+                />
 
-          {/* 4 Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-            {SKILL_PILLARS.map((pillar) => (
-              <SkillRealmCard
-                key={pillar.id}
-                pillar={pillar}
-                isHovered={activePillarId === pillar.id}
-                onHoverChange={(hovered) =>
-                  handlePillarHover(hovered ? pillar.id : null)
-                }
-              />
+                {/* Glowing White Connector Stem between steps */}
+                {idx < SKILL_STEPS.length - 1 && (
+                  <div className="w-4 h-8 flex flex-col items-center justify-between my-0.5">
+                    <div className="w-0.5 h-full bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.7)]" />
+                    <div className="size-2 rounded-full bg-white shadow-[0_0_8px_#ffffff] -mt-1" />
+                  </div>
+                )}
+              </React.Fragment>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Interactive Deep-Dive Modal */}
+      <SkillFlowModal
+        step={modalStep}
+        onClose={() => {
+          setModalStep(null);
+          setActiveStepId(null);
+        }}
+      />
     </section>
   );
 }
