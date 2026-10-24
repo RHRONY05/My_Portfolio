@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SKILL_STEPS, type SkillLifecycleStep } from "./skillsData";
 import { SkillFlowStepCard } from "./SkillFlowStepCard";
 import { SkillFlowModal } from "./SkillFlowModal";
@@ -88,91 +87,6 @@ export function SkillsLoadBalancer() {
   const [isDesktop, setIsDesktop] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const [flowPoints, setFlowPoints] = useState<FlowConnectorPoints | null>(null);
-  const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const isInteractingRef = useRef(false);
-  const resumeTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Continuous auto-moving train loop on mobile (< 1024px)
-  useEffect(() => {
-    if (isDesktop) return;
-    const track = carouselRef.current;
-    if (!track) return;
-
-    let animId: number;
-    let lastTime = performance.now();
-
-    const trainLoop = (now: number) => {
-      const delta = (now - lastTime) / 1000;
-      lastTime = now;
-
-      // Glide continuously like a train when not actively being dragged/touched and modal is closed
-      if (!isInteractingRef.current && track && !modalStep) {
-        const halfWidth = track.scrollWidth / 2;
-        if (halfWidth > 0) {
-          track.scrollLeft += 36 * delta; // 36px/sec smooth train glide
-
-          if (track.scrollLeft >= halfWidth) {
-            track.scrollLeft -= halfWidth;
-          }
-        }
-      }
-      animId = requestAnimationFrame(trainLoop);
-    };
-
-    animId = requestAnimationFrame(trainLoop);
-    return () => cancelAnimationFrame(animId);
-  }, [isDesktop, modalStep]);
-
-  const handleCarouselScroll = () => {
-    if (!carouselRef.current) return;
-    const track = carouselRef.current;
-    const halfWidth = track.scrollWidth / 2;
-    if (halfWidth <= 0) return;
-
-    // Seamless wrap-around boundary for infinite bidirectional dragging
-    if (track.scrollLeft >= halfWidth * 1.8) {
-      track.scrollLeft -= halfWidth;
-    } else if (track.scrollLeft <= 4) {
-      track.scrollLeft += halfWidth;
-    }
-
-    const singleStepWidth = halfWidth / SKILL_STEPS.length;
-    const normalizedScroll = track.scrollLeft % halfWidth;
-    const idx = Math.min(
-      SKILL_STEPS.length - 1,
-      Math.max(0, Math.floor((normalizedScroll + singleStepWidth / 2) / singleStepWidth))
-    );
-    setActiveCarouselIndex(idx);
-  };
-
-  const handleUserInteractStart = () => {
-    isInteractingRef.current = true;
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-  };
-
-  const handleUserInteractEnd = () => {
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(() => {
-      isInteractingRef.current = false;
-    }, 1400);
-  };
-
-  const scrollToStep = (index: number) => {
-    if (!carouselRef.current) return;
-    const track = carouselRef.current;
-    const halfWidth = track.scrollWidth / 2;
-    const singleStepWidth = halfWidth / SKILL_STEPS.length;
-    const targetScroll = index * singleStepWidth;
-    track.scrollTo({
-      left: targetScroll,
-      behavior: "smooth",
-    });
-    setActiveCarouselIndex(index);
-    playRatchetClick();
-    handleUserInteractStart();
-    handleUserInteractEnd();
-  };
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024);
@@ -263,7 +177,7 @@ export function SkillsLoadBalancer() {
         className="dot-grid absolute inset-0 pointer-events-none opacity-40"
       />
 
-      {/* Luminescent White Cyber Circuit Keyframes */}
+      {/* Luminescent White Cyber Circuit Keyframes & Infinite Train Marquee */}
       <style jsx>{`
         @keyframes whiteFlow {
           0% {
@@ -272,6 +186,22 @@ export function SkillsLoadBalancer() {
           100% {
             stroke-dashoffset: 0;
           }
+        }
+        @keyframes skillsTrainMarquee {
+          0% {
+            transform: translateX(0%);
+          }
+          100% {
+            transform: translateX(calc(-100% - 1.25rem));
+          }
+        }
+        .animate-train-marquee {
+          animation: skillsTrainMarquee 26s linear infinite;
+          will-change: transform;
+        }
+        .animate-train-marquee:hover,
+        .animate-train-marquee:active {
+          animation-play-state: paused;
         }
       `}</style>
 
@@ -518,8 +448,8 @@ export function SkillsLoadBalancer() {
         </div>
 
         {/* =========================================================================
-            MOBILE / TABLET HORIZONTAL SNAP CAROUSEL (< 1024px)
-            Single WebGL context, touch-pan-x kinetic swiping with step dots
+            MOBILE / TABLET INFINITE TRAIN MARQUEE (< 1024px)
+            Continuous hardware-accelerated train loop with hover/touch pause
             ========================================================================= */}
         <div className="lg:hidden flex flex-col items-center w-full">
           {/* Top Character + 3D Wheel */}
@@ -556,91 +486,50 @@ export function SkillsLoadBalancer() {
             </div>
           </div>
 
-          {/* Swipeable Continuous Train Carousel Stage */}
-          <div className="relative w-full">
-            {/* Horizontal Continuous Scroll Track */}
-            <div
-              ref={carouselRef}
-              onScroll={handleCarouselScroll}
-              onTouchStart={handleUserInteractStart}
-              onTouchEnd={handleUserInteractEnd}
-              onPointerDown={handleUserInteractStart}
-              onPointerUp={handleUserInteractEnd}
-              className="flex w-full items-center overflow-x-auto gap-4 px-6 sm:px-10 touch-pan-x select-none cursor-grab active:cursor-grabbing py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              }}
-            >
-              {[...SKILL_STEPS, ...SKILL_STEPS].map((step, idx) => {
-                const isStepActive = (idx % SKILL_STEPS.length) === activeCarouselIndex;
-                return (
+          {/* Continuous Train Infinite Marquee Stage */}
+          <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] py-2 select-none">
+            <div className="flex w-max items-center gap-5">
+              {/* Primary Track Set */}
+              <div className="flex shrink-0 items-center gap-5 animate-train-marquee">
+                {SKILL_STEPS.map((step) => (
                   <div
-                    key={`${step.id}-train-${idx}`}
-                    className="shrink-0 flex justify-center py-1"
+                    key={`track1-${step.id}`}
+                    className="shrink-0 flex justify-center py-1 cursor-pointer"
                   >
                     <SkillFlowStepCard
                       step={step}
-                      isActive={activeStepId === step.id || isStepActive}
+                      isActive={activeStepId === step.id}
                       onSelect={() => handleSelectStep(step)}
                     />
                   </div>
-                );
-              })}
-            </div>
-
-            {/* Stage Counter & Swipe Indicator Bar */}
-            <div className="flex items-center justify-between px-6 sm:px-12 mt-4">
-              {/* Left Chevron */}
-              <button
-                type="button"
-                onClick={() => scrollToStep(Math.max(0, activeCarouselIndex - 1))}
-                disabled={activeCarouselIndex === 0}
-                aria-label="Previous lifecycle phase"
-                className="rounded-full p-2 border border-line bg-card/80 text-muted hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
-              >
-                <ChevronLeft className="size-4" />
-              </button>
-
-              {/* Progress Dots */}
-              <div className="flex items-center gap-2">
-                {SKILL_STEPS.map((step, idx) => (
-                  <button
-                    key={step.id}
-                    type="button"
-                    onClick={() => scrollToStep(idx)}
-                    aria-label={`Go to phase ${idx + 1}: ${step.title}`}
-                    className={`transition-all duration-300 rounded-full cursor-pointer ${
-                      activeCarouselIndex === idx
-                        ? "w-6 h-2 bg-white shadow-[0_0_10px_rgba(255,255,255,0.9)]"
-                        : "size-2 bg-white/20 hover:bg-white/40"
-                    }`}
-                  />
                 ))}
               </div>
 
-              {/* Right Chevron */}
-              <button
-                type="button"
-                onClick={() => scrollToStep(Math.min(SKILL_STEPS.length - 1, activeCarouselIndex + 1))}
-                disabled={activeCarouselIndex === SKILL_STEPS.length - 1}
-                aria-label="Next lifecycle phase"
-                className="rounded-full p-2 border border-line bg-card/80 text-muted hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+              {/* Seamless Duplicate Track Set */}
+              <div
+                aria-hidden="true"
+                className="flex shrink-0 items-center gap-5 animate-train-marquee"
               >
-                <ChevronRight className="size-4" />
-              </button>
+                {SKILL_STEPS.map((step) => (
+                  <div
+                    key={`track2-${step.id}`}
+                    className="shrink-0 flex justify-center py-1 cursor-pointer"
+                  >
+                    <SkillFlowStepCard
+                      step={step}
+                      isActive={activeStepId === step.id}
+                      onSelect={() => handleSelectStep(step)}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
+          </div>
 
-            {/* Phase Title Badge */}
-            <div className="flex items-center justify-center gap-2 mt-2.5">
-              <span className="font-mono text-[11px] font-bold tracking-wider uppercase text-muted">
-                Phase {activeCarouselIndex + 1} of 6
-              </span>
-              <span className="text-white/40">•</span>
-              <span className="font-sans text-[12px] font-medium text-white/90">
-                {SKILL_STEPS[activeCarouselIndex]?.title}
-              </span>
-            </div>
+          {/* Interactive Hint Indicator */}
+          <div className="flex items-center justify-center gap-2 mt-4 text-muted font-mono text-[11px] tracking-wider uppercase">
+            <span className="size-1.5 rounded-full bg-white/60 animate-ping" />
+            <span>Tap any node to inspect methodology</span>
           </div>
         </div>
       </div>
