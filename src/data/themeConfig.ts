@@ -36,30 +36,10 @@ export interface FontItem {
 export const APPROVED_THEMES: ThemeItem[] = [
   // --- Dark Themes (01 - 05) ---
   {
-    id: "monolithic-onyx",
-    name: "Monolithic Onyx & Graphite",
-    tagline: "Total dark stealth. Absolute black canvas with precision carbon surfaces and titanium white accents.",
-    num: "01",
-    mode: "dark",
-    colors: {
-      canvas: "#000000",
-      card: "#111111",
-      line: "#343434",
-      fg: "#F5F5F5",
-      muted: "#7A7A7A",
-      accent: "#E5E5E5",
-      onAccent: "#000000",
-      secondary: "#A3A3A3",
-      accentGlow: "rgba(229, 229, 229, 0.35)",
-      cardHoverBorder: "#E5E5E5",
-      cardHoverGlow: "rgba(229, 229, 229, 0.2)",
-    },
-  },
-  {
     id: "obsidian-burnt-orange",
     name: "Obsidian Slate & Burnt Orange",
     tagline: "Warm technical editorial. Deep obsidian slate base with warm ivory typography and electric burnt orange accents.",
-    num: "02",
+    num: "01",
     mode: "dark",
     colors: {
       canvas: "#151817",
@@ -73,6 +53,26 @@ export const APPROVED_THEMES: ThemeItem[] = [
       accentGlow: "rgba(89, 199, 166, 0.22)",
       cardHoverBorder: "#59c7a6",
       cardHoverGlow: "rgba(89, 199, 166, 0.18)",
+    },
+  },
+  {
+    id: "monolithic-onyx",
+    name: "Monolithic Onyx & Graphite",
+    tagline: "Total dark stealth. Absolute black canvas with precision carbon surfaces and titanium white accents.",
+    num: "02",
+    mode: "dark",
+    colors: {
+      canvas: "#000000",
+      card: "#111111",
+      line: "#343434",
+      fg: "#F5F5F5",
+      muted: "#7A7A7A",
+      accent: "#E5E5E5",
+      onAccent: "#000000",
+      secondary: "#A3A3A3",
+      accentGlow: "rgba(229, 229, 229, 0.35)",
+      cardHoverBorder: "#E5E5E5",
+      cardHoverGlow: "rgba(229, 229, 229, 0.2)",
     },
   },
   {

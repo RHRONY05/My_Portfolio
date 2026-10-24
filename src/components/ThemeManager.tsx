@@ -12,17 +12,15 @@ import {
 export function ThemeManager() {
   useEffect(() => {
     try {
-            // Ensure default theme is monolithic-onyx (titanium white stealth)
+            // Ensure default theme is obsidian-burnt-orange (custom portfolio theme with green canvas & pine glow)
       const themeVer = localStorage.getItem("rony_theme_ver");
-      if (themeVer !== "v3_onyx") {
-        localStorage.setItem("rony_theme_ver", "v3_onyx");
-        if (!localStorage.getItem("rony_theme_id") || localStorage.getItem("rony_theme_id") === "obsidian-burnt-orange") {
-          localStorage.setItem("rony_theme_id", "monolithic-onyx");
-        }
+      if (themeVer !== "v4_obsidian_custom") {
+        localStorage.setItem("rony_theme_ver", "v4_obsidian_custom");
+        localStorage.setItem("rony_theme_id", "obsidian-burnt-orange");
       }
 
       // 1. Resolve Theme
-      const savedThemeId = localStorage.getItem("rony_theme_id") || "monolithic-onyx";
+      const savedThemeId = localStorage.getItem("rony_theme_id") || "obsidian-burnt-orange";
       let activeTheme: ThemeItem | undefined =
         APPROVED_THEMES.find((t) => t.id === savedThemeId) || APPROVED_THEMES[0];
 
