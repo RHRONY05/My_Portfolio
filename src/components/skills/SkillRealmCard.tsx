@@ -1,344 +1,117 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import {
-  Layers,
-  Cpu,
-  Database,
-  Bot,
-  Terminal,
-  Wrench,
-  X,
-  type LucideIcon,
-} from "lucide-react";
-import { SkillRealm } from "./skillsData";
+import React from "react";
+import Image from "next/image";
+import type { SkillPillar } from "./skillsData";
 
 interface SkillRealmCardProps {
-  realm: SkillRealm;
-  variant?: "default" | "compact";
-  isActiveRouting?: boolean;
-  isDimmed?: boolean;
-  isOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  pillar: SkillPillar;
+  isHovered?: boolean;
+  onHoverChange?: (hovered: boolean) => void;
+  className?: string;
 }
 
-const REALM_ICONS: Record<string, LucideIcon> = {
-  frontend: Layers,
-  backend: Cpu,
-  database: Database,
-  "ai-agents": Bot,
-  devops: Terminal,
-  tooling: Wrench,
-};
-
 export function SkillRealmCard({
-  realm,
-  variant = "default",
-  isActiveRouting = false,
-  isDimmed = false,
-  isOpen: controlledIsOpen,
-  onOpenChange,
+  pillar,
+  isHovered = false,
+  onHoverChange,
+  className = "",
 }: SkillRealmCardProps) {
-  const [internalHovered, setInternalHovered] = useState(false);
-  const isControlled = controlledIsOpen !== undefined;
-  const isOpen = isControlled ? controlledIsOpen : internalHovered;
-  const lastHoverTimeRef = useRef<number>(0);
-
-  const IconComponent = REALM_ICONS[realm.id] ?? Layers;
-
-  // Determine popover vertical anchor based on card position so it stays cleanly in viewport
-  const getAnchorClass = () => {
-    if (realm.id === "frontend" || realm.id === "ai-agents") {
-      return realm.side === "left"
-        ? "top-0 left-0 origin-top-left"
-        : "top-0 right-0 origin-top-right";
-    }
-    if (realm.id === "backend" || realm.id === "devops") {
-      return realm.side === "left"
-        ? "top-1/2 -translate-y-1/2 left-0 origin-left"
-        : "top-1/2 -translate-y-1/2 right-0 origin-right";
-    }
-    // Bottom cards (database, tooling)
-    return realm.side === "left"
-      ? "bottom-0 left-0 origin-bottom-left"
-      : "bottom-0 right-0 origin-bottom-right";
-  };
-
-  const handleMouseEnter = () => {
-    // Only trigger hover on devices that support true pointer hover
-    if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
-      lastHoverTimeRef.current = Date.now();
-      if (onOpenChange) {
-        onOpenChange(true);
-      } else {
-        setInternalHovered(true);
-      }
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
-      if (onOpenChange) {
-        onOpenChange(false);
-      } else {
-        setInternalHovered(false);
-      }
-    }
-  };
-
-  const handleCardClick = () => {
-    // Prevent synthetic click immediately after mouseenter on hybrid touchscreens
-    if (Date.now() - lastHoverTimeRef.current < 300) {
-      return;
-    }
-    if (onOpenChange) {
-      onOpenChange(!isOpen);
-    } else {
-      setInternalHovered((prev) => !prev);
-    }
-  };
-
-  const handleClose = () => {
-    if (onOpenChange) {
-      onOpenChange(false);
-    } else {
-      setInternalHovered(false);
-    }
-  };
+  const isLeftSide = pillar.side === "left";
 
   return (
     <div
-      id={`realm-card-${realm.id}`}
-      className={`group relative w-full ${isOpen ? "z-50" : "z-10"}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={handleCardClick}
+      onMouseEnter={() => onHoverChange?.(true)}
+      onMouseLeave={() => onHoverChange?.(false)}
+      className={`group/card relative flex flex-col justify-between rounded-xl border bg-card/90 backdrop-blur-md p-3.5 xl:p-4 transition-all duration-300 select-none shadow-sm overflow-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ${
+        isHovered
+          ? "border-[var(--color-card-hover-border)] shadow-[0_12px_32px_var(--color-card-hover-glow)] -translate-y-0.5"
+          : "border-line hover:border-[var(--color-card-hover-border)] hover:shadow-[0_12px_32px_var(--color-card-hover-glow)] hover:-translate-y-0.5"
+      } ${className}`}
     >
-      {/* 
-        =======================================================================
-        BASE CARD FACE
-        - Overflow-safe flex layout
-        - Highlights dynamically when traffic is actively routed to this realm
-        =======================================================================
-      */}
+      {/* Circuit Contact Hook Pin at EXACT VERTICAL CENTER of the inner edge */}
       <div
-        className={`relative w-full rounded-xl border transition-all duration-300 cursor-pointer select-none ${
-          variant === "compact"
-            ? "px-2.5 py-2 sm:px-3 sm:py-2"
-            : "px-3 py-2.5 sm:px-3.5 sm:py-3"
-        } ${
-          isDimmed && !isOpen ? "opacity-40" : "opacity-100"
-        } ${
-          isOpen
-            ? "border-accent bg-card shadow-[0_0_18px_rgba(var(--color-accent-rgb),0.25)] scale-[1.01]"
-            : isActiveRouting
-            ? "border-accent/90 bg-card/95 shadow-[0_0_16px_rgba(var(--color-accent-rgb),0.22)] ring-1 ring-accent/40"
-            : "border-line bg-card/80 backdrop-blur-md hover:border-accent hover:bg-card hover:shadow-[0_0_14px_rgba(var(--color-accent-rgb),0.18)]"
+        id={`card-pin-${pillar.id}`}
+        className={`hidden lg:flex absolute top-1/2 -translate-y-1/2 size-3.5 rounded-full border border-line bg-card items-center justify-center z-30 transition-all ${
+          isLeftSide ? "right-0 translate-x-1/2" : "left-0 -translate-x-1/2"
         }`}
       >
-        {variant === "compact" ? (
-          /* Mobile Compact Face */
-          <div className="flex flex-col justify-center min-w-0">
-            {/* Header: Number + Short Name + Icon (Safe from overflow) */}
-            <div className="flex items-center justify-between gap-1 min-w-0">
-              <div className="flex items-center gap-1 min-w-0 flex-1">
-                <span className="font-mono text-[11px] sm:text-xs font-bold text-accent shrink-0 flex items-center gap-1">
-                  {isActiveRouting && (
-                    <span className="size-1 rounded-full bg-accent animate-ping" />
-                  )}
-                  {realm.number}.
-                </span>
-                <span className="font-mono text-[11px] sm:text-xs font-bold text-fg group-hover:text-accent transition-colors truncate">
-                  {realm.shortName}
-                </span>
-              </div>
-              <div
-                className={`flex size-5 shrink-0 items-center justify-center rounded-md border transition-colors ${
-                  isActiveRouting
-                    ? "border-accent bg-accent/20 text-accent"
-                    : "border-line/60 bg-canvas/80 text-muted group-hover:border-accent group-hover:text-accent"
-                }`}
-              >
-                <IconComponent className="size-2.5" />
-              </div>
-            </div>
-
-            {/* Micro Tech Icons row + count */}
-            <div className="flex items-center justify-between mt-1.5 gap-1 min-w-0">
-              <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                {realm.tools.slice(0, 3).map((tool) => (
-                  <span
-                    key={tool.name}
-                    title={tool.name}
-                    className="flex size-4.5 shrink-0 items-center justify-center rounded border border-line/60 bg-canvas/70 p-0.5"
-                  >
-                    {tool.icon ? (
-                      <img
-                        src={tool.icon}
-                        alt=""
-                        className="size-3 object-contain"
-                      />
-                    ) : (
-                      <span className="size-1.5 rounded-full bg-accent" />
-                    )}
-                  </span>
-                ))}
-              </div>
-              <span className="font-mono text-[9px] text-muted shrink-0 whitespace-nowrap">
-                +{realm.tools.length - 3}
-              </span>
-            </div>
-          </div>
-        ) : (
-          /* Desktop Standard Face */
-          <>
-            {/* Header Row: Number + Short Name + Count Badge + Icon (Safe from overflow) */}
-            <div className="flex items-center justify-between gap-1.5 min-w-0">
-              <div className="flex items-center gap-1 min-w-0 flex-1">
-                <span className="font-mono text-xs font-bold text-accent shrink-0 flex items-center gap-1">
-                  {isActiveRouting && (
-                    <span className="size-1.5 rounded-full bg-accent animate-ping" />
-                  )}
-                  {realm.number}.
-                </span>
-                <span className="font-mono text-xs font-bold text-fg group-hover:text-accent transition-colors truncate">
-                  {realm.shortName}
-                </span>
-              </div>
-              <div className="flex items-center gap-1 shrink-0">
-                <span
-                  className={`font-mono text-[9.5px] sm:text-[10px] px-1.5 py-0.5 rounded border transition-colors whitespace-nowrap ${
-                    isActiveRouting
-                      ? "border-accent/60 bg-accent/15 text-accent font-semibold"
-                      : "border-line/60 bg-canvas/60 text-muted group-hover:border-accent/40 group-hover:text-secondary"
-                  }`}
-                >
-                  {realm.tools.length} Tools
-                </span>
-                <div
-                  className={`flex size-5.5 sm:size-6 shrink-0 items-center justify-center rounded-md border transition-colors ${
-                    isActiveRouting
-                      ? "border-accent bg-accent/20 text-accent shadow-xs"
-                      : "border-line/60 bg-canvas/80 text-muted group-hover:border-accent group-hover:text-accent"
-                  }`}
-                >
-                  <IconComponent className="size-2.5 sm:size-3" />
-                </div>
-              </div>
-            </div>
-
-            {/* Micro Tech Icon avatars row with authentic brand colors */}
-            <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-line/40 min-w-0">
-              <div className="flex items-center gap-1 sm:gap-1.5 min-w-0 overflow-hidden">
-                {realm.tools.slice(0, 4).map((tool) => (
-                  <span
-                    key={tool.name}
-                    title={tool.name}
-                    className="flex size-5 shrink-0 items-center justify-center rounded border border-line/60 bg-canvas/80 p-0.5 transition-transform group-hover:scale-105"
-                  >
-                    {tool.icon ? (
-                      <img
-                        src={tool.icon}
-                        alt=""
-                        className="size-3.5 object-contain"
-                      />
-                    ) : (
-                      <span className="size-1.5 rounded-full bg-accent" />
-                    )}
-                  </span>
-                ))}
-              </div>
-              <span className="font-mono text-[9.5px] sm:text-[10px] text-muted group-hover:text-accent transition-colors shrink-0 whitespace-nowrap ml-1">
-                [+more]
-              </span>
-            </div>
-          </>
-        )}
+        <div
+          className={`size-1.5 rounded-full transition-all duration-300 ${
+            isHovered
+              ? "bg-[var(--color-card-hover-border)] shadow-[0_0_8px_var(--color-card-hover-border)] scale-125"
+              : "bg-muted group-hover/card:bg-[var(--color-card-hover-border)]"
+          }`}
+        />
       </div>
 
-      {/* 
-        =======================================================================
-        HOVER OVERLAY PANEL: REVEALS ALL TOOLS' NAMES WITH AUTHENTIC BRAND ICONS
-        =======================================================================
-      */}
-      <div
-        style={{ zIndex: 2147483647 }}
-        className={`absolute ${getAnchorClass()} w-[265px] sm:w-[285px] xl:w-[305px] max-w-[calc(100vw-24px)] p-3 sm:p-3.5 rounded-xl border border-accent/80 bg-card/95 backdrop-blur-xl shadow-[0_0_35px_rgba(0,0,0,0.9),0_0_20px_rgba(var(--color-accent-rgb),0.25)] transition-all duration-200 ease-out ${
-          isOpen
-            ? "opacity-100 visible scale-100 pointer-events-auto"
-            : "opacity-0 invisible scale-95 pointer-events-none"
-        }`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Hover Header: Number + Realm Title + Tool Count Badge + Mobile Close */}
-        <div className="flex items-center justify-between gap-2 pb-2 border-b border-line/60">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <span className="font-mono text-xs font-bold text-accent shrink-0">
-              {realm.number}.
-            </span>
-            <span className="font-mono text-xs font-bold text-fg truncate">
-              {realm.title}
-            </span>
-          </div>
+      {/* Mobile Top Pin */}
+      <div className="lg:hidden absolute -top-1.5 left-1/2 -translate-x-1/2 size-3 rounded-full border border-line bg-card flex items-center justify-center">
+        <div
+          className={`size-1.5 rounded-full transition-all duration-300 ${
+            isHovered
+              ? "bg-[var(--color-card-hover-border)] shadow-[0_0_8px_var(--color-card-hover-border)] scale-125"
+              : "bg-muted"
+          }`}
+        />
+      </div>
 
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded border border-accent/40 bg-accent/10 text-accent font-semibold">
-              {realm.tools.length} Tools
-            </span>
-            <div className="flex size-5 shrink-0 items-center justify-center rounded border border-line/60 bg-canvas/80 text-accent">
-              <IconComponent className="size-2.5" />
-            </div>
-            {/* Mobile tap dismiss button */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClose();
-              }}
-              className="lg:hidden flex size-5 shrink-0 items-center justify-center rounded border border-line/70 bg-canvas/90 text-muted hover:border-accent hover:text-accent transition-colors cursor-pointer"
-              aria-label="Close details"
-              title="Close"
-            >
-              <X className="size-2.5" />
-            </button>
-          </div>
-        </div>
+      {/* Card Header: Pure Title */}
+      <div>
+        <h3 className="font-sans text-base xl:text-lg font-bold tracking-tight text-fg transition-colors group-hover/card:text-accent">
+          {pillar.title}
+        </h3>
 
-        {/* Section Tag */}
-        <div className="flex items-center justify-between mt-2 mb-1.5">
-          <span className="font-mono text-[10px] text-accent tracking-wider uppercase font-semibold">
-            All Production Tools
-          </span>
-          <span className="font-mono text-[9px] text-muted tracking-widest uppercase">
-            {realm.tagline}
-          </span>
-        </div>
-
-        {/* Full Tools Matrix: ALL Tool Names & Authentic Brand Icons rendered */}
-        <div className="flex flex-wrap gap-1.5 max-h-[220px] overflow-y-auto custom-scrollbar pr-0.5">
-          {realm.tools.map((tool) => (
-            <span
+        {/* Tools Row: ZERO SCROLLBARS, Circular Downward Puddle Glow */}
+        <div className="relative flex items-center gap-2 my-2.5 xl:my-3 flex-nowrap overflow-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {pillar.tools.map((tool) => (
+            <div
               key={tool.name}
-              className="inline-flex items-center gap-1.5 font-mono text-[10.5px] px-2 py-1 rounded-md border border-line/70 bg-canvas/90 text-fg hover:border-accent hover:text-accent transition-colors shadow-xs"
+              className="relative group/tool flex flex-col items-center shrink-0"
             >
-              {tool.icon && (
-                <img
+              {/* Distinct circular / elliptical glow puddle at the bottom of the icon using project section card glow */}
+              <div
+                aria-hidden="true"
+                className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-6 h-2 rounded-full bg-[radial-gradient(ellipse,var(--color-card-hover-border)_0%,transparent_75%)] opacity-35 group-hover/tool:opacity-90 blur-[2px] transition-all pointer-events-none"
+              />
+
+              {/* Squircle Tile (No square box-shadow, purely crisp border) */}
+              <div
+                title={tool.name}
+                className="relative size-8 xl:size-8.5 rounded-lg border border-line bg-canvas/80 flex items-center justify-center p-1.5 transition-all duration-200 hover:border-[var(--color-card-hover-border)] hover:scale-110 cursor-default z-10"
+              >
+                <Image
                   src={tool.icon}
-                  alt=""
-                  className="size-3.5 object-contain shrink-0"
+                  alt={tool.name}
+                  width={20}
+                  height={20}
+                  className="size-4 xl:size-4.5 object-contain filter drop-shadow-xs"
                 />
-              )}
-              <span>{tool.name}</span>
-            </span>
+              </div>
+
+              {/* Tooltip on hover */}
+              <div className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover/tool:opacity-100 transition-opacity bg-card px-2 py-0.5 rounded border border-line text-[9.5px] font-mono font-bold text-accent whitespace-nowrap pointer-events-none shadow-md z-40">
+                {tool.name}
+              </div>
+            </div>
           ))}
         </div>
+      </div>
 
-        {/* Sub-footer: Brief summary preview */}
-        <div className="mt-2.5 pt-2 border-t border-line/40 flex items-center justify-between text-[9.5px] font-mono text-muted">
-          <span className="truncate max-w-[190px]">{realm.previewTech}</span>
-          <span className="text-accent shrink-0">
-            {isActiveRouting ? "Active Traffic" : "Ready"}
-          </span>
+      {/* Bottom Section: Produces / Deliverables */}
+      <div className="pt-2 border-t border-line/60 overflow-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <span className="block font-mono text-[9px] font-bold tracking-widest text-muted uppercase mb-1.5">
+          PRODUCES:
+        </span>
+        <div className="flex flex-wrap gap-1.5 overflow-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {pillar.produces.map((item) => (
+            <span
+              key={item}
+              className="px-2 py-0.5 rounded-md border border-line bg-canvas/70 font-mono text-[9px] xl:text-[9.5px] text-secondary hover:text-fg hover:border-[var(--color-card-hover-border)] transition-colors whitespace-nowrap"
+            >
+              {item}
+            </span>
+          ))}
         </div>
       </div>
     </div>

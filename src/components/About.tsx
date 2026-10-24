@@ -32,9 +32,10 @@ export function About() {
       className="relative mx-auto max-w-[1400px] min-h-screen flex flex-col justify-center px-4 sm:px-6 md:px-8 lg:px-8 pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-20 lg:pb-10 scroll-mt-0 overflow-x-clip"
     >
       <div className="grid grid-cols-1 items-center gap-10 sm:gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
-        {/* LEFT COLUMN: The Interactive 3D Book Dossier (Deferred until scroll proximity) */}
+        {/* LEFT COLUMN: The Interactive 3D Book Dossier (Deferred until scroll proximity, instant on return) */}
         <div className="flex w-full justify-center">
           <LazyViewportMount
+            sessionKey="about-3d-book"
             className="w-full flex justify-center"
             fallback={
               <div className="flex h-[480px] w-full sm:h-[540px] lg:h-[590px] xl:h-[620px] items-center justify-center">

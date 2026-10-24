@@ -9,43 +9,49 @@ const CIRCLE_COUNT = 6;
 const GOLD_COLOR = "#E5B869";
 const CARD_BG = "#161B22";
 
-// The 6 AI Tools orchestrated in the horizontal halo
-const AI_TOOLS = [
+// The 6 Strategic Planning Tools orchestrated in the horizontal halo
+export const PLANNING_TOOLS = [
   {
     name: "Claude",
     fullName: "Claude (Anthropic)",
+    role: "Architecture & Strategy",
     iconUrl: "/images/skills/tools/claude.svg",
     color: "#D97757",
   },
   {
-    name: "Gemini",
-    fullName: "Gemini (Google)",
-    iconUrl: "/images/skills/tools/gemini.svg",
-    color: "#4E88D4",
-  },
-  {
-    name: "ChatGPT",
-    fullName: "ChatGPT (OpenAI)",
-    iconUrl: "/images/skills/tools/chatgpt.svg",
-    color: "#10A37F",
-  },
-  {
     name: "Antigravity",
     fullName: "Google Antigravity",
+    role: "Autonomous Agent Systems",
     iconUrl: "/images/skills/tools/antigravity.svg",
     color: "#3186FF",
   },
   {
-    name: "Cursor",
-    fullName: "Cursor AI",
-    iconUrl: "/images/skills/tools/cursor.svg",
-    color: "#E5B869",
+    name: "Stitch",
+    fullName: "Stitch (UI Design)",
+    role: "UI & Component Prototyping",
+    iconUrl: "/images/skills/tools/stitch.webp",
+    color: "#FF80BF",
   },
   {
-    name: "Ollama",
-    fullName: "Ollama (Local LLMs)",
-    iconUrl: "/images/skills/tools/ollama.svg",
-    color: "#F3C77C",
+    name: "Muse Agent",
+    fullName: "Muse Research Agent",
+    role: "Deep Docs & Codebase Research",
+    iconUrl: "/images/skills/tools/muse.webp",
+    color: "#2563EB",
+  },
+  {
+    name: "Excalidraw",
+    fullName: "Excalidraw",
+    role: "System & Schema Modeling",
+    iconUrl: "/images/skills/tools/excalidraw.webp",
+    color: "#6965DB",
+  },
+  {
+    name: "Postman",
+    fullName: "Postman",
+    role: "API Contract Design",
+    iconUrl: "/images/skills/tools/postman.svg",
+    color: "#FF6C37",
   },
 ];
 
@@ -163,7 +169,7 @@ function HorizontalHaloRing({
         const angle = (i * Math.PI * 2) / CIRCLE_COUNT;
         const x = RADIUS * Math.sin(angle);
         const z = RADIUS * Math.cos(angle);
-        const tool = AI_TOOLS[i];
+        const tool = PLANNING_TOOLS[i];
 
         return (
           <group key={tool.name} position={[x, 0, z]}>
@@ -196,20 +202,32 @@ function HorizontalHaloRing({
                 position={[0, 0.035, 0]}
                 distanceFactor={4.6}
                 zIndexRange={[5, 0]}
-                className="pointer-events-auto select-none"
+                className="tool-emblem-html pointer-events-auto select-none"
               >
                 <div
-                  title={tool.fullName}
-                  className="group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card/95 border border-line hover:border-accent hover:scale-115 hover:shadow-[0_0_14px_rgba(var(--color-accent-rgb,229,184,105),0.45)] transition-all cursor-pointer p-1 backdrop-blur-sm"
+                  title={`${tool.fullName} — ${tool.role}`}
+                  onPointerEnter={(e) => {
+                    // Direct zero-overhead DOM elevation (NO React state churn)
+                    const wrapper = (e.currentTarget.closest(".pointer-events-auto")?.parentElement as HTMLElement | null) ||
+                      (e.currentTarget.parentElement?.parentElement as HTMLElement | null);
+                    if (wrapper) wrapper.style.zIndex = "999999";
+                  }}
+                  onPointerLeave={(e) => {
+                    const wrapper = (e.currentTarget.closest(".pointer-events-auto")?.parentElement as HTMLElement | null) ||
+                      (e.currentTarget.parentElement?.parentElement as HTMLElement | null);
+                    if (wrapper) wrapper.style.zIndex = "";
+                  }}
+                  className="tool-emblem-card group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card/95 border border-line hover:border-accent hover:scale-115 hover:shadow-[0_0_14px_rgba(var(--color-accent-rgb),0.45)] transition-transform duration-150 cursor-pointer p-1 backdrop-blur-sm"
                 >
                   <img
                     src={tool.iconUrl}
                     alt={tool.name}
                     className="size-4 object-contain filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
                   />
-                  {/* Sleek Tooltip on hover */}
-                  <div className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-card px-2 py-0.5 rounded border border-line text-[10px] font-mono font-bold text-accent whitespace-nowrap pointer-events-none shadow-lg z-50">
-                    {tool.fullName}
+                  {/* Sleek Tooltip on hover (Elevated above all other 3D tokens) */}
+                  <div className="absolute -top-11 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-card/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-line text-center whitespace-nowrap pointer-events-none shadow-2xl z-[999999]">
+                    <div className="text-[10px] font-mono font-bold text-accent drop-shadow-sm">{tool.name}</div>
+                    <div className="text-[9px] font-sans text-muted">{tool.role}</div>
                   </div>
                 </div>
               </Html>
@@ -276,7 +294,11 @@ export function MahoragaWheelCanvas({
     };
     updateColors();
     window.addEventListener("storage", updateColors);
-    return () => window.removeEventListener("storage", updateColors);
+    window.addEventListener("rony_theme_change", updateColors);
+    return () => {
+      window.removeEventListener("storage", updateColors);
+      window.removeEventListener("rony_theme_change", updateColors);
+    };
   }, []);
 
   const dragPhysicsRef = useRef<DragPhysicsState>({
@@ -387,11 +409,19 @@ export function MahoragaWheelCanvas({
       onPointerLeave={handlePointerUp}
       className="relative w-[380px] sm:w-[420px] md:w-[460px] h-[175px] sm:h-[195px] cursor-grab active:cursor-grabbing touch-pan-y select-none"
     >
+      {/* Native CSS compositor z-index elevation (0 React re-renders, 0 JS thread overhead) */}
+      <style jsx global>{`
+        div:has(> .tool-emblem-html:hover) {
+          z-index: 999999 !important;
+        }
+      `}</style>
+
       <Canvas
         frameloop={isVisible ? "always" : "never"}
         camera={{ position: [0, 3.1, 4.1], fov: 36 }}
         dpr={[1, 1.5]}
-        className="size-full pointer-events-auto"
+        gl={{ alpha: true, powerPreference: "high-performance" }}
+        className="size-full pointer-events-auto bg-transparent"
       >
         {/* Dynamic Studio Lighting matching active theme */}
         <ambientLight intensity={1.3} />

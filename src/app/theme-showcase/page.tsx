@@ -29,6 +29,8 @@ export default function ThemeShowcasePage() {
   const [copiedHex, setCopiedHex] = useState<string | null>(null);
   const [appliedNotification, setAppliedNotification] = useState<string | null>(null);
 
+  const [themeFilter, setThemeFilter] = useState<"all" | "dark" | "light">("all");
+
   // Initialize from localStorage
   useEffect(() => {
     try {
@@ -50,6 +52,11 @@ export default function ThemeShowcasePage() {
   const activeFont =
     APPROVED_FONTS.find((f) => f.id === selectedFontId) ?? APPROVED_FONTS[0];
   const colors = activeTheme.colors;
+
+  const filteredThemes = APPROVED_THEMES.filter((t) => {
+    if (themeFilter === "all") return true;
+    return t.mode === themeFilter;
+  });
 
   const handleCopyHex = (hex: string) => {
     navigator.clipboard.writeText(hex);
@@ -111,7 +118,7 @@ export default function ThemeShowcasePage() {
                 backgroundColor: colors.card,
               }}
             >
-              Curated System: 4 Themes &bull; 4 Fonts
+              Curated System: {APPROVED_THEMES.length} Themes (4 Dark &bull; 4 Light) &bull; {APPROVED_FONTS.length} Fonts
             </span>
           </div>
 
@@ -149,30 +156,57 @@ export default function ThemeShowcasePage() {
             Tactical Theme &amp; Font Laboratory
           </h1>
           <p className="text-base max-w-3xl" style={{ color: colors.muted }}>
-            Explore the 4 official curated color themes and 4 curated typography systems.
+            Explore 8 curated color themes (4 dark stealth profiles &amp; 4 high-clarity light profiles) alongside 4 curated typography systems.
             Selecting any combination updates all live sample surfaces below.
           </p>
         </div>
 
-        {/* CONTROLS: 4 THEMES & 4 FONTS SELECTORS */}
+        {/* CONTROLS: THEMES & FONTS SELECTORS */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* 1. Theme Selector */}
           <div
             className="p-6 rounded-2xl border space-y-4 shadow-sm"
             style={{ backgroundColor: colors.card, borderColor: colors.line }}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <h2
                 className="text-lg font-bold flex items-center gap-2"
                 style={{ fontFamily: activeFont.family }}
               >
-                <Layers className="size-5" style={{ color: colors.accent }} /> 1. Select Color Theme (4 Options)
+                <Layers className="size-5" style={{ color: colors.accent }} /> 1. Select Color Theme ({APPROVED_THEMES.length} Options)
               </h2>
-              <span className="text-xs font-mono text-muted">Click to preview</span>
+
+              {/* Mode Filter Pills: All / Dark / Light */}
+              <div
+                className="flex items-center gap-1 p-1 rounded-lg border self-start sm:self-auto"
+                style={{ backgroundColor: colors.canvas, borderColor: colors.line }}
+              >
+                {(["all", "dark", "light"] as const).map((filter) => {
+                  const isFilterActive = themeFilter === filter;
+                  const count =
+                    filter === "all"
+                      ? APPROVED_THEMES.length
+                      : APPROVED_THEMES.filter((t) => t.mode === filter).length;
+                  return (
+                    <button
+                      key={filter}
+                      type="button"
+                      onClick={() => setThemeFilter(filter)}
+                      className="px-2.5 py-1 text-[11px] font-mono font-bold rounded-md transition-all uppercase cursor-pointer"
+                      style={{
+                        backgroundColor: isFilterActive ? colors.accent : "transparent",
+                        color: isFilterActive ? colors.onAccent : colors.muted,
+                      }}
+                    >
+                      {filter} ({count})
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="space-y-3">
-              {APPROVED_THEMES.map((theme) => {
+              {filteredThemes.map((theme) => {
                 const isSelected = theme.id === selectedThemeId;
                 const c = theme.colors;
                 return (
@@ -197,7 +231,7 @@ export default function ThemeShowcasePage() {
                     }}
                   >
                     <div className="space-y-2">
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-wrap items-center gap-2.5">
                         <span
                           className="font-mono text-xs px-2 py-0.5 rounded font-bold"
                           style={{
@@ -225,6 +259,27 @@ export default function ThemeShowcasePage() {
                             Default
                           </span>
                         )}
+                        {theme.id === "nordic-frost" && (
+                          <span
+                            className="text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase tracking-wide"
+                            style={{
+                              backgroundColor: c.accent,
+                              color: c.onAccent,
+                            }}
+                          >
+                            Your Palette ⚡
+                          </span>
+                        )}
+                        <span
+                          className="text-[10px] font-mono px-1.5 py-0.5 rounded uppercase border"
+                          style={{
+                            borderColor: c.line,
+                            color: c.muted,
+                            backgroundColor: c.canvas,
+                          }}
+                        >
+                          {theme.mode === "light" ? "Light" : "Dark"}
+                        </span>
                       </div>
 
                       <p className="text-xs max-w-md line-clamp-1" style={{ color: c.muted }}>

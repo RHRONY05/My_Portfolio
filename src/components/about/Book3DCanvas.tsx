@@ -37,7 +37,7 @@ export function Book3DCanvas({
   chapter = 1,
   onChapterChange,
 }: Book3DCanvasProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [rotationOffset, setRotationOffset] = useState(0);
   const [zoom, setZoom] = useState(1);
   const isDraggingRef = useRef(false);

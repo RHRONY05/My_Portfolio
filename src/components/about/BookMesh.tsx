@@ -13,6 +13,24 @@ interface BookMeshProps {
   accentColor?: string;
 }
 
+// Module-level texture cache to keep decoded GPU textures persistent across route navigation
+const textureCache = new Map<string, THREE.Texture>();
+
+function loadCachedTexture(url: string, onLoad: (tex: THREE.Texture) => void) {
+  if (textureCache.has(url)) {
+    const cached = textureCache.get(url)!;
+    onLoad(cached);
+    return;
+  }
+  const loader = new THREE.TextureLoader();
+  loader.load(url, (texture) => {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    textureCache.set(url, texture);
+    onLoad(texture);
+  });
+}
+
 export function BookMesh({
   isOpen,
   onToggleOpen,
@@ -28,96 +46,70 @@ export function BookMesh({
   const leaf3Ref = useRef<THREE.Group>(null);
   const leaf4Ref = useRef<THREE.Group>(null);
 
-  // Textures for covers and all 5 inner page spreads
-  const [frontTexture, setFrontTexture] = useState<THREE.Texture | null>(null);
-  const [backTexture, setBackTexture] = useState<THREE.Texture | null>(null);
-  const [page1LeftTexture, setPage1LeftTexture] = useState<THREE.Texture | null>(null);
-  const [page1RightTexture, setPage1RightTexture] = useState<THREE.Texture | null>(null);
-  const [page2LeftTexture, setPage2LeftTexture] = useState<THREE.Texture | null>(null);
-  const [page2RightTexture, setPage2RightTexture] = useState<THREE.Texture | null>(null);
-  const [page3LeftTexture, setPage3LeftTexture] = useState<THREE.Texture | null>(null);
-  const [page3RightTexture, setPage3RightTexture] = useState<THREE.Texture | null>(null);
-  const [page4LeftTexture, setPage4LeftTexture] = useState<THREE.Texture | null>(null);
-  const [page4RightTexture, setPage4RightTexture] = useState<THREE.Texture | null>(null);
-  const [page5LeftTexture, setPage5LeftTexture] = useState<THREE.Texture | null>(null);
-  const [page5RightTexture, setPage5RightTexture] = useState<THREE.Texture | null>(null);
+  // Textures for covers and all 5 inner page spreads (synchronously restored from cache on return)
+  const [frontTexture, setFrontTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/book_cover.webp") || null
+  );
+  const [backTexture, setBackTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/back_cover.webp") || null
+  );
+  const [page1LeftTexture, setPage1LeftTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/page_01_left.webp") || null
+  );
+  const [page1RightTexture, setPage1RightTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/page_01_right.webp") || null
+  );
+  const [page2LeftTexture, setPage2LeftTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/page_02_left.webp") || null
+  );
+  const [page2RightTexture, setPage2RightTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/page_02_right.webp") || null
+  );
+  const [page3LeftTexture, setPage3LeftTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/page_03_left.webp") || null
+  );
+  const [page3RightTexture, setPage3RightTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/page_03_right.webp") || null
+  );
+  const [page4LeftTexture, setPage4LeftTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/page_04_left.webp") || null
+  );
+  const [page4RightTexture, setPage4RightTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/page_04_right.webp") || null
+  );
+  const [page5LeftTexture, setPage5LeftTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/page_05_left.webp") || null
+  );
+  const [page5RightTexture, setPage5RightTexture] = useState<THREE.Texture | null>(
+    () => textureCache.get("/images/about/page_05_right.webp") || null
+  );
 
   useEffect(() => {
-    const textureLoader = new THREE.TextureLoader();
-
     // 1. Front Cover (1024x1536)
-    textureLoader.load("/images/about/book_cover.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setFrontTexture(texture);
-    });
+    loadCachedTexture("/images/about/book_cover.webp", setFrontTexture);
 
     // 2. Back Cover (1024x1536)
-    textureLoader.load("/images/about/back_cover.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setBackTexture(texture);
-    });
+    loadCachedTexture("/images/about/back_cover.webp", setBackTexture);
 
     // Chapter 01
-    textureLoader.load("/images/about/page_01_left.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setPage1LeftTexture(texture);
-    });
-    textureLoader.load("/images/about/page_01_right.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setPage1RightTexture(texture);
-    });
+    loadCachedTexture("/images/about/page_01_left.webp", setPage1LeftTexture);
+    loadCachedTexture("/images/about/page_01_right.webp", setPage1RightTexture);
 
     // Chapter 02
-    textureLoader.load("/images/about/page_02_left.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setPage2LeftTexture(texture);
-    });
-    textureLoader.load("/images/about/page_02_right.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setPage2RightTexture(texture);
-    });
+    loadCachedTexture("/images/about/page_02_left.webp", setPage2LeftTexture);
+    loadCachedTexture("/images/about/page_02_right.webp", setPage2RightTexture);
 
     // Chapter 03
-    textureLoader.load("/images/about/page_03_left.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setPage3LeftTexture(texture);
-    });
-    textureLoader.load("/images/about/page_03_right.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setPage3RightTexture(texture);
-    });
+    loadCachedTexture("/images/about/page_03_left.webp", setPage3LeftTexture);
+    loadCachedTexture("/images/about/page_03_right.webp", setPage3RightTexture);
 
     // Chapter 04
-    textureLoader.load("/images/about/page_04_left.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setPage4LeftTexture(texture);
-    });
-    textureLoader.load("/images/about/page_04_right.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setPage4RightTexture(texture);
-    });
+    loadCachedTexture("/images/about/page_04_left.webp", setPage4LeftTexture);
+    loadCachedTexture("/images/about/page_04_right.webp", setPage4RightTexture);
 
     // Chapter 05 (The AI Horizon & Shawshank Epigraph)
-    textureLoader.load("/images/about/page_05_left.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setPage5LeftTexture(texture);
-    });
-    textureLoader.load("/images/about/page_05_right.webp", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      setPage5RightTexture(texture);
-    });
+    loadCachedTexture("/images/about/page_05_left.webp", setPage5LeftTexture);
+    loadCachedTexture("/images/about/page_05_right.webp", setPage5RightTexture);
 
     return () => {
       document.body.style.cursor = "default";

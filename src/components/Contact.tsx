@@ -85,11 +85,11 @@ function ContactCard({
     preview ?? (href ? href.replace(/^https?:\/\//, "") : (fallback ?? ""));
 
   const className =
-    "group flex w-full items-center gap-4 rounded-lg border border-line bg-card p-4 transition-colors hover:border-accent";
+    "contact-card group flex w-full items-center gap-4 rounded-lg border border-line bg-card p-4";
 
   const inner = (
     <>
-      <Icon className="size-5 shrink-0 text-muted transition-colors group-hover:text-accent" />
+      <Icon className="contact-card-icon size-5 shrink-0 text-muted transition-colors" />
       <div className="flex flex-col">
         <span className="text-mono text-fg">{label}</span>
         <span className="text-caption text-muted">{display}</span>
@@ -174,7 +174,7 @@ function ContactForm() {
 
   return (
     <div className="w-full lg:w-3/5">
-      <div className="glow-border relative w-full overflow-hidden rounded-xl bg-card p-6 sm:p-8">
+      <div className="contact-form-card relative w-full overflow-hidden rounded-xl border border-line bg-card p-6 sm:p-8">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 opacity-30 [background-image:radial-gradient(rgba(48,54,61,0.4)_1px,transparent_1px)] [background-size:16px_16px]"
@@ -317,7 +317,7 @@ function ContactForm() {
 }
 
 const inputClass =
-  "rounded-lg border border-line bg-canvas p-3 text-body text-fg outline-none transition-colors placeholder:text-muted/60 focus:border-accent focus:ring-1 focus:ring-accent";
+  "contact-input rounded-lg border border-line bg-canvas p-3 text-body text-fg outline-none transition-all placeholder:text-muted/60";
 
 function Field({
   id,

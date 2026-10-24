@@ -8,25 +8,27 @@ import {
   FontItem,
   applyThemeToDocument,
   applyFontToDocument,
+  ensureGoogleFontLoaded,
 } from "@/data/themeConfig";
 import { Palette, Type, Check, ChevronDown, Sparkles, Sliders, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export function ThemeFontCustomizer() {
+export function ThemeFontCustomizer({ isPastHero = true }: { isPastHero?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"theme" | "font">("theme");
-  const [currentThemeId, setCurrentThemeId] = useState<string>("monolithic-onyx");
-  const [currentFontId, setCurrentFontId] = useState<string>("original-surfer");
+  const [themeFilter, setThemeFilter] = useState<"all" | "dark" | "light">("all");
+  const [currentThemeId, setCurrentThemeId] = useState<string>("obsidian-burnt-orange");
+  const [currentFontId, setCurrentFontId] = useState<string>("plex-editorial");
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Sync state with localStorage on mount
   useEffect(() => {
     try {
-      const savedTheme = localStorage.getItem("rony_theme_id");
+      const savedTheme = localStorage.getItem("rony_theme_id") || "obsidian-burnt-orange";
       if (savedTheme && APPROVED_THEMES.some((t) => t.id === savedTheme)) {
         setCurrentThemeId(savedTheme);
       }
-      const savedFont = localStorage.getItem("rony_font_id");
+      const savedFont = localStorage.getItem("rony_font_id") || "plex-editorial";
       if (savedFont && APPROVED_FONTS.some((f) => f.id === savedFont)) {
         setCurrentFontId(savedFont);
       }
@@ -96,13 +98,22 @@ export function ThemeFontCustomizer() {
   const activeFont =
     APPROVED_FONTS.find((f) => f.id === currentFontId) ?? APPROVED_FONTS[0];
 
+  const filteredThemes = APPROVED_THEMES.filter((t) => {
+    if (themeFilter === "all") return true;
+    return t.mode === themeFilter;
+  });
+
   return (
     <div className="relative inline-block text-left" ref={containerRef}>
       {/* Trigger Button */}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="group relative flex items-center gap-2 rounded-lg border border-line/60 bg-card/80 px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-mono font-medium text-fg shadow-sm backdrop-blur-md transition-all duration-200 hover:border-accent hover:bg-card hover:text-accent focus:outline-none focus:ring-1 focus:ring-accent"
+        className={`group relative flex items-center gap-2 rounded-lg border px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-mono font-medium shadow-sm backdrop-blur-md transition-all duration-200 focus:outline-none ${
+          isPastHero
+            ? "border-line/60 bg-card/80 text-fg hover:border-accent hover:bg-card hover:text-accent focus:ring-1 focus:ring-accent"
+            : "border-white/15 bg-black/60 text-[#f5f5f5] hover:border-white/40 hover:bg-black/80 hover:text-white focus:ring-1 focus:ring-white/30"
+        }`}
         aria-expanded={isOpen}
         aria-label="Customize Theme and Font"
         title="Customize Theme & Font"
@@ -111,23 +122,37 @@ export function ThemeFontCustomizer() {
         <span className="relative flex h-2.5 w-2.5 items-center justify-center">
           <span
             className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
-            style={{ backgroundColor: activeTheme.colors.accent }}
+            style={{ backgroundColor: isPastHero ? activeTheme.colors.accent : "#E5E5E5" }}
           />
           <span
             className="relative inline-flex h-2 w-2 rounded-full shadow-[0_0_8px_currentColor]"
-            style={{ backgroundColor: activeTheme.colors.accent }}
+            style={{ backgroundColor: isPastHero ? activeTheme.colors.accent : "#E5E5E5" }}
           />
         </span>
 
         {/* Icon & Label */}
-        <Sliders className="size-3.5 text-accent transition-transform group-hover:rotate-45 duration-300" />
-        <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg/90 group-hover:text-accent">
+        <Sliders
+          className={`size-3.5 transition-transform group-hover:rotate-45 duration-300 ${
+            isPastHero ? "text-accent" : "text-[#e5e5e5] group-hover:text-white"
+          }`}
+        />
+        <span
+          className={`font-mono text-[11px] font-bold uppercase tracking-wider ${
+            isPastHero
+              ? "text-fg/90 group-hover:text-accent"
+              : "text-[#f5f5f5]/90 group-hover:text-white"
+          }`}
+        >
           Theme
         </span>
 
         <ChevronDown
-          className={`size-3 text-muted transition-transform duration-200 group-hover:text-accent ${
+          className={`size-3 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
+          } ${
+            isPastHero
+              ? "text-muted group-hover:text-accent"
+              : "text-white/60 group-hover:text-white"
           }`}
         />
       </button>
@@ -170,12 +195,15 @@ export function ThemeFontCustomizer() {
                   }`}
                 >
                   <Palette className="size-3" />
-                  <span>Colors (4)</span>
+                  <span>Colors ({APPROVED_THEMES.length})</span>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => setActiveTab("font")}
+                  onClick={() => {
+                    ensureGoogleFontLoaded();
+                    setActiveTab("font");
+                  }}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold transition-all ${
                     activeTab === "font"
                       ? "bg-accent text-on-accent shadow-sm"
@@ -183,7 +211,7 @@ export function ThemeFontCustomizer() {
                   }`}
                 >
                   <Type className="size-3" />
-                  <span>Fonts (4)</span>
+                  <span>Fonts ({APPROVED_FONTS.length})</span>
                 </button>
               </div>
 
@@ -202,10 +230,42 @@ export function ThemeFontCustomizer() {
               </div>
             </div>
 
-            {/* TAB 1: 4 Approved Themes */}
+            {/* Mode filter row when on Theme tab */}
             {activeTab === "theme" && (
-              <div className="space-y-1.5 max-h-[300px] overflow-y-auto pr-0.5 custom-scrollbar">
-                {APPROVED_THEMES.map((theme) => {
+              <div className="flex items-center justify-between pb-2 mb-2 border-b border-line/30">
+                <span className="text-[10px] font-mono text-muted uppercase tracking-wider">
+                  Mode Filter
+                </span>
+                <div className="flex items-center gap-1 bg-canvas/60 p-0.5 rounded-md border border-line/40">
+                  {(["all", "dark", "light"] as const).map((filter) => {
+                    const isFilterActive = themeFilter === filter;
+                    const count =
+                      filter === "all"
+                        ? APPROVED_THEMES.length
+                        : APPROVED_THEMES.filter((t) => t.mode === filter).length;
+                    return (
+                      <button
+                        key={filter}
+                        type="button"
+                        onClick={() => setThemeFilter(filter)}
+                        className={`px-1.5 py-0.5 text-[9px] font-mono font-bold rounded uppercase transition-all ${
+                          isFilterActive
+                            ? "bg-accent text-on-accent shadow-xs"
+                            : "text-muted hover:text-fg"
+                        }`}
+                      >
+                        {filter} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 1: Approved Themes */}
+            {activeTab === "theme" && (
+              <div className="space-y-1.5 max-h-[320px] overflow-y-auto pr-0.5 custom-scrollbar">
+                {filteredThemes.map((theme) => {
                   const isSelected = theme.id === currentThemeId;
                   return (
                     <button
@@ -243,15 +303,23 @@ export function ThemeFontCustomizer() {
 
                         {/* Theme Info */}
                         <div className="min-w-0">
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 flex-wrap">
                             <span className="text-xs font-semibold text-fg tracking-tight truncate">
                               {theme.name}
                             </span>
                             {theme.id === "monolithic-onyx" && (
-                              <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-accent/20 text-accent border border-accent/30 uppercase">
+                              <span className="px-1 py-0.2 rounded text-[8px] font-mono bg-accent/20 text-accent border border-accent/30 uppercase">
                                 Def
                               </span>
                             )}
+                            {theme.id === "nordic-frost" && (
+                              <span className="px-1 py-0.2 rounded text-[8px] font-mono bg-accent/20 text-accent border border-accent/30 uppercase">
+                                You ⚡
+                              </span>
+                            )}
+                            <span className="px-1 py-0.2 rounded text-[8px] font-mono text-muted/80 border border-line/40 uppercase">
+                              {theme.mode === "light" ? "Light" : "Dark"}
+                            </span>
                           </div>
                           <p className="text-[10px] text-muted line-clamp-1 font-mono">
                             {theme.tagline}
