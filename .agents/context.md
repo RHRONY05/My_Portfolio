@@ -68,12 +68,13 @@
 
 ## 4. Design System Tokens & Dynamic Switchers
 
-### 8 Curated Dynamic Themes (`src/data/themeConfig.ts` & `src/app/globals.css`):
+### Curated Dynamic Themes (`src/data/themeConfig.ts` & `src/app/globals.css`):
 #### Dark Profiles:
-1. **01. Monolithic Onyx & Graphite (DEFAULT)**: `#000000` canvas | `#111111` card | `#E5E5E5` accent
-2. **02. Celadon & Hunter Forest**: `#111D13` canvas | `#192B1C` card | `#A1CCA5` accent
-3. **03. Midnight Amethyst & Deep Violet**: `#11001C` canvas | `#1E0030` card | `#C084FC` accent
-4. **04. Prussian Blue & Space Indigo**: `#0B132B` canvas | `#131C38` card | `#5BC0BE` accent
+1. **01. Obsidian Slate & Burnt Orange (DEFAULT / SPECIAL PORTFOLIO THEME)**: `#151817` canvas (green undertone) | `#1e2220` card | `#ff7857` accent | `#59c7a6` pine green card hover glow
+2. **02. Monolithic Onyx & Graphite**: `#000000` canvas | `#111111` card | `#E5E5E5` accent
+3. **03. Celadon & Hunter Forest**: `#111D13` canvas | `#192B1C` card | `#A1CCA5` accent
+4. **04. Midnight Amethyst & Deep Violet**: `#11001C` canvas | `#1E0030` card | `#C084FC` accent
+5. **05. Prussian Blue & Space Indigo**: `#0B132B` canvas | `#131C38` card | `#5BC0BE` accent
 
 #### Light Profiles:
 5. **05. Nordic Frost & Oceanic Teal (User Custom)**: `#F5F7FA` canvas | `#FFFFFF` card | `#0B132B` fg | `#1F8A87` accent | `#5BC0BE` secondary
