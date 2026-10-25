@@ -217,7 +217,7 @@ function HorizontalHaloRing({
                       (e.currentTarget.parentElement?.parentElement as HTMLElement | null);
                     if (wrapper) wrapper.style.zIndex = "";
                   }}
-                  className="tool-emblem-card group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card/95 border border-line hover:border-white hover:scale-115 hover:shadow-[0_0_14px_rgba(255,255,255,0.65)] transition-transform duration-150 cursor-pointer p-1 backdrop-blur-sm"
+                  className="tool-emblem-card group relative flex size-7 sm:size-8 items-center justify-center rounded-full bg-card border border-line hover:border-white hover:scale-115 hover:shadow-[0_0_14px_rgba(255,255,255,0.65)] transition-transform duration-150 cursor-pointer p-1"
                 >
                   <img
                     src={tool.iconUrl}
@@ -225,7 +225,7 @@ function HorizontalHaloRing({
                     className="size-4 object-contain filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
                   />
                   {/* Sleek Tooltip on hover (Elevated above all other 3D tokens) */}
-                  <div className="absolute -top-11 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-card/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-line text-center whitespace-nowrap pointer-events-none shadow-2xl z-[999999]">
+                  <div className="absolute -top-11 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-card px-3 py-1.5 rounded-xl border border-line text-center whitespace-nowrap pointer-events-none shadow-2xl z-[999999]">
                     <div className="text-[10px] font-mono font-bold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">{tool.name}</div>
                     <div className="text-[9px] font-sans text-muted">{tool.role}</div>
                   </div>
@@ -407,7 +407,7 @@ export function MahoragaWheelCanvas({
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       onPointerLeave={handlePointerUp}
-      className="relative w-[380px] sm:w-[420px] md:w-[460px] h-[175px] sm:h-[195px] cursor-grab active:cursor-grabbing touch-pan-y select-none"
+      className="relative w-full max-w-[340px] sm:max-w-[420px] md:max-w-[460px] h-[160px] sm:h-[185px] md:h-[195px] mx-auto cursor-grab active:cursor-grabbing touch-pan-y select-none"
     >
       {/* Native CSS compositor z-index elevation (0 React re-renders, 0 JS thread overhead) */}
       <style jsx global>{`
@@ -419,7 +419,7 @@ export function MahoragaWheelCanvas({
       <Canvas
         frameloop={isVisible ? "always" : "never"}
         camera={{ position: [0, 3.1, 4.1], fov: 36 }}
-        dpr={[1, 1.5]}
+        dpr={typeof window !== "undefined" && window.innerWidth < 768 ? 1 : [1, 1.5]}
         gl={{ alpha: true, powerPreference: "high-performance" }}
         className="size-full pointer-events-auto bg-transparent"
       >

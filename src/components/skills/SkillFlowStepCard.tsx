@@ -31,13 +31,13 @@ export function SkillFlowStepCard({
           onSelect();
         }
       }}
-      className={`group relative cursor-pointer transition-all duration-300 select-none bg-card/90 backdrop-blur-md shadow-md ${
+      className={`group relative cursor-pointer transition-transform duration-200 select-none bg-card lg:bg-card/90 lg:backdrop-blur-md transform-gpu ${
         isOval
-          ? "rounded-full w-[295px] xl:w-[325px] h-[138px] xl:h-[148px] flex flex-col items-center justify-center px-6 py-4 text-center border-2 border-white/40 hover:border-white shadow-[0_0_20px_rgba(255,255,255,0.18)] hover:shadow-[0_0_32px_rgba(255,255,255,0.4)]"
-          : "rounded-2xl w-[295px] xl:w-[325px] h-[148px] xl:h-[158px] p-5 xl:p-6 flex flex-col justify-between border border-line hover:border-white/80 shadow-sm hover:shadow-[0_0_24px_rgba(255,255,255,0.22)]"
+          ? "rounded-full w-[275px] sm:w-[295px] xl:w-[325px] h-[128px] sm:h-[138px] xl:h-[148px] flex flex-col items-center justify-center px-6 py-4 text-center border-2 border-white/40 hover:border-white shadow-sm lg:shadow-[0_0_20px_rgba(255,255,255,0.18)] lg:hover:shadow-[0_0_32px_rgba(255,255,255,0.4)]"
+          : "rounded-2xl w-[275px] sm:w-[295px] xl:w-[325px] h-[138px] sm:h-[148px] xl:h-[158px] p-4 sm:p-5 xl:p-6 flex flex-col justify-between border border-line hover:border-white/80 shadow-sm lg:hover:shadow-[0_0_24px_rgba(255,255,255,0.22)]"
       } ${
         isActive
-          ? "border-white shadow-[0_0_32px_rgba(255,255,255,0.45)] scale-[1.02]"
+          ? "border-white shadow-[0_0_20px_rgba(255,255,255,0.4)] scale-[1.02]"
           : "hover:scale-[1.02]"
       } ${className}`}
     >

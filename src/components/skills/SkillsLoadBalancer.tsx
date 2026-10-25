@@ -96,6 +96,7 @@ export function SkillsLoadBalancer() {
   }, []);
 
   const measureFlowPoints = () => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) return;
     if (!stageRef.current) return;
     const sRect = stageRef.current.getBoundingClientRect();
     if (sRect.width === 0 || sRect.height === 0) return;
@@ -189,15 +190,18 @@ export function SkillsLoadBalancer() {
         }
         @keyframes skillsTrainMarquee {
           0% {
-            transform: translateX(0%);
+            transform: translate3d(0, 0, 0);
           }
           100% {
-            transform: translateX(calc(-100% - 1.25rem));
+            transform: translate3d(calc(-100% - 1.25rem), 0, 0);
           }
         }
         .animate-train-marquee {
-          animation: skillsTrainMarquee 26s linear infinite;
+          animation: skillsTrainMarquee 28s linear infinite;
           will-change: transform;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
         }
         .animate-train-marquee:hover,
         .animate-train-marquee:active {
@@ -487,14 +491,24 @@ export function SkillsLoadBalancer() {
           </div>
 
           {/* Continuous Train Infinite Marquee Stage */}
-          <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] py-2 select-none">
+          <div className="relative w-full overflow-hidden py-2 select-none">
+            {/* Pure CSS GPU Edge Fades (replaces expensive mask-image) */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-canvas via-canvas/80 to-transparent z-10"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-canvas via-canvas/80 to-transparent z-10"
+            />
+
             <div className="flex w-max items-center gap-5">
               {/* Primary Track Set */}
-              <div className="flex shrink-0 items-center gap-5 animate-train-marquee">
+              <div className="flex shrink-0 items-center gap-5 animate-train-marquee transform-gpu">
                 {SKILL_STEPS.map((step) => (
                   <div
                     key={`track1-${step.id}`}
-                    className="shrink-0 flex justify-center py-1 cursor-pointer"
+                    className="shrink-0 flex justify-center py-1 cursor-pointer transform-gpu"
                   >
                     <SkillFlowStepCard
                       step={step}
@@ -508,12 +522,12 @@ export function SkillsLoadBalancer() {
               {/* Seamless Duplicate Track Set */}
               <div
                 aria-hidden="true"
-                className="flex shrink-0 items-center gap-5 animate-train-marquee"
+                className="flex shrink-0 items-center gap-5 animate-train-marquee transform-gpu"
               >
                 {SKILL_STEPS.map((step) => (
                   <div
                     key={`track2-${step.id}`}
-                    className="shrink-0 flex justify-center py-1 cursor-pointer"
+                    className="shrink-0 flex justify-center py-1 cursor-pointer transform-gpu"
                   >
                     <SkillFlowStepCard
                       step={step}
